@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kingdom Bible Utility</title>
+  <style>
+    :root {
+      --bg: #fcfcfc;
+      --text: #1a1a1a;
+      --accent: #2b5797;
+      --max-width: 680px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #121212;
+        --text: #e0e0e0;
+        --accent: #64b5f6;
+      }
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Georgia, serif;
+      line-height: 1.8;
+      font-size: 1.2rem;
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+    header, main, section, footer {
+      max-width: var(--max-width);
+      margin: 0 auto 2rem auto;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 1rem;
+      font-family: sans-serif;
+    }
+    button {
+      background: none;
+      border: 1px solid var(--text);
+      color: var(--text);
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button.highlight {
+      background: var(--text);
+      color: var(--bg);
+    }
+    .large-type {
+      font-size: 1.6rem;
+      line-height: 1.6;
+    }
+    .card {
+      border: 1px solid #444;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+    }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav>
+      <strong>Kingdom Utility</strong>
+      <div>
+        <button id="btn-reader" class="highlight">Reader</button>
+        <button id="btn-ministry">Prayer Mode</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- View 1: Reader View -->
+  <main id="reader-view">
+    <h2>John 15 (Berean Standard Bible)</h2>
+    <article>
+      <p>I am the true vine, and My Father is the keeper of the vineyard. He cuts off every branch in Me that bears no fruit, while every branch that does bear fruit He prunes so that it will be even more fruitful.</p>
+      <p>Abide in Me, and I will abide in you. No branch can bear fruit by itself; it must abide in the vine. Neither can you bear fruit unless you abide in Me.</p>
+    </article>
+  </main>
+
+  <!-- View 2: Ministry Mode (Hidden by default) -->
+  <section id="ministry-view" hidden class="large-type">
+    <h2>Prayer & Ministry Guide</h2>
+    <div class="card">
+      <strong>Identity in Christ (2 Cor 5:17, 21)</strong>
+      <p>“Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come... God made Him who knew no sin to be sin for us, so that in Him we might become the righteousness of God.”</p>
+    </div>
+    <div class="card">
+      <strong>Healing & Comfort (Psalm 107:20)</strong>
+      <p>“He sent His word and healed them, and delivered them from their destructions.”</p>
+    </div>
+  </section>
+
+  <footer>
+    <hr>
+    <p style="font-size: 0.9rem; font-family: sans-serif; text-align: center;">
+      0 Ads. 0 Trackers. 0 Subscriptions. Built for the Kingdom.<br>
+      <em>Freely given, freely share.</em>
+    </p>
+  </footer>
+
+  <script>
+    const btnReader = document.getElementById('btn-reader');
+    const btnMinistry = document.getElementById('btn-ministry');
+    const readerView = document.getElementById('reader-view');
+    const ministryView = document.getElementById('ministry-view');
+
+    btnReader.addEventListener('click', () => {
+      readerView.hidden = false;
+      ministryView.hidden = true;
+      btnReader.classList.add('highlight');
+      btnMinistry.classList.remove('highlight');
+    });
+
+    btnMinistry.addEventListener('click', () => {
+      readerView.hidden = true;
+      ministryView.hidden = false;
+      btnMinistry.classList.add('highlight');
+      btnReader.classList.remove('highlight');
+    });
+  </script>
+</body>
+</html>
