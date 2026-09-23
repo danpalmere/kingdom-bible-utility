@@ -29,7 +29,7 @@
       margin: 0;
       padding: 2rem 1rem;
     }
-    header, main, section, footer {
+    header, main, section, footer, dialog {
       max-width: var(--max-width);
       margin: 0 auto 2rem auto;
     }
@@ -46,6 +46,7 @@
       gap: 0.5rem;
       margin-bottom: 1.5rem;
       font-family: system-ui, -apple-system, sans-serif;
+      flex-wrap: wrap;
     }
     select, button {
       background: var(--bg);
@@ -88,7 +89,26 @@
       margin-right: 0.2rem;
       font-family: system-ui, -apple-system, sans-serif;
     }
+    /* Modal Styling */
+    dialog {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--text);
+      border-radius: 8px;
+      padding: 1.5rem;
+      width: 90%;
+    }
+    dialog::backdrop {
+      background: rgba(0,0,0,0.6);
+    }
     [hidden] { display: none !important; }
+
+    /* Print Optimization: Strips all UI when printing physical handouts */
+    @media print {
+      nav, .controls, .topic-pills, button, footer { display: none !important; }
+      body { background: white; color: black; font-size: 12pt; padding: 0; }
+      main, section { max-width: 100%; margin: 0; }
+    }
   </style>
 </head>
 <body>
@@ -117,6 +137,7 @@
         <option value="15" selected>Chapter 15</option>
       </select>
       <button id="btn-load">Load Passage</button>
+      <button id="btn-export-open" style="margin-left: auto;">🖨️ Export / Print</button>
     </div>
 
     <h2 id="passage-title">John 15</h2>
@@ -133,7 +154,8 @@
       <button class="topic-btn highlight" onclick="showTopic('identity')">Identity in Christ</button>
       <button class="topic-btn" onclick="showTopic('healing')">Healing & Comfort</button>
       <button class="topic-btn" onclick="showTopic('peace')">Peace & Rest</button>
-      <button class="topic-btn" onclick="showTopic('encouragement')">Encouragement (1 Cor 14:3)</button>
+      <button class="topic-btn" onclick="showTopic('encouragement')">Encouragement</button>
+      <button class="topic-btn" onclick="showTopic('wimber')" style="border-style: dashed;">Wimber 5-Step Model</button>
     </div>
 
     <div id="topic-identity" class="topic-content">
@@ -173,10 +195,46 @@
       </div>
       <div class="card">
         <strong>Zephaniah 3:17</strong>
-        <p>“The LORD your God is in your midst, a Mighty One who will save. He will rejoice over you with gladness; He will quiet you with His love; He will rejoice over you with singing.”</p>
+        <p>“The LORD your God is in your midst, a Mighty One who will save. He will quiet you with His love; He will rejoice over you with singing.”</p>
+      </div>
+    </div>
+
+    <!-- Wimber 5-Step Prayer Model -->
+    <div id="topic-wimber" class="topic-content" hidden>
+      <div class="card">
+        <strong>Step 1: The Interview</strong>
+        <p style="font-size: 1.1rem;">"Where does it hurt?" or "What would you like prayer for?" Ask simple, natural questions. Listen to the Spirit as they speak.</p>
+      </div>
+      <div class="card">
+        <strong>Step 2: The Diagnosis</strong>
+        <p style="font-size: 1.1rem;">Is this condition natural/physical, emotional, or spiritual? Ask God for wisdom.</p>
+      </div>
+      <div class="card">
+        <strong>Step 3: Prayer Strategy</strong>
+        <p style="font-size: 1.1rem;">Determine whether to pray a blessing, ask the Father, or speak with Kingdom authority over the pain in Jesus' name.</p>
+      </div>
+      <div class="card">
+        <strong>Step 4: Command / Prayer</strong>
+        <p style="font-size: 1.1rem;">Pray with eyes open. Keep it quiet and humble. Speak directly to the condition in the authority of Christ.</p>
+      </div>
+      <div class="card">
+        <strong>Step 5: Post-Prayer Direction</strong>
+        <p style="font-size: 1.1rem;">Ask: "What are you experiencing right now?" Reassure them of God’s love and encourage them to walk in identity.</p>
       </div>
     </div>
   </section>
+
+  <!-- Export Modal -->
+  <dialog id="export-modal">
+    <h3 style="margin-top:0;">Export Passage for Discipleship</h3>
+    <p style="font-size: 0.95rem;">Copy clean text formatted for handouts, emails, or personal study notes.</p>
+    <textarea id="export-text-area" style="width: 100%; height: 160px; font-family: monospace; font-size: 0.9rem; margin-bottom: 1rem;"></textarea>
+    <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+      <button onclick="window.print()">🖨️ Print Page</button>
+      <button id="btn-copy-text" class="highlight">Copy Text</button>
+      <button onclick="document.getElementById('export-modal').close()">Close</button>
+    </div>
+  </dialog>
 
   <footer>
     <hr>
@@ -216,7 +274,8 @@
       event.target.classList.add('highlight');
     }
 
-    // Dynamic Bible Passage Fetcher (Using Bolls Bible API for public domain texts)
+    // Dynamic Bible Passage Fetcher
+    let currentRawText = "";
     async function fetchPassage(book, chapter) {
       const contentDiv = document.getElementById('passage-content');
       const titleDiv = document.getElementById('passage-title');
@@ -225,7 +284,6 @@
       contentDiv.innerHTML = "<p><em>Loading text...</em></p>";
 
       try {
-        // Map common book names to API IDs
         const bookMap = { "John": 43, "Romans": 45, "Psalms": 19, "Ephesians": 49 };
         const bookId = bookMap[book] || 43;
 
@@ -233,8 +291,11 @@
         const data = await response.json();
 
         let passageHtml = "<p>";
+        currentRawText = `${book} ${chapter} (BSB)\n\n`;
+
         data.forEach(verse => {
           passageHtml += `<span class="verse-num">${verse.verse}</span>${verse.text} `;
+          currentRawText += `${verse.verse}. ${verse.text}\n`;
         });
         passageHtml += "</p>";
 
@@ -250,7 +311,20 @@
       fetchPassage(book, chapter);
     });
 
-    // Load initial passage on start
+    // Export Modal Handling
+    const exportModal = document.getElementById('export-modal');
+    document.getElementById('btn-export-open').addEventListener('click', () => {
+      document.getElementById('export-text-area').value = currentRawText;
+      exportModal.showModal();
+    });
+
+    document.getElementById('btn-copy-text').addEventListener('click', () => {
+      const textArea = document.getElementById('export-text-area');
+      navigator.clipboard.writeText(textArea.value);
+      alert('Clean text copied to clipboard!');
+    });
+
+    // Load initial passage
     fetchPassage('John', 15);
   </script>
 </body>
