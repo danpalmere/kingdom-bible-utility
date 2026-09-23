@@ -9,6 +9,7 @@
       --bg: #fcfcfc;
       --text: #1a1a1a;
       --accent: #2b5797;
+      --border: #ddd;
       --max-width: 680px;
     }
     @media (prefers-color-scheme: dark) {
@@ -16,14 +17,15 @@
         --bg: #121212;
         --text: #e0e0e0;
         --accent: #64b5f6;
+        --border: #333;
       }
     }
     body {
       background: var(--bg);
       color: var(--text);
       font-family: Georgia, serif;
-      line-height: 1.8;
-      font-size: 1.2rem;
+      line-height: 1.85;
+      font-size: 1.25rem;
       margin: 0;
       padding: 2rem 1rem;
     }
@@ -35,15 +37,22 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #ccc;
+      border-bottom: 1px solid var(--border);
       padding-bottom: 1rem;
-      font-family: sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
     }
-    button {
-      background: none;
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    select, button {
+      background: var(--bg);
       border: 1px solid var(--text);
       color: var(--text);
-      padding: 0.4rem 0.8rem;
+      padding: 0.5rem 0.8rem;
+      font-size: 1rem;
       cursor: pointer;
       border-radius: 4px;
     }
@@ -51,15 +60,33 @@
       background: var(--text);
       color: var(--bg);
     }
+    .topic-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .topic-btn {
+      font-size: 0.9rem;
+      padding: 0.4rem 0.7rem;
+    }
     .large-type {
-      font-size: 1.6rem;
-      line-height: 1.6;
+      font-size: 1.5rem;
+      line-height: 1.7;
     }
     .card {
-      border: 1px solid #444;
-      padding: 1rem;
-      margin-bottom: 1rem;
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
       border-radius: 6px;
+    }
+    .verse-num {
+      font-size: 0.8rem;
+      vertical-align: super;
+      color: var(--accent);
+      margin-right: 0.2rem;
+      font-family: system-ui, -apple-system, sans-serif;
     }
     [hidden] { display: none !important; }
   </style>
@@ -70,7 +97,7 @@
     <nav>
       <strong>Kingdom Utility</strong>
       <div>
-        <button id="btn-reader" class="highlight">Reader</button>
+        <button id="btn-reader" class="highlight">Abide Reader</button>
         <button id="btn-ministry">Prayer Mode</button>
       </div>
     </nav>
@@ -78,35 +105,89 @@
 
   <!-- View 1: Reader View -->
   <main id="reader-view">
-    <h2>John 15 (Berean Standard Bible)</h2>
-    <article>
-      <p>I am the true vine, and My Father is the keeper of the vineyard. He cuts off every branch in Me that bears no fruit, while every branch that does bear fruit He prunes so that it will be even more fruitful.</p>
-      <p>Abide in Me, and I will abide in you. No branch can bear fruit by itself; it must abide in the vine. Neither can you bear fruit unless you abide in Me.</p>
+    <div class="controls">
+      <select id="book-select">
+        <option value="John">John</option>
+        <option value="Romans">Romans</option>
+        <option value="Psalms">Psalms</option>
+        <option value="Ephesians">Ephesians</option>
+      </select>
+      <select id="chapter-select">
+        <option value="1">Chapter 1</option>
+        <option value="15" selected>Chapter 15</option>
+      </select>
+      <button id="btn-load">Load Passage</button>
+    </div>
+
+    <h2 id="passage-title">John 15</h2>
+    <article id="passage-content">
+      <p><em>Loading passage...</em></p>
     </article>
   </main>
 
-  <!-- View 2: Ministry Mode (Hidden by default) -->
+  <!-- View 2: Ministry & Prayer Mode -->
   <section id="ministry-view" hidden class="large-type">
     <h2>Prayer & Ministry Guide</h2>
-    <div class="card">
-      <strong>Identity in Christ (2 Cor 5:17, 21)</strong>
-      <p>“Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come... God made Him who knew no sin to be sin for us, so that in Him we might become the righteousness of God.”</p>
+    
+    <div class="topic-pills">
+      <button class="topic-btn highlight" onclick="showTopic('identity')">Identity in Christ</button>
+      <button class="topic-btn" onclick="showTopic('healing')">Healing & Comfort</button>
+      <button class="topic-btn" onclick="showTopic('peace')">Peace & Rest</button>
+      <button class="topic-btn" onclick="showTopic('encouragement')">Encouragement (1 Cor 14:3)</button>
     </div>
-    <div class="card">
-      <strong>Healing & Comfort (Psalm 107:20)</strong>
-      <p>“He sent His word and healed them, and delivered them from their destructions.”</p>
+
+    <div id="topic-identity" class="topic-content">
+      <div class="card">
+        <strong>2 Corinthians 5:17, 21</strong>
+        <p>“Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come... God made Him who knew no sin to be sin for us, so that in Him we might become the righteousness of God.”</p>
+      </div>
+      <div class="card">
+        <strong>Galatians 2:20</strong>
+        <p>“I have been crucified with Christ, and I no longer live, but Christ lives in me. The life I now live in the body, I live by faith in the Son of God, who loved me and gave Himself up for me.”</p>
+      </div>
+    </div>
+
+    <div id="topic-healing" class="topic-content" hidden>
+      <div class="card">
+        <strong>Psalm 107:20</strong>
+        <p>“He sent His word and healed them, and delivered them from their destructions.”</p>
+      </div>
+      <div class="card">
+        <strong>Isaiah 53:4–5</strong>
+        <p>“Surely He took up our infirmities and carried our sorrows... and by His wounds we are healed.”</p>
+      </div>
+    </div>
+
+    <div id="topic-peace" class="topic-content" hidden>
+      <div class="card">
+        <strong>Philippians 4:6–7</strong>
+        <p>“Be anxious for nothing, but in everything, by prayer and petition, with thanksgiving, present your requests to God. And the peace of God, which surpasses all understanding, will guard your hearts and minds in Christ Jesus.”</p>
+      </div>
+    </div>
+
+    <div id="topic-encouragement" class="topic-content" hidden>
+      <div class="card">
+        <strong>1 Corinthians 14:3 (Scripture Guardrail)</strong>
+        <p>“On the other hand, the one who prophesies speaks to people for their strengthening, encouraging and comfort.”</p>
+        <p style="font-size: 1rem; font-style: italic;">Speak plainly and humbly: "I was reading this passage and felt encouraged to share it with you."</p>
+      </div>
+      <div class="card">
+        <strong>Zephaniah 3:17</strong>
+        <p>“The LORD your God is in your midst, a Mighty One who will save. He will rejoice over you with gladness; He will quiet you with His love; He will rejoice over you with singing.”</p>
+      </div>
     </div>
   </section>
 
   <footer>
     <hr>
-    <p style="font-size: 0.9rem; font-family: sans-serif; text-align: center;">
+    <p style="font-size: 0.9rem; font-family: system-ui, sans-serif; text-align: center;">
       0 Ads. 0 Trackers. 0 Subscriptions. Built for the Kingdom.<br>
       <em>Freely given, freely share.</em>
     </p>
   </footer>
 
   <script>
+    // View Toggling
     const btnReader = document.getElementById('btn-reader');
     const btnMinistry = document.getElementById('btn-ministry');
     const readerView = document.getElementById('reader-view');
@@ -125,6 +206,52 @@
       btnMinistry.classList.add('highlight');
       btnReader.classList.remove('highlight');
     });
+
+    // Topic Switching in Ministry Mode
+    function showTopic(topicId) {
+      document.querySelectorAll('.topic-content').forEach(el => el.hidden = true);
+      document.querySelectorAll('.topic-btn').forEach(el => el.classList.remove('highlight'));
+      
+      document.getElementById('topic-' + topicId).hidden = false;
+      event.target.classList.add('highlight');
+    }
+
+    // Dynamic Bible Passage Fetcher (Using Bolls Bible API for public domain texts)
+    async function fetchPassage(book, chapter) {
+      const contentDiv = document.getElementById('passage-content');
+      const titleDiv = document.getElementById('passage-title');
+      
+      titleDiv.innerText = `${book} ${chapter}`;
+      contentDiv.innerHTML = "<p><em>Loading text...</em></p>";
+
+      try {
+        // Map common book names to API IDs
+        const bookMap = { "John": 43, "Romans": 45, "Psalms": 19, "Ephesians": 49 };
+        const bookId = bookMap[book] || 43;
+
+        const response = await fetch(`https://bolls.life/get-chapter/BSB/${bookId}/${chapter}/`);
+        const data = await response.json();
+
+        let passageHtml = "<p>";
+        data.forEach(verse => {
+          passageHtml += `<span class="verse-num">${verse.verse}</span>${verse.text} `;
+        });
+        passageHtml += "</p>";
+
+        contentDiv.innerHTML = passageHtml;
+      } catch (err) {
+        contentDiv.innerHTML = "<p><em>Unable to load text automatically right now. Try again in a moment.</em></p>";
+      }
+    }
+
+    document.getElementById('btn-load').addEventListener('click', () => {
+      const book = document.getElementById('book-select').value;
+      const chapter = document.getElementById('chapter-select').value;
+      fetchPassage(book, chapter);
+    });
+
+    // Load initial passage on start
+    fetchPassage('John', 15);
   </script>
 </body>
 </html>
