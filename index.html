@@ -334,6 +334,20 @@
       event.target.classList.add('highlight');
     }
 
+    // Recursive helper function to extract text from plain strings OR nested objects (poetry formatting)
+    function extractText(contentArray) {
+      if (!Array.isArray(contentArray)) return '';
+      return contentArray.map(item => {
+        if (typeof item === 'string') {
+          return item;
+        } else if (typeof item === 'object' && item !== null) {
+          if (item.text) return item.text;
+          if (item.content) return extractText(item.content);
+        }
+        return '';
+      }).join(' ');
+    }
+
     // Dynamic Bible Passage Fetcher using Hello AO API (BSB Translation)
     let currentRawText = "";
     async function fetchPassage(bookId, chapter) {
@@ -353,11 +367,14 @@
 
         data.chapter.content.forEach(item => {
           if (item.type === 'heading') {
-            passageHtml += `</p><h4 style="margin-top: 1.5rem; color: var(--accent); font-family: system-ui, sans-serif;">${item.content.join(' ')}</h4><p>`;
+            const headingText = extractText(item.content);
+            passageHtml += `</p><h4 style="margin-top: 1.5rem; color: var(--accent); font-family: system-ui, sans-serif;">${headingText}</h4><p>`;
           } else if (item.type === 'verse') {
-            const verseText = item.content.join(' ');
+            const verseText = extractText(item.content);
             passageHtml += `<span class="verse-num">${item.number}</span>${verseText} `;
             currentRawText += `${item.number}. ${verseText}\n`;
+          } else if (item.type === 'line_break') {
+            passageHtml += `<br>`;
           }
         });
         passageHtml += "</p>";
