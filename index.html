@@ -345,7 +345,7 @@
       event.target.classList.add('highlight');
     }
 
-    // Extract text from plain strings OR nested poetry objects
+    // Helper function to extract text from plain strings OR nested poetry objects
     function extractText(contentArray) {
       if (!Array.isArray(contentArray)) return '';
       return contentArray.map(item => {
@@ -359,7 +359,21 @@
       }).join(' ');
     }
 
+    let localBsbData = null;
     let currentRawText = "";
+
+    // Load local dataset from repo folder
+    async function loadLocalBsb() {
+      try {
+        const response = await fetch('./data/bsb_nt.json');
+        if (response.ok) {
+          localBsbData = await response.json();
+          console.log('Local BSB Dataset loaded successfully.');
+        }
+      } catch (err) {
+        console.log('Local BSB dataset not loaded, using remote fallback.');
+      }
+    }
 
     async function fetchPassage(bookId, chapter) {
       const contentDiv = document.getElementById('passage-content');
@@ -368,15 +382,27 @@
       contentDiv.innerHTML = "<p><em>Loading text...</em></p>";
 
       try {
-        const response = await fetch(`https://bible.helloao.org/api/BSB/${bookId}/${chapter}.json`);
-        const data = await response.json();
+        let chapterContent = null;
+        let bookName = bookId;
 
-        titleDiv.innerText = `${data.book.name} ${chapter}`;
+        // Check local JSON dataset first (100% private, zero network traffic)
+        if (localBsbData && localBsbData[bookId] && localBsbData[bookId][chapter]) {
+          chapterContent = localBsbData[bookId][chapter].content;
+          bookName = localBsbData[bookId].name || bookId;
+        } else {
+          // Fallback to static CDN if not in local file yet
+          const response = await fetch(`https://bible.helloao.org/api/BSB/${bookId}/${chapter}.json`);
+          const data = await response.json();
+          chapterContent = data.chapter.content;
+          bookName = data.book.name;
+        }
+
+        titleDiv.innerText = `${bookName} ${chapter}`;
 
         let passageHtml = "<p>";
-        currentRawText = `${data.book.name} ${chapter} (BSB)\n\n`;
+        currentRawText = `${bookName} ${chapter} (BSB)\n\n`;
 
-        data.chapter.content.forEach(item => {
+        chapterContent.forEach(item => {
           if (item.type === 'heading') {
             const headingText = extractText(item.content);
             passageHtml += `</p><h4 style="margin-top: 1.5rem; color: var(--accent); font-family: system-ui, sans-serif;">${headingText}</h4><p>`;
@@ -392,7 +418,7 @@
 
         contentDiv.innerHTML = passageHtml;
       } catch (err) {
-        contentDiv.innerHTML = "<p><em>Unable to load text. If offline, make sure this chapter was loaded at least once previously.</em></p>";
+        contentDiv.innerHTML = "<p><em>Unable to load text. Check connection or verify local dataset.</em></p>";
       }
     }
 
@@ -415,8 +441,11 @@
       alert('Clean text copied to clipboard!');
     });
 
-    // Load initial passage
-    fetchPassage('JHN', 15);
+    // Initialize App: Load local JSON first, then render initial passage
+    window.addEventListener('DOMContentLoaded', async () => {
+      await loadLocalBsb();
+      fetchPassage('JHN', 15);
+    });
   </script>
 </body>
 </html>
