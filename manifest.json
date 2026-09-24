@@ -1,0 +1,9 @@
+{
+  "name": "Kingdom Bible Utility",
+  "short_name": "Kingdom Bible",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "description": "A distraction-free, ad-free Bible reader and prayer utility for discipleship."
+}
