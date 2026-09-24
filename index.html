@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kingdom Bible Utility</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#121212">
   <style>
     :root {
       --bg: #fcfcfc;
@@ -48,7 +50,7 @@
       font-family: system-ui, -apple-system, sans-serif;
       flex-wrap: wrap;
     }
-    select, button {
+    select, button, input {
       background: var(--bg);
       border: 1px solid var(--text);
       color: var(--text);
@@ -195,7 +197,7 @@
         <option value="REV">Revelation</option>
       </select>
       
-      <input type="number" id="chapter-input" value="15" min="1" max="150" style="width: 70px; padding: 0.5rem; border: 1px solid var(--text); background: var(--bg); color: var(--text); font-size: 1rem; border-radius: 4px;">
+      <input type="number" id="chapter-input" value="15" min="1" max="150" style="width: 70px;">
       
       <button id="btn-load">Load Passage</button>
       <button id="btn-export-open" style="margin-left: auto;">🖨️ Export / Print</button>
@@ -305,6 +307,15 @@
   </footer>
 
   <script>
+    // Register Offline Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(() => console.log('Kingdom Utility: Offline Engine Active'))
+          .catch((err) => console.log('Service Worker failed:', err));
+      });
+    }
+
     // View Toggling
     const btnReader = document.getElementById('btn-reader');
     const btnMinistry = document.getElementById('btn-ministry');
@@ -334,7 +345,7 @@
       event.target.classList.add('highlight');
     }
 
-    // Recursive helper function to extract text from plain strings OR nested objects (poetry formatting)
+    // Extract text from plain strings OR nested poetry objects
     function extractText(contentArray) {
       if (!Array.isArray(contentArray)) return '';
       return contentArray.map(item => {
@@ -348,8 +359,8 @@
       }).join(' ');
     }
 
-    // Dynamic Bible Passage Fetcher using Hello AO API (BSB Translation)
     let currentRawText = "";
+
     async function fetchPassage(bookId, chapter) {
       const contentDiv = document.getElementById('passage-content');
       const titleDiv = document.getElementById('passage-title');
@@ -381,7 +392,7 @@
 
         contentDiv.innerHTML = passageHtml;
       } catch (err) {
-        contentDiv.innerHTML = "<p><em>Unable to load text automatically right now. Please check the chapter number or connection.</em></p>";
+        contentDiv.innerHTML = "<p><em>Unable to load text. If offline, make sure this chapter was loaded at least once previously.</em></p>";
       }
     }
 
@@ -404,7 +415,7 @@
       alert('Clean text copied to clipboard!');
     });
 
-    // Load initial passage (John 15)
+    // Load initial passage
     fetchPassage('JHN', 15);
   </script>
 </body>
