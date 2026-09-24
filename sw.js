@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kingdom-bible-v2';
+const CACHE_NAME = 'kingdom-bible-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -13,6 +13,17 @@ self.addEventListener('install', (event) => {
     })
   );
   self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+      );
+    })
+  );
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
