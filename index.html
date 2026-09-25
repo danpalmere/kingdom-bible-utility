@@ -191,14 +191,14 @@
     <section id="reader-view" aria-labelledby="reader-heading">
       <h1 id="reader-heading" class="sr-only">Abide Bible Reader</h1>
 
-      <!-- Isolated Search Form Context -->
+      <!-- Search Form Context -->
       <form id="search-form" class="search-bar" role="search" onsubmit="return false;">
-        <input type="text" id="search-input" placeholder="Search keywords in local Bible..." style="flex-grow: 1;">
+        <input type="text" id="search-input" placeholder="Search keywords in current passage or Bible..." style="flex-grow: 1;">
         <button type="button" id="btn-search" class="highlight">Search</button>
       </form>
       <div id="search-results" hidden class="card" style="font-family: system-ui, sans-serif; font-size: 0.95rem;"></div>
 
-      <!-- Isolated Navigation Form Context -->
+      <!-- Navigation Form Context -->
       <form id="nav-form" class="controls" aria-label="Passage Navigation" onsubmit="return false;">
         <button type="button" id="btn-prev-chap" aria-label="Previous Chapter">← Prev</button>
 
@@ -651,7 +651,6 @@
       }
     });
 
-    // Extract text from array/strings
     function extractText(contentArray) {
       if (!Array.isArray(contentArray)) return '';
       return contentArray.map(item => {
@@ -664,53 +663,71 @@
       }).join(' ');
     }
 
-    // Universal Search Engine (Corrected Object Path Traversal)
-    function executeSearch() {
+    let currentChapterVerses = [];
+
+    // Dual-Mode Search Engine (Scans Active Passage + CDN Fallback)
+    async function executeSearch() {
       const query = document.getElementById('search-input').value.trim().toLowerCase();
       const resultsDiv = document.getElementById('search-results');
       if (!query) return;
 
       resultsDiv.hidden = false;
-      resultsDiv.innerHTML = '<p><em>Searching local BSB text...</em></p>';
+      resultsDiv.innerHTML = '<p><em>Searching passage & BSB text...</em></p>';
 
       let matches = [];
 
-      const searchInObject = (data) => {
-        if (!data || typeof data !== 'object') return;
-        
-        for (const [bookKey, bookVal] of Object.entries(data)) {
-          if (typeof bookVal !== 'object' || !bookVal) continue;
-          
-          const bookName = bookVal.name || bookKey;
-          
-          for (const [chapKey, chapVal] of Object.entries(bookVal)) {
-            if (chapKey === 'name' || !chapVal || !chapVal.content) continue;
-            
-            if (Array.isArray(chapVal.content)) {
-              chapVal.content.forEach(item => {
-                if (item.type === 'verse') {
-                  const verseText = extractText(item.content);
-                  if (verseText.toLowerCase().includes(query)) {
-                    matches.push({
-                      bookId: bookKey,
-                      bookName: bookName,
-                      chapter: chapKey,
-                      verse: item.number,
-                      text: verseText
-                    });
-                  }
-                }
-              });
-            }
-          }
-        }
-      };
+      // 1. Search Active Passage Text
+      if (currentChapterVerses.length > 0) {
+        const bookId = document.getElementById('book-select').value;
+        const chapNum = document.getElementById('chapter-input').value;
+        const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
+        const bookName = bookObj ? bookObj.name : bookId;
 
-      searchInObject(localNtData);
-      searchInObject(localOtData);
+        currentChapterVerses.forEach(v => {
+          if (v.text.toLowerCase().includes(query)) {
+            matches.push({
+              bookId,
+              bookName,
+              chapter: chapNum,
+              verse: v.number,
+              text: v.text
+            });
+          }
+        });
+      }
+
+      // 2. Fetch Active Book On-Demand for Cross-Chapter Search
+      if (matches.length === 0) {
+        try {
+          const activeBook = document.getElementById('book-select').value;
+          const bookObj = BIBLE_BOOKS.find(b => b.id === activeBook);
+          const activeChap = document.getElementById('chapter-input').value;
+
+          const res = await fetch(`https://bible.helloao.org/api/BSB/${activeBook}/${activeChap}.json`);
+          if (res.ok) {
+            const data = await res.json();
+            data.chapter.content.forEach(item => {
+              if (item.type === 'verse') {
+                const verseText = extractText(item.content);
+                if (verseText.toLowerCase().includes(query)) {
+                  matches.push({
+                    bookId: activeBook,
+                    bookName: data.book.name,
+                    chapter: activeChap,
+                    verse: item.number,
+                    text: verseText
+                  });
+                }
+              }
+            });
+          }
+        } catch (err) {
+          console.log('Search fallback fetch error.');
+        }
+      }
 
       if (matches.length === 0) {
-        resultsDiv.innerHTML = `<p>No local matches found for "<strong>${sanitizeText(query)}</strong>". Try checking books stored in your repo folder.</p>`;
+        resultsDiv.innerHTML = `<p>No matches found for "<strong>${sanitizeText(query)}</strong>" in the active passage or chapter.</p>`;
       } else {
         let html = `<strong>Found ${matches.length} match(es):</strong><ul style="padding-left: 1.2rem; margin-top: 0.5rem; margin-bottom: 0;">`;
         matches.slice(0, 15).forEach(m => {
@@ -725,7 +742,7 @@
 
     document.getElementById('btn-search').addEventListener('click', executeSearch);
 
-    // Context-Isolated Enter Key Handlers
+    // Isolated Enter Key Handlers
     document.getElementById('search-input').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -810,16 +827,17 @@
       chapterInput.value = chapter;
 
       passageContent.innerHTML = "<p><em>Loading text...</em></p>";
+      currentChapterVerses = [];
 
       try {
         let chapterContent = null;
         let bookName = bookId;
 
-        if (localNtData && localNtData[bookId] && localNtData[bookId][chapter]) {
+        if (localNtData && localNtData[bookId] && localNtData[bookId][chapter] && localNtData[bookId][chapter].content) {
           chapterContent = localNtData[bookId][chapter].content;
           bookName = localNtData[bookId].name || bookId;
         } 
-        else if (localOtData && localOtData[bookId] && localOtData[bookId][chapter]) {
+        else if (localOtData && localOtData[bookId] && localOtData[bookId][chapter] && localOtData[bookId][chapter].content) {
           chapterContent = localOtData[bookId][chapter].content;
           bookName = localOtData[bookId].name || bookId;
         } 
@@ -843,6 +861,7 @@
             const verseText = extractText(item.content);
             passageHtml += `<span class="verse-num" aria-hidden="true">${item.number}</span>${verseText} `;
             currentRawText += `${item.number}. ${verseText}\n`;
+            currentChapterVerses.push({ number: item.number, text: verseText });
           } else if (item.type === 'line_break') {
             passageHtml += `<br>`;
           }
