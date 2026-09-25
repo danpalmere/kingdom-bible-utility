@@ -191,16 +191,16 @@
     <section id="reader-view" aria-labelledby="reader-heading">
       <h1 id="reader-heading" class="sr-only">Abide Bible Reader</h1>
 
-      <!-- Local Search Bar -->
-      <div class="search-bar" role="search">
+      <!-- Isolated Search Form Context -->
+      <form id="search-form" class="search-bar" role="search" onsubmit="return false;">
         <input type="text" id="search-input" placeholder="Search keywords in local Bible..." style="flex-grow: 1;">
-        <button id="btn-search" class="highlight">Search</button>
-      </div>
+        <button type="button" id="btn-search" class="highlight">Search</button>
+      </form>
       <div id="search-results" hidden class="card" style="font-family: system-ui, sans-serif; font-size: 0.95rem;"></div>
 
-      <!-- Passage Navigation Controls -->
-      <div class="controls" aria-label="Passage Navigation">
-        <button id="btn-prev-chap" aria-label="Previous Chapter">← Prev</button>
+      <!-- Isolated Navigation Form Context -->
+      <form id="nav-form" class="controls" aria-label="Passage Navigation" onsubmit="return false;">
+        <button type="button" id="btn-prev-chap" aria-label="Previous Chapter">← Prev</button>
 
         <label for="book-select" class="sr-only">Book</label>
         <select id="book-select">
@@ -277,11 +277,11 @@
         <label for="chapter-input" class="sr-only">Chapter</label>
         <input type="number" id="chapter-input" value="15" min="1" max="150" style="width: 65px;" aria-label="Chapter Number">
         
-        <button id="btn-next-chap" aria-label="Next Chapter">Next →</button>
-        <button id="btn-load" class="highlight">Go</button>
-        <button id="btn-bookmark">🔖 Bookmark</button>
-        <button id="btn-export-open" style="margin-left: auto;">🖨️ Export</button>
-      </div>
+        <button type="button" id="btn-next-chap" aria-label="Next Chapter">Next →</button>
+        <button type="button" id="btn-load" class="highlight">Go</button>
+        <button type="button" id="btn-bookmark">🔖 Bookmark</button>
+        <button type="button" id="btn-export-open" style="margin-left: auto;">🖨️ Export</button>
+      </form>
 
       <!-- Bookmarks List -->
       <div id="bookmarks-container" class="bookmarks-bar" aria-label="Saved Bookmarks"></div>
@@ -415,8 +415,8 @@
           </label>
           <div style="display: flex; gap: 0.3rem;">
             <input type="password" id="notes-pin" placeholder="PIN/Passcode" style="width: 110px; min-height: 36px; padding: 0.2rem 0.5rem; font-size: 0.85rem;">
-            <button id="btn-lock-notes" style="min-height: 36px; padding: 0.2rem 0.6rem; font-size: 0.85rem;">Lock</button>
-            <button id="btn-unlock-notes" class="highlight" style="min-height: 36px; padding: 0.2rem 0.6rem; font-size: 0.85rem;">Unlock</button>
+            <button type="button" id="btn-lock-notes" style="min-height: 36px; padding: 0.2rem 0.6rem; font-size: 0.85rem;">Lock</button>
+            <button type="button" id="btn-unlock-notes" class="highlight" style="min-height: 36px; padding: 0.2rem 0.6rem; font-size: 0.85rem;">Unlock</button>
           </div>
         </div>
         <textarea id="session-notes" placeholder="Enter PIN above and click Unlock to decrypt or start private notes..." style="width: 100%; height: 120px; box-sizing: border-box;"></textarea>
@@ -623,6 +623,7 @@
 
       bookmarks.forEach((bm, index) => {
         const btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = 'bookmark-pill';
         btn.innerHTML = `${bm.title} <span onclick="removeBookmark(event, ${index})">×</span>`;
         btn.onclick = () => fetchPassage(bm.bookId, bm.chapter);
@@ -650,44 +651,52 @@
       }
     });
 
-    // Helper: Universal Deep Text Extractor
-    function extractTextDeep(obj) {
-      if (typeof obj === 'string') return obj;
-      if (Array.isArray(obj)) return obj.map(extractTextDeep).join(' ');
-      if (typeof obj === 'object' && obj !== null) {
-        let textParts = [];
-        if (obj.text) textParts.push(extractTextDeep(obj.text));
-        if (obj.content) textParts.push(extractTextDeep(obj.content));
-        return textParts.join(' ');
-      }
-      return '';
+    // Extract text from array/strings
+    function extractText(contentArray) {
+      if (!Array.isArray(contentArray)) return '';
+      return contentArray.map(item => {
+        if (typeof item === 'string') return sanitizeText(item);
+        else if (typeof item === 'object' && item !== null) {
+          if (item.text) return sanitizeText(item.text);
+          if (item.content) return extractText(item.content);
+        }
+        return '';
+      }).join(' ');
     }
 
-    // Fixed Search Function (Supports Direct & Nested Object Structures)
+    // Universal Search Engine (Corrected Object Path Traversal)
     function executeSearch() {
       const query = document.getElementById('search-input').value.trim().toLowerCase();
       const resultsDiv = document.getElementById('search-results');
       if (!query) return;
 
       resultsDiv.hidden = false;
-      resultsDiv.innerHTML = '<p><em>Searching local dataset...</em></p>';
+      resultsDiv.innerHTML = '<p><em>Searching local BSB text...</em></p>';
 
       let matches = [];
-      const searchDataset = (dataset) => {
-        if (!dataset) return;
-        for (const [bookId, chapters] of Object.entries(dataset)) {
-          for (const [chapNum, chapData] of Object.entries(chapters)) {
-            if (chapData && chapData.content && Array.isArray(chapData.content)) {
-              chapData.content.forEach(item => {
+
+      const searchInObject = (data) => {
+        if (!data || typeof data !== 'object') return;
+        
+        for (const [bookKey, bookVal] of Object.entries(data)) {
+          if (typeof bookVal !== 'object' || !bookVal) continue;
+          
+          const bookName = bookVal.name || bookKey;
+          
+          for (const [chapKey, chapVal] of Object.entries(bookVal)) {
+            if (chapKey === 'name' || !chapVal || !chapVal.content) continue;
+            
+            if (Array.isArray(chapVal.content)) {
+              chapVal.content.forEach(item => {
                 if (item.type === 'verse') {
-                  const text = extractTextDeep(item.content);
-                  if (text.toLowerCase().includes(query)) {
+                  const verseText = extractText(item.content);
+                  if (verseText.toLowerCase().includes(query)) {
                     matches.push({
-                      bookId,
-                      bookName: chapData.name || bookId,
-                      chapter: chapNum,
+                      bookId: bookKey,
+                      bookName: bookName,
+                      chapter: chapKey,
                       verse: item.number,
-                      text
+                      text: verseText
                     });
                   }
                 }
@@ -697,13 +706,13 @@
         }
       };
 
-      searchDataset(localNtData);
-      searchDataset(localOtData);
+      searchInObject(localNtData);
+      searchInObject(localOtData);
 
       if (matches.length === 0) {
-        resultsDiv.innerHTML = `<p>No local matches found for "<strong>${sanitizeText(query)}</strong>". Try checking passages loaded in local storage.</p>`;
+        resultsDiv.innerHTML = `<p>No local matches found for "<strong>${sanitizeText(query)}</strong>". Try checking books stored in your repo folder.</p>`;
       } else {
-        let html = `<strong>Found ${matches.length} match(es):</strong><ul style="padding-left: 1.2rem; margin-top: 0.5rem;">`;
+        let html = `<strong>Found ${matches.length} match(es):</strong><ul style="padding-left: 1.2rem; margin-top: 0.5rem; margin-bottom: 0;">`;
         matches.slice(0, 15).forEach(m => {
           html += `<li style="margin-bottom: 0.5rem;">
             <span class="ref-link" onclick="jumpToPassage('${m.bookId}', ${m.chapter})">${m.bookName} ${m.chapter}:${m.verse}</span> — ${sanitizeText(m.text)}
@@ -716,10 +725,11 @@
 
     document.getElementById('btn-search').addEventListener('click', executeSearch);
 
-    // Enter Key Listeners for Quick Submission
+    // Context-Isolated Enter Key Handlers
     document.getElementById('search-input').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
+        e.stopPropagation();
         executeSearch();
       }
     });
@@ -727,6 +737,7 @@
     document.getElementById('chapter-input').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
+        e.stopPropagation();
         document.getElementById('btn-load').click();
       }
     });
@@ -772,18 +783,6 @@
         alert('Incorrect PIN/Passcode or corrupt payload.');
       }
     });
-
-    function extractText(contentArray) {
-      if (!Array.isArray(contentArray)) return '';
-      return contentArray.map(item => {
-        if (typeof item === 'string') return sanitizeText(item);
-        else if (typeof item === 'object' && item !== null) {
-          if (item.text) return sanitizeText(item.text);
-          if (item.content) return extractText(item.content);
-        }
-        return '';
-      }).join(' ');
-    }
 
     let localNtData = null;
     let localOtData = null;
