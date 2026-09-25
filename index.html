@@ -154,7 +154,6 @@
       border: 0;
     }
 
-    /* Organized Search UI Accordions */
     details.search-group {
       border: 1px solid var(--border);
       border-radius: 6px;
@@ -687,7 +686,7 @@
 
     let currentChapterVerses = [];
 
-    // Full Bible Accordion-Organized Search Engine
+    // Rapid Memory-First Search Engine
     async function executeSearch() {
       const rawQuery = document.getElementById('search-input').value.trim();
       const resultsDiv = document.getElementById('search-results');
@@ -700,45 +699,66 @@
 
       let matches = [];
 
-      // Scan all 66 books across Old & New Testaments
-      for (const book of BIBLE_BOOKS) {
-        // Sample major chapters per book for high-speed response
-        const chapLimit = Math.min(book.chapters, 15);
-        for (let c = 1; c <= chapLimit; c++) {
-          try {
-            let chapterContent = null;
-            
-            if (localNtData && localNtData[book.id] && localNtData[book.id][c]) {
-              chapterContent = localNtData[book.id][c].content;
-            } else if (localOtData && localOtData[book.id] && localOtData[book.id][c]) {
-              chapterContent = localOtData[book.id][c].content;
-            } else {
-              const res = await fetch(`https://bible.helloao.org/api/BSB/${book.id}/${c}.json`);
-              if (res.ok) {
-                const data = await res.json();
-                chapterContent = data.chapter.content;
-              }
-            }
+      const searchDataset = (dataset) => {
+        if (!dataset) return;
+        for (const [bookId, chapters] of Object.entries(dataset)) {
+          const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
+          if (!bookObj) continue;
 
-            if (chapterContent && Array.isArray(chapterContent)) {
-              chapterContent.forEach(item => {
+          for (const [chapNum, chapData] of Object.entries(chapters)) {
+            if (chapData && chapData.content && Array.isArray(chapData.content)) {
+              chapData.content.forEach(item => {
                 if (item.type === 'verse') {
-                  const verseText = extractText(item.content);
-                  if (verseText.toLowerCase().includes(cleanQuery)) {
+                  const text = extractText(item.content);
+                  if (text.toLowerCase().includes(cleanQuery)) {
                     matches.push({
-                      bookId: book.id,
-                      bookName: book.name,
-                      testament: book.testament,
-                      chapter: c,
+                      bookId,
+                      bookName: bookObj.name,
+                      testament: bookObj.testament,
+                      chapter: chapNum,
                       verse: item.number,
-                      text: verseText
+                      text
                     });
                   }
                 }
               });
             }
-          } catch (e) {
-            // Skip unavailable chapters gracefully
+          }
+        }
+      };
+
+      // Search memory-loaded OT & NT JSON datasets directly
+      searchDataset(localOtData);
+      searchDataset(localNtData);
+
+      // On-demand fetch fallback if local data files are pending
+      if (matches.length === 0) {
+        for (const book of BIBLE_BOOKS) {
+          const chapLimit = Math.min(book.chapters, 10);
+          for (let c = 1; c <= chapLimit; c++) {
+            try {
+              const res = await fetch(`https://bible.helloao.org/api/BSB/${book.id}/${c}.json`);
+              if (res.ok) {
+                const data = await res.json();
+                if (data.chapter && Array.isArray(data.chapter.content)) {
+                  data.chapter.content.forEach(item => {
+                    if (item.type === 'verse') {
+                      const verseText = extractText(item.content);
+                      if (verseText.toLowerCase().includes(cleanQuery)) {
+                        matches.push({
+                          bookId: book.id,
+                          bookName: book.name,
+                          testament: book.testament,
+                          chapter: c,
+                          verse: item.number,
+                          text: verseText
+                        });
+                      }
+                    }
+                  });
+                }
+              }
+            } catch (e) {}
           }
         }
       }
@@ -751,18 +771,18 @@
 
         let html = `<strong>Total Hits: ${matches.length}</strong>`;
 
-        // Render Old Testament Group
         if (otMatches.length > 0) {
+          const matchText = otMatches.length === 1 ? '1 match' : `${otMatches.length} matches`;
           html += `<details class="search-group" open>
-            <summary>📜 Old Testament (${otMatches.length} matches)</summary>
+            <summary>📜 Old Testament (${matchText})</summary>
             ${renderGroupedMatches(otMatches)}
           </details>`;
         }
 
-        // Render New Testament Group
         if (ntMatches.length > 0) {
+          const matchText = ntMatches.length === 1 ? '1 match' : `${ntMatches.length} matches`;
           html += `<details class="search-group" open>
-            <summary>✝️ New Testament (${ntMatches.length} matches)</summary>
+            <summary>✝️ New Testament (${matchText})</summary>
             ${renderGroupedMatches(ntMatches)}
           </details>`;
         }
@@ -771,7 +791,7 @@
       }
     }
 
-    // Helper: Group matches by Book Name and apply clean truncation
+    // Helper: Render grouped book matches with singular/plural accuracy
     function renderGroupedMatches(matchList) {
       const groupedByBook = {};
       matchList.forEach(m => {
