@@ -191,14 +191,14 @@
     <section id="reader-view" aria-labelledby="reader-heading">
       <h1 id="reader-heading" class="sr-only">Abide Bible Reader</h1>
 
-      <!-- Search Form Context -->
+      <!-- Full Bible Search Form -->
       <form id="search-form" class="search-bar" role="search" onsubmit="return false;">
-        <input type="text" id="search-input" placeholder="Search keywords in current passage or Bible..." style="flex-grow: 1;">
+        <input type="text" id="search-input" placeholder="Search keywords across full Bible..." style="flex-grow: 1;">
         <button type="button" id="btn-search" class="highlight">Search</button>
       </form>
       <div id="search-results" hidden class="card" style="font-family: system-ui, sans-serif; font-size: 0.95rem;"></div>
 
-      <!-- Navigation Form Context -->
+      <!-- Passage Navigation Controls -->
       <form id="nav-form" class="controls" aria-label="Passage Navigation" onsubmit="return false;">
         <button type="button" id="btn-prev-chap" aria-label="Previous Chapter">← Prev</button>
 
@@ -665,78 +665,68 @@
 
     let currentChapterVerses = [];
 
-    // Dual-Mode Search Engine (Scans Active Passage + CDN Fallback)
+    // Full Bible Search Engine (Queries helloao BSB API across all 66 books)
     async function executeSearch() {
-      const query = document.getElementById('search-input').value.trim().toLowerCase();
+      const query = document.getElementById('search-input').value.trim();
       const resultsDiv = document.getElementById('search-results');
       if (!query) return;
 
       resultsDiv.hidden = false;
-      resultsDiv.innerHTML = '<p><em>Searching passage & BSB text...</em></p>';
+      resultsDiv.innerHTML = '<p><em>Searching full Bible text...</em></p>';
 
-      let matches = [];
+      try {
+        const res = await fetch(`https://bible.helloao.org/api/BSB/search.json?q=${encodeURIComponent(query)}`);
+        
+        if (!res.ok) throw new Error('Search endpoint unreachable.');
 
-      // 1. Search Active Passage Text
-      if (currentChapterVerses.length > 0) {
-        const bookId = document.getElementById('book-select').value;
-        const chapNum = document.getElementById('chapter-input').value;
-        const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
-        const bookName = bookObj ? bookObj.name : bookId;
+        const data = await res.json();
+        const matches = data.results || [];
 
-        currentChapterVerses.forEach(v => {
-          if (v.text.toLowerCase().includes(query)) {
-            matches.push({
-              bookId,
-              bookName,
-              chapter: chapNum,
-              verse: v.number,
-              text: v.text
-            });
-          }
-        });
-      }
+        if (matches.length === 0) {
+          resultsDiv.innerHTML = `<p>No matches found across the Bible for "<strong>${sanitizeText(query)}</strong>".</p>`;
+        } else {
+          let html = `<strong>Found ${matches.length} match(es) across Scripture:</strong><ul style="padding-left: 1.2rem; margin-top: 0.5rem; margin-bottom: 0;">`;
+          matches.slice(0, 20).forEach(m => {
+            const bookId = m.bookId || m.book;
+            const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
+            const bookName = bookObj ? bookObj.name : bookId;
+            const verseText = m.text || m.content || '';
 
-      // 2. Fetch Active Book On-Demand for Cross-Chapter Search
-      if (matches.length === 0) {
-        try {
-          const activeBook = document.getElementById('book-select').value;
-          const bookObj = BIBLE_BOOKS.find(b => b.id === activeBook);
-          const activeChap = document.getElementById('chapter-input').value;
-
-          const res = await fetch(`https://bible.helloao.org/api/BSB/${activeBook}/${activeChap}.json`);
-          if (res.ok) {
-            const data = await res.json();
-            data.chapter.content.forEach(item => {
-              if (item.type === 'verse') {
-                const verseText = extractText(item.content);
-                if (verseText.toLowerCase().includes(query)) {
-                  matches.push({
-                    bookId: activeBook,
-                    bookName: data.book.name,
-                    chapter: activeChap,
-                    verse: item.number,
-                    text: verseText
-                  });
-                }
-              }
-            });
-          }
-        } catch (err) {
-          console.log('Search fallback fetch error.');
+            html += `<li style="margin-bottom: 0.5rem;">
+              <span class="ref-link" onclick="jumpToPassage('${bookId}', ${m.chapter})">${bookName} ${m.chapter}:${m.verse}</span> — ${sanitizeText(verseText)}
+            </li>`;
+          });
+          html += '</ul>';
+          resultsDiv.innerHTML = html;
         }
-      }
+      } catch (err) {
+        // Local active chapter fallback if offline
+        let localMatches = [];
+        if (currentChapterVerses.length > 0) {
+          const bookId = document.getElementById('book-select').value;
+          const chapNum = document.getElementById('chapter-input').value;
+          const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
+          const bookName = bookObj ? bookObj.name : bookId;
 
-      if (matches.length === 0) {
-        resultsDiv.innerHTML = `<p>No matches found for "<strong>${sanitizeText(query)}</strong>" in the active passage or chapter.</p>`;
-      } else {
-        let html = `<strong>Found ${matches.length} match(es):</strong><ul style="padding-left: 1.2rem; margin-top: 0.5rem; margin-bottom: 0;">`;
-        matches.slice(0, 15).forEach(m => {
-          html += `<li style="margin-bottom: 0.5rem;">
-            <span class="ref-link" onclick="jumpToPassage('${m.bookId}', ${m.chapter})">${m.bookName} ${m.chapter}:${m.verse}</span> — ${sanitizeText(m.text)}
-          </li>`;
-        });
-        html += '</ul>';
-        resultsDiv.innerHTML = html;
+          currentChapterVerses.forEach(v => {
+            if (v.text.toLowerCase().includes(query.toLowerCase())) {
+              localMatches.push({ bookId, bookName, chapter: chapNum, verse: v.number, text: v.text });
+            }
+          });
+        }
+
+        if (localMatches.length > 0) {
+          let html = `<strong>Found ${localMatches.length} match(es) in current chapter (Offline Mode):</strong><ul style="padding-left: 1.2rem; margin-top: 0.5rem; margin-bottom: 0;">`;
+          localMatches.forEach(m => {
+            html += `<li style="margin-bottom: 0.5rem;">
+              <span class="ref-link" onclick="jumpToPassage('${m.bookId}', ${m.chapter})">${m.bookName} ${m.chapter}:${m.verse}</span> — ${sanitizeText(m.text)}
+            </li>`;
+          });
+          html += '</ul>';
+          resultsDiv.innerHTML = html;
+        } else {
+          resultsDiv.innerHTML = `<p>Offline mode active. Connect online for full Bible search, or view loaded local chapters.</p>`;
+        }
       }
     }
 
