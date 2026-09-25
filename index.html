@@ -11,15 +11,18 @@
       --bg: #fcfcfc;
       --text: #1a1a1a;
       --accent: #2b5797;
-      --border: #ddd;
+      --border: #444;
+      --focus-ring: #005a9c;
       --max-width: 680px;
+      --reader-font-size: 1.25rem;
     }
     @media (prefers-color-scheme: dark) {
       :root {
         --bg: #121212;
-        --text: #e0e0e0;
+        --text: #f0f0f0;
         --accent: #64b5f6;
-        --border: #333;
+        --border: #666;
+        --focus-ring: #82b1ff;
       }
     }
     body {
@@ -27,10 +30,16 @@
       color: var(--text);
       font-family: Georgia, serif;
       line-height: 1.85;
-      font-size: 1.25rem;
       margin: 0;
       padding: 2rem 1rem;
     }
+    
+    /* Accessibility: Visible Focus Indicators */
+    *:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 3px;
+    }
+
     header, main, section, footer, dialog {
       max-width: var(--max-width);
       margin: 0 auto 2rem auto;
@@ -39,16 +48,30 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 2px solid var(--border);
       padding-bottom: 1rem;
       font-family: system-ui, -apple-system, sans-serif;
     }
-    .controls {
+    .controls, .reader-toolbar {
       display: flex;
       gap: 0.5rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       font-family: system-ui, -apple-system, sans-serif;
       flex-wrap: wrap;
+      align-items: center;
+    }
+    .reader-toolbar {
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(0,0,0,0.02);
+    }
+    label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
     }
     select, button, input {
       background: var(--bg);
@@ -58,6 +81,7 @@
       font-size: 1rem;
       cursor: pointer;
       border-radius: 4px;
+      min-height: 44px; /* WCAG Touch Target Standard */
     }
     button.highlight {
       background: var(--text);
@@ -71,8 +95,8 @@
       font-family: system-ui, -apple-system, sans-serif;
     }
     .topic-btn {
-      font-size: 0.9rem;
-      padding: 0.4rem 0.7rem;
+      font-size: 0.95rem;
+      padding: 0.4rem 0.8rem;
     }
     .large-type {
       font-size: 1.5rem;
@@ -84,28 +108,49 @@
       margin-bottom: 1.25rem;
       border-radius: 6px;
     }
+    
+    /* Dynamic Reader Customizations */
+    #passage-content {
+      font-size: var(--reader-font-size);
+    }
     .verse-num {
-      font-size: 0.8rem;
+      font-size: 0.8em;
       vertical-align: super;
       color: var(--accent);
       margin-right: 0.2rem;
       font-family: system-ui, -apple-system, sans-serif;
+      font-weight: bold;
     }
+    
+    /* Accessibility Utility Classes */
+    .hide-headings h4 { display: none !important; }
+    .hide-verses .verse-num { display: none !important; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      border: 0;
+    }
+
     dialog {
       background: var(--bg);
       color: var(--text);
-      border: 1px solid var(--text);
+      border: 2px solid var(--text);
       border-radius: 8px;
       padding: 1.5rem;
       width: 90%;
     }
     dialog::backdrop {
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.7);
     }
     [hidden] { display: none !important; }
 
     @media print {
-      nav, .controls, .topic-pills, button, footer { display: none !important; }
+      nav, .controls, .reader-toolbar, .topic-pills, button, footer { display: none !important; }
       body { background: white; color: black; font-size: 12pt; padding: 0; }
       main, section { max-width: 100%; margin: 0; }
     }
@@ -113,183 +158,215 @@
 </head>
 <body>
 
-  <header>
-    <nav>
+  <!-- Accessible Skip Link for Keyboard Users -->
+  <a href="#main-content" class="sr-only" style="position: absolute; top: 0; left: 0; padding: 1rem; background: var(--text); color: var(--bg); z-index: 1000;" onfocus="this.classList.remove('sr-only')" onblur="this.classList.add('sr-only')">Skip to main content</a>
+
+  <header role="banner">
+    <nav aria-label="Main Navigation">
       <strong>Kingdom Utility</strong>
       <div>
-        <button id="btn-reader" class="highlight">Abide Reader</button>
-        <button id="btn-ministry">Prayer Mode</button>
+        <button id="btn-reader" class="highlight" aria-pressed="true">Abide Reader</button>
+        <button id="btn-ministry" aria-pressed="false">Prayer Mode</button>
       </div>
     </nav>
   </header>
 
   <!-- View 1: Reader View -->
-  <main id="reader-view">
-    <div class="controls">
-      <select id="book-select">
-        <!-- Old Testament -->
-        <option value="GEN">Genesis</option>
-        <option value="EXO">Exodus</option>
-        <option value="LEV">Leviticus</option>
-        <option value="NUM">Numbers</option>
-        <option value="DEU">Deuteronomy</option>
-        <option value="JOS">Joshua</option>
-        <option value="JDG">Judges</option>
-        <option value="RUT">Ruth</option>
-        <option value="1SA">1 Samuel</option>
-        <option value="2SA">2 Samuel</option>
-        <option value="1KI">1 Kings</option>
-        <option value="2KI">2 Kings</option>
-        <option value="1CH">1 Chronicles</option>
-        <option value="2CH">2 Chronicles</option>
-        <option value="EZR">Ezra</option>
-        <option value="NEH">Nehemiah</option>
-        <option value="EST">Esther</option>
-        <option value="JOB">Job</option>
-        <option value="PSA">Psalms</option>
-        <option value="PRO">Proverbs</option>
-        <option value="ECC">Ecclesiastes</option>
-        <option value="SNG">Song of Solomon</option>
-        <option value="ISA">Isaiah</option>
-        <option value="JER">Jeremiah</option>
-        <option value="LAM">Lamentations</option>
-        <option value="EZK">Ezekiel</option>
-        <option value="DAN">Daniel</option>
-        <option value="HOS">Hosea</option>
-        <option value="JOL">Joel</option>
-        <option value="AMO">Amos</option>
-        <option value="OBA">Obadiah</option>
-        <option value="JNH">Jonah</option>
-        <option value="MIC">Micah</option>
-        <option value="NAM">Nahum</option>
-        <option value="HAB">Habakkuk</option>
-        <option value="ZEP">Zephaniah</option>
-        <option value="HAG">Haggai</option>
-        <option value="ZEC">Zechariah</option>
-        <option value="MAL">Malachi</option>
-        <!-- New Testament -->
-        <option value="MAT">Matthew</option>
-        <option value="MRK">Mark</option>
-        <option value="LUK">Luke</option>
-        <option value="JHN" selected>John</option>
-        <option value="ACT">Acts</option>
-        <option value="ROM">Romans</option>
-        <option value="1CO">1 Corinthians</option>
-        <option value="2CO">2 Corinthians</option>
-        <option value="GAL">Galatians</option>
-        <option value="EPH">Ephesians</option>
-        <option value="PHP">Philippians</option>
-        <option value="COL">Colossians</option>
-        <option value="1TH">1 Thessalonians</option>
-        <option value="2TH">2 Thessalonians</option>
-        <option value="1TI">1 Timothy</option>
-        <option value="2TI">2 Timothy</option>
-        <option value="TIT">Titus</option>
-        <option value="PHM">Philemon</option>
-        <option value="HEB">Hebrews</option>
-        <option value="JAS">James</option>
-        <option value="1PE">1 Peter</option>
-        <option value="2PE">2 Peter</option>
-        <option value="1JN">1 John</option>
-        <option value="2JN">2 John</option>
-        <option value="3JN">3 John</option>
-        <option value="JUD">Jude</option>
-        <option value="REV">Revelation</option>
-      </select>
-      
-      <input type="number" id="chapter-input" value="15" min="1" max="150" style="width: 70px;">
-      
-      <button id="btn-load">Load Passage</button>
-      <button id="btn-export-open" style="margin-left: auto;">🖨️ Export / Print</button>
-    </div>
+  <main id="main-content" tabIndex="-1">
+    <section id="reader-view" aria-labelledby="reader-heading">
+      <h1 id="reader-heading" class="sr-only">Abide Bible Reader</h1>
 
-    <h2 id="passage-title">John 15</h2>
-    <article id="passage-content">
-      <p><em>Loading passage...</em></p>
-    </article>
+      <!-- Passage Selection Controls -->
+      <div class="controls" role="search" aria-label="Passage Selector">
+        <label for="book-select">Book</label>
+        <select id="book-select">
+          <!-- Old Testament -->
+          <option value="GEN">Genesis</option>
+          <option value="EXO">Exodus</option>
+          <option value="LEV">Leviticus</option>
+          <option value="NUM">Numbers</option>
+          <option value="DEU">Deuteronomy</option>
+          <option value="JOS">Joshua</option>
+          <option value="JDG">Judges</option>
+          <option value="RUT">Ruth</option>
+          <option value="1SA">1 Samuel</option>
+          <option value="2SA">2 Samuel</option>
+          <option value="1KI">1 Kings</option>
+          <option value="2KI">2 Kings</option>
+          <option value="1CH">1 Chronicles</option>
+          <option value="2CH">2 Chronicles</option>
+          <option value="EZR">Ezra</option>
+          <option value="NEH">Nehemiah</option>
+          <option value="EST">Esther</option>
+          <option value="JOB">Job</option>
+          <option value="PSA">Psalms</option>
+          <option value="PRO">Proverbs</option>
+          <option value="ECC">Ecclesiastes</option>
+          <option value="SNG">Song of Solomon</option>
+          <option value="ISA">Isaiah</option>
+          <option value="JER">Jeremiah</option>
+          <option value="LAM">Lamentations</option>
+          <option value="EZK">Ezekiel</option>
+          <option value="DAN">Daniel</option>
+          <option value="HOS">Hosea</option>
+          <option value="JOL">Joel</option>
+          <option value="AMO">Amos</option>
+          <option value="OBA">Obadiah</option>
+          <option value="JNH">Jonah</option>
+          <option value="MIC">Micah</option>
+          <option value="NAM">Nahum</option>
+          <option value="HAB">Habakkuk</option>
+          <option value="ZEP">Zephaniah</option>
+          <option value="HAG">Haggai</option>
+          <option value="ZEC">Zechariah</option>
+          <option value="MAL">Malachi</option>
+          <!-- New Testament -->
+          <option value="MAT">Matthew</option>
+          <option value="MRK">Mark</option>
+          <option value="LUK">Luke</option>
+          <option value="JHN" selected>John</option>
+          <option value="ACT">Acts</option>
+          <option value="ROM">Romans</option>
+          <option value="1CO">1 Corinthians</option>
+          <option value="2CO">2 Corinthians</option>
+          <option value="GAL">Galatians</option>
+          <option value="EPH">Ephesians</option>
+          <option value="PHP">Philippians</option>
+          <option value="COL">Colossians</option>
+          <option value="1TH">1 Thessalonians</option>
+          <option value="2TH">2 Thessalonians</option>
+          <option value="1TI">1 Timothy</option>
+          <option value="2TI">2 Timothy</option>
+          <option value="TIT">Titus</option>
+          <option value="PHM">Philemon</option>
+          <option value="HEB">Hebrews</option>
+          <option value="JAS">James</option>
+          <option value="1PE">1 Peter</option>
+          <option value="2PE">2 Peter</option>
+          <option value="1JN">1 John</option>
+          <option value="2JN">2 John</option>
+          <option value="3JN">3 John</option>
+          <option value="JUD">Jude</option>
+          <option value="REV">Revelation</option>
+        </select>
+        
+        <label for="chapter-input">Chapter</label>
+        <input type="number" id="chapter-input" value="15" min="1" max="150" style="width: 70px;">
+        
+        <button id="btn-load">Load Passage</button>
+        <button id="btn-export-open" style="margin-left: auto;">🖨️ Export / Print</button>
+      </div>
+
+      <!-- Customization Toolbar -->
+      <div class="reader-toolbar" role="region" aria-label="Reader View Options">
+        <span style="font-weight: bold; font-size: 0.9rem;">View Settings:</span>
+        
+        <label style="margin-left: 0.5rem;">
+          <input type="checkbox" id="toggle-headings" checked> Headings
+        </label>
+        
+        <label style="margin-left: 0.5rem;">
+          <input type="checkbox" id="toggle-verses" checked> Verses
+        </label>
+
+        <div style="margin-left: auto; display: flex; gap: 0.3rem; align-items: center;">
+          <span style="font-size: 0.9rem; font-weight: bold;">Text Size:</span>
+          <button id="btn-font-smaller" aria-label="Decrease text size" style="padding: 0.2rem 0.6rem;">A-</button>
+          <button id="btn-font-larger" aria-label="Increase text size" style="padding: 0.2rem 0.6rem;">A+</button>
+        </div>
+      </div>
+
+      <h2 id="passage-title">John 15</h2>
+      
+      <!-- Live Region for Screen Readers -->
+      <article id="passage-content" aria-live="polite">
+        <p><em>Loading passage...</em></p>
+      </article>
+    </section>
+
+    <!-- View 2: Ministry & Prayer Mode -->
+    <section id="ministry-view" hidden class="large-type" aria-labelledby="ministry-heading">
+      <h2 id="ministry-heading">Prayer & Ministry Guide</h2>
+      
+      <div class="topic-pills" role="tablist" aria-label="Ministry Topics">
+        <button class="topic-btn highlight" role="tab" aria-selected="true" onclick="showTopic('identity', this)">Identity in Christ</button>
+        <button class="topic-btn" role="tab" aria-selected="false" onclick="showTopic('healing', this)">Healing & Comfort</button>
+        <button class="topic-btn" role="tab" aria-selected="false" onclick="showTopic('peace', this)">Peace & Rest</button>
+        <button class="topic-btn" role="tab" aria-selected="false" onclick="showTopic('encouragement', this)">Encouragement</button>
+        <button class="topic-btn" role="tab" aria-selected="false" onclick="showTopic('wimber', this)" style="border-style: dashed;">Wimber 5-Step Model</button>
+      </div>
+
+      <div id="topic-identity" class="topic-content" role="tabpanel">
+        <div class="card">
+          <strong>2 Corinthians 5:17, 21</strong>
+          <p>“Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come... God made Him who knew no sin to be sin for us, so that in Him we might become the righteousness of God.”</p>
+        </div>
+        <div class="card">
+          <strong>Galatians 2:20</strong>
+          <p>“I have been crucified with Christ, and I no longer live, but Christ lives in me. The life I now live in the body, I live by faith in the Son of God, who loved me and gave Himself up for me.”</p>
+        </div>
+      </div>
+
+      <div id="topic-healing" class="topic-content" role="tabpanel" hidden>
+        <div class="card">
+          <strong>Psalm 107:20</strong>
+          <p>“He sent His word and healed them, and delivered them from their destructions.”</p>
+        </div>
+        <div class="card">
+          <strong>Isaiah 53:4–5</strong>
+          <p>“Surely He took up our infirmities and carried our sorrows... and by His wounds we are healed.”</p>
+        </div>
+      </div>
+
+      <div id="topic-peace" class="topic-content" role="tabpanel" hidden>
+        <div class="card">
+          <strong>Philippians 4:6–7</strong>
+          <p>“Be anxious for nothing, but in everything, by prayer and petition, with thanksgiving, present your requests to God. And the peace of God, which surpasses all understanding, will guard your hearts and minds in Christ Jesus.”</p>
+        </div>
+      </div>
+
+      <div id="topic-encouragement" class="topic-content" role="tabpanel" hidden>
+        <div class="card">
+          <strong>1 Corinthians 14:3 (Scripture Guardrail)</strong>
+          <p>“On the other hand, the one who prophesies speaks to people for their strengthening, encouraging and comfort.”</p>
+          <p style="font-size: 1rem; font-style: italic;">Speak plainly and humbly: "I was reading this passage and felt encouraged to share it with you."</p>
+        </div>
+        <div class="card">
+          <strong>Zephaniah 3:17</strong>
+          <p>“The LORD your God is in your midst, a Mighty One who will save. He will quiet you with His love; He will rejoice over you with singing.”</p>
+        </div>
+      </div>
+
+      <div id="topic-wimber" class="topic-content" role="tabpanel" hidden>
+        <div class="card">
+          <strong>Step 1: The Interview</strong>
+          <p style="font-size: 1.1rem;">"Where does it hurt?" or "What would you like prayer for?" Ask simple, natural questions. Listen to the Spirit as they speak.</p>
+        </div>
+        <div class="card">
+          <strong>Step 2: The Diagnosis</strong>
+          <p style="font-size: 1.1rem;">Is this condition natural/physical, emotional, or spiritual? Ask God for wisdom.</p>
+        </div>
+        <div class="card">
+          <strong>Step 3: Prayer Strategy</strong>
+          <p style="font-size: 1.1rem;">Determine whether to pray a blessing, ask the Father, or speak with Kingdom authority over the pain in Jesus' name.</p>
+        </div>
+        <div class="card">
+          <strong>Step 4: Command / Prayer</strong>
+          <p style="font-size: 1.1rem;">Pray with eyes open. Keep it quiet and humble. Speak directly to the condition in the authority of Christ.</p>
+        </div>
+        <div class="card">
+          <strong>Step 5: Post-Prayer Direction</strong>
+          <p style="font-size: 1.1rem;">Ask: "What are you experiencing right now?" Reassure them of God’s love and encourage them to walk in identity.</p>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- View 2: Ministry & Prayer Mode -->
-  <section id="ministry-view" hidden class="large-type">
-    <h2>Prayer & Ministry Guide</h2>
-    
-    <div class="topic-pills">
-      <button class="topic-btn highlight" onclick="showTopic('identity')">Identity in Christ</button>
-      <button class="topic-btn" onclick="showTopic('healing')">Healing & Comfort</button>
-      <button class="topic-btn" onclick="showTopic('peace')">Peace & Rest</button>
-      <button class="topic-btn" onclick="showTopic('encouragement')">Encouragement</button>
-      <button class="topic-btn" onclick="showTopic('wimber')" style="border-style: dashed;">Wimber 5-Step Model</button>
-    </div>
-
-    <div id="topic-identity" class="topic-content">
-      <div class="card">
-        <strong>2 Corinthians 5:17, 21</strong>
-        <p>“Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come... God made Him who knew no sin to be sin for us, so that in Him we might become the righteousness of God.”</p>
-      </div>
-      <div class="card">
-        <strong>Galatians 2:20</strong>
-        <p>“I have been crucified with Christ, and I no longer live, but Christ lives in me. The life I now live in the body, I live by faith in the Son of God, who loved me and gave Himself up for me.”</p>
-      </div>
-    </div>
-
-    <div id="topic-healing" class="topic-content" hidden>
-      <div class="card">
-        <strong>Psalm 107:20</strong>
-        <p>“He sent His word and healed them, and delivered them from their destructions.”</p>
-      </div>
-      <div class="card">
-        <strong>Isaiah 53:4–5</strong>
-        <p>“Surely He took up our infirmities and carried our sorrows... and by His wounds we are healed.”</p>
-      </div>
-    </div>
-
-    <div id="topic-peace" class="topic-content" hidden>
-      <div class="card">
-        <strong>Philippians 4:6–7</strong>
-        <p>“Be anxious for nothing, but in everything, by prayer and petition, with thanksgiving, present your requests to God. And the peace of God, which surpasses all understanding, will guard your hearts and minds in Christ Jesus.”</p>
-      </div>
-    </div>
-
-    <div id="topic-encouragement" class="topic-content" hidden>
-      <div class="card">
-        <strong>1 Corinthians 14:3 (Scripture Guardrail)</strong>
-        <p>“On the other hand, the one who prophesies speaks to people for their strengthening, encouraging and comfort.”</p>
-        <p style="font-size: 1rem; font-style: italic;">Speak plainly and humbly: "I was reading this passage and felt encouraged to share it with you."</p>
-      </div>
-      <div class="card">
-        <strong>Zephaniah 3:17</strong>
-        <p>“The LORD your God is in your midst, a Mighty One who will save. He will quiet you with His love; He will rejoice over you with singing.”</p>
-      </div>
-    </div>
-
-    <div id="topic-wimber" class="topic-content" hidden>
-      <div class="card">
-        <strong>Step 1: The Interview</strong>
-        <p style="font-size: 1.1rem;">"Where does it hurt?" or "What would you like prayer for?" Ask simple, natural questions. Listen to the Spirit as they speak.</p>
-      </div>
-      <div class="card">
-        <strong>Step 2: The Diagnosis</strong>
-        <p style="font-size: 1.1rem;">Is this condition natural/physical, emotional, or spiritual? Ask God for wisdom.</p>
-      </div>
-      <div class="card">
-        <strong>Step 3: Prayer Strategy</strong>
-        <p style="font-size: 1.1rem;">Determine whether to pray a blessing, ask the Father, or speak with Kingdom authority over the pain in Jesus' name.</p>
-      </div>
-      <div class="card">
-        <strong>Step 4: Command / Prayer</strong>
-        <p style="font-size: 1.1rem;">Pray with eyes open. Keep it quiet and humble. Speak directly to the condition in the authority of Christ.</p>
-      </div>
-      <div class="card">
-        <strong>Step 5: Post-Prayer Direction</strong>
-        <p style="font-size: 1.1rem;">Ask: "What are you experiencing right now?" Reassure them of God’s love and encourage them to walk in identity.</p>
-      </div>
-    </div>
-  </section>
-
   <!-- Export Modal -->
-  <dialog id="export-modal">
-    <h3 style="margin-top:0;">Export Passage for Discipleship</h3>
+  <dialog id="export-modal" aria-labelledby="modal-title">
+    <h2 id="modal-title" style="margin-top:0; font-size: 1.3rem;">Export Passage for Discipleship</h2>
     <p style="font-size: 0.95rem;">Copy clean text formatted for handouts, emails, or personal study notes.</p>
+    <label for="export-text-area" class="sr-only">Passage Text Area</label>
     <textarea id="export-text-area" style="width: 100%; height: 160px; font-family: monospace; font-size: 0.9rem; margin-bottom: 1rem;"></textarea>
     <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
       <button onclick="window.print()">🖨️ Print Page</button>
@@ -298,7 +375,7 @@
     </div>
   </dialog>
 
-  <footer>
+  <footer role="contentinfo">
     <hr>
     <p style="font-size: 0.9rem; font-family: system-ui, sans-serif; text-align: center;">
       0 Ads. 0 Trackers. 0 Subscriptions. Built for the Kingdom.<br>
@@ -316,7 +393,7 @@
       });
     }
 
-    // View Toggling
+    // Accessible View Toggling
     const btnReader = document.getElementById('btn-reader');
     const btnMinistry = document.getElementById('btn-ministry');
     const readerView = document.getElementById('reader-view');
@@ -327,6 +404,8 @@
       ministryView.hidden = true;
       btnReader.classList.add('highlight');
       btnMinistry.classList.remove('highlight');
+      btnReader.setAttribute('aria-pressed', 'true');
+      btnMinistry.setAttribute('aria-pressed', 'false');
     });
 
     btnMinistry.addEventListener('click', () => {
@@ -334,18 +413,60 @@
       ministryView.hidden = false;
       btnMinistry.classList.add('highlight');
       btnReader.classList.remove('highlight');
+      btnMinistry.setAttribute('aria-pressed', 'true');
+      btnReader.setAttribute('aria-pressed', 'false');
+    });
+
+    // Reader View Customizations (Toggles & Font Sizing)
+    const toggleHeadings = document.getElementById('toggle-headings');
+    const toggleVerses = document.getElementById('toggle-verses');
+    const passageContent = document.getElementById('passage-content');
+    let currentFontSize = 1.25; // rem
+
+    toggleHeadings.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        passageContent.classList.remove('hide-headings');
+      } else {
+        passageContent.classList.add('hide-headings');
+      }
+    });
+
+    toggleVerses.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        passageContent.classList.remove('hide-verses');
+      } else {
+        passageContent.classList.add('hide-verses');
+      }
+    });
+
+    document.getElementById('btn-font-larger').addEventListener('click', () => {
+      if (currentFontSize < 2.0) {
+        currentFontSize += 0.15;
+        document.documentElement.style.setProperty('--reader-font-size', `${currentFontSize}rem`);
+      }
+    });
+
+    document.getElementById('btn-font-smaller').addEventListener('click', () => {
+      if (currentFontSize > 0.95) {
+        currentFontSize -= 0.15;
+        document.documentElement.style.setProperty('--reader-font-size', `${currentFontSize}rem`);
+      }
     });
 
     // Topic Switching in Ministry Mode
-    function showTopic(topicId) {
+    function showTopic(topicId, clickedBtn) {
       document.querySelectorAll('.topic-content').forEach(el => el.hidden = true);
-      document.querySelectorAll('.topic-btn').forEach(el => el.classList.remove('highlight'));
+      document.querySelectorAll('.topic-btn').forEach(el => {
+        el.classList.remove('highlight');
+        el.setAttribute('aria-selected', 'false');
+      });
       
       document.getElementById('topic-' + topicId).hidden = false;
-      event.target.classList.add('highlight');
+      clickedBtn.classList.add('highlight');
+      clickedBtn.setAttribute('aria-selected', 'true');
     }
 
-    // Helper function to extract text from plain strings OR nested poetry objects
+    // Extract text from plain strings OR nested poetry objects
     function extractText(contentArray) {
       if (!Array.isArray(contentArray)) return '';
       return contentArray.map(item => {
@@ -359,38 +480,44 @@
       }).join(' ');
     }
 
-    let localBsbData = null;
+    let localNtData = null;
+    let localOtData = null;
     let currentRawText = "";
 
-    // Load local dataset from repo folder
-    async function loadLocalBsb() {
+    async function loadLocalDatasets() {
       try {
-        const response = await fetch('./data/bsb_nt.json');
-        if (response.ok) {
-          localBsbData = await response.json();
-          console.log('Local BSB Dataset loaded successfully.');
-        }
+        const [ntRes, otRes] = await Promise.all([
+          fetch('./data/bsb_nt.json'),
+          fetch('./data/bsb_ot.json')
+        ]);
+        if (ntRes.ok) localNtData = await ntRes.json();
+        if (otRes.ok) localOtData = await otRes.json();
       } catch (err) {
-        console.log('Local BSB dataset not loaded, using remote fallback.');
+        console.log('Using remote fallback where local files are pending.');
       }
     }
 
     async function fetchPassage(bookId, chapter) {
-      const contentDiv = document.getElementById('passage-content');
       const titleDiv = document.getElementById('passage-title');
       
-      contentDiv.innerHTML = "<p><em>Loading text...</em></p>";
+      passageContent.innerHTML = "<p><em>Loading text...</em></p>";
 
       try {
         let chapterContent = null;
         let bookName = bookId;
 
-        // Check local JSON dataset first (100% private, zero network traffic)
-        if (localBsbData && localBsbData[bookId] && localBsbData[bookId][chapter]) {
-          chapterContent = localBsbData[bookId][chapter].content;
-          bookName = localBsbData[bookId].name || bookId;
-        } else {
-          // Fallback to static CDN if not in local file yet
+        // 1. Check Local NT Data
+        if (localNtData && localNtData[bookId] && localNtData[bookId][chapter]) {
+          chapterContent = localNtData[bookId][chapter].content;
+          bookName = localNtData[bookId].name || bookId;
+        } 
+        // 2. Check Local OT Data
+        else if (localOtData && localOtData[bookId] && localOtData[bookId][chapter]) {
+          chapterContent = localOtData[bookId][chapter].content;
+          bookName = localOtData[bookId].name || bookId;
+        } 
+        // 3. Fallback to Static CDN
+        else {
           const response = await fetch(`https://bible.helloao.org/api/BSB/${bookId}/${chapter}.json`);
           const data = await response.json();
           chapterContent = data.chapter.content;
@@ -408,7 +535,7 @@
             passageHtml += `</p><h4 style="margin-top: 1.5rem; color: var(--accent); font-family: system-ui, sans-serif;">${headingText}</h4><p>`;
           } else if (item.type === 'verse') {
             const verseText = extractText(item.content);
-            passageHtml += `<span class="verse-num">${item.number}</span>${verseText} `;
+            passageHtml += `<span class="verse-num" aria-hidden="true">${item.number}</span>${verseText} `;
             currentRawText += `${item.number}. ${verseText}\n`;
           } else if (item.type === 'line_break') {
             passageHtml += `<br>`;
@@ -416,9 +543,9 @@
         });
         passageHtml += "</p>";
 
-        contentDiv.innerHTML = passageHtml;
+        passageContent.innerHTML = passageHtml;
       } catch (err) {
-        contentDiv.innerHTML = "<p><em>Unable to load text. Check connection or verify local dataset.</em></p>";
+        passageContent.innerHTML = "<p><em>Unable to load text. Check connection or verify local dataset.</em></p>";
       }
     }
 
@@ -441,9 +568,9 @@
       alert('Clean text copied to clipboard!');
     });
 
-    // Initialize App: Load local JSON first, then render initial passage
+    // Initialize App
     window.addEventListener('DOMContentLoaded', async () => {
-      await loadLocalBsb();
+      await loadLocalDatasets();
       fetchPassage('JHN', 15);
     });
   </script>
