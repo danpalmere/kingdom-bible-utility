@@ -4,6 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kingdom Bible Utility</title>
+  
+  <!-- Hardened Content Security Policy (CSP) -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline';
+    connect-src 'self' https://bible.helloao.org;
+    img-src 'self' data:;
+    font-src 'self';
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+  ">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="no-referrer">
+
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#121212">
   <style>
@@ -82,13 +98,8 @@
       border-radius: 4px;
       min-height: 44px;
     }
-    textarea {
-      cursor: text;
-    }
-    button:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
+    textarea { cursor: text; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
     button.highlight {
       background: var(--text);
       color: var(--bg);
@@ -115,9 +126,7 @@
       border-radius: 6px;
     }
     
-    #passage-content {
-      font-size: var(--reader-font-size);
-    }
+    #passage-content { font-size: var(--reader-font-size); }
     .verse-num {
       font-size: 0.8em;
       vertical-align: super;
@@ -148,9 +157,7 @@
       padding: 1.5rem;
       width: 90%;
     }
-    dialog::backdrop {
-      background: rgba(0,0,0,0.7);
-    }
+    dialog::backdrop { background: rgba(0,0,0,0.7); }
     [hidden] { display: none !important; }
 
     @media print {
@@ -388,11 +395,19 @@
         </div>
       </div>
 
+      <!-- AES-GCM Encrypted Local Prayer Notes -->
       <div class="notes-section" style="margin-top: 2rem;">
-        <label for="session-notes" style="font-size: 1.1rem; margin-bottom: 0.5rem; display: block;">
-          📝 Session Prayer Notes <span style="font-size: 0.85rem; font-weight: normal; opacity: 0.8;">(Saved on device only)</span>
-        </label>
-        <textarea id="session-notes" placeholder="Jot down names, requests, or Scriptures shared during prayer..." style="width: 100%; height: 120px; box-sizing: border-box;"></textarea>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <label for="session-notes" style="font-size: 1.1rem; font-weight: bold;">
+            🔒 Encrypted Prayer Notes <span style="font-size: 0.85rem; font-weight: normal; opacity: 0.8;">(AES-GCM at-rest)</span>
+          </label>
+          <div style="display: flex; gap: 0.3rem;">
+            <input type="password" id="notes-pin" placeholder="PIN/Passcode" style="width: 110px; min-height: 36px; padding: 0.2rem 0.5rem; font-size: 0.85rem;">
+            <button id="btn-lock-notes" style="min-height: 36px; padding: 0.2rem 0.6rem; font-size: 0.85rem;">Lock</button>
+            <button id="btn-unlock-notes" class="highlight" style="min-height: 36px; padding: 0.2rem 0.6rem; font-size: 0.85rem;">Unlock</button>
+          </div>
+        </div>
+        <textarea id="session-notes" placeholder="Enter PIN above and click Unlock to decrypt or start private notes..." style="width: 100%; height: 120px; box-sizing: border-box;"></textarea>
       </div>
     </section>
   </main>
@@ -419,6 +434,62 @@
   </footer>
 
   <script>
+    // Security Utility: Strict Input & Text Sanitizer (XSS Defense)
+    function sanitizeText(str) {
+      if (typeof str !== 'string') return '';
+      const tempDiv = document.createElement('div');
+      tempDiv.textContent = str;
+      return tempDiv.innerHTML.replace(/[<>'"]/g, (c) => {
+        return { '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c];
+      });
+    }
+
+    // Web Crypto API Engine (AES-GCM Client-Side Encryption)
+    const cryptoEngine = {
+      async deriveKey(passcode, salt) {
+        const enc = new TextEncoder();
+        const keyMaterial = await window.crypto.subtle.importKey(
+          'raw', enc.encode(passcode), 'PBKDF2', false, ['deriveKey']
+        );
+        return window.crypto.subtle.deriveKey(
+          { name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+          keyMaterial,
+          { name: 'AES-GCM', length: 256 },
+          false,
+          ['encrypt', 'decrypt']
+        );
+      },
+      async encrypt(plaintext, passcode) {
+        const enc = new TextEncoder();
+        const salt = window.crypto.getRandomValues(new Uint8Array(16));
+        const iv = window.crypto.getRandomValues(new Uint8Array(12));
+        const key = await this.deriveKey(passcode, salt);
+        const encrypted = await window.crypto.subtle.encrypt(
+          { name: 'AES-GCM', iv: iv }, key, enc.encode(plaintext)
+        );
+        return JSON.stringify({
+          salt: Array.from(salt),
+          iv: Array.from(iv),
+          ciphertext: Array.from(new Uint8Array(encrypted))
+        });
+      },
+      async decrypt(jsonStr, passcode) {
+        try {
+          const data = JSON.parse(jsonStr);
+          const salt = new Uint8Array(data.salt);
+          const iv = new Uint8Array(data.iv);
+          const ciphertext = new Uint8Array(data.ciphertext);
+          const key = await this.deriveKey(passcode, salt);
+          const decrypted = await window.crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv: iv }, key, ciphertext
+          );
+          return new TextDecoder().decode(decrypted);
+        } catch (err) {
+          throw new Error('Invalid PIN or corrupted ciphertext.');
+        }
+      }
+    };
+
     const BIBLE_BOOKS = [
       { id: "GEN", name: "Genesis", chapters: 50 }, { id: "EXO", name: "Exodus", chapters: 40 },
       { id: "LEV", name: "Leviticus", chapters: 27 }, { id: "NUM", name: "Numbers", chapters: 36 },
@@ -458,7 +529,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-          .then(() => console.log('Kingdom Utility: Offline Engine Active'))
+          .then(() => console.log('Kingdom Utility: Hardened Engine Active'))
           .catch((err) => console.log('Service Worker failed:', err));
       });
     }
@@ -527,20 +598,55 @@
       clickedBtn.setAttribute('aria-selected', 'true');
     }
 
+    // Encrypted Prayer Notes Event Handling
     const sessionNotes = document.getElementById('session-notes');
-    if (sessionNotes) {
-      sessionNotes.value = localStorage.getItem('kingdom_prayer_notes') || '';
-      sessionNotes.addEventListener('input', (e) => {
-        localStorage.setItem('kingdom_prayer_notes', e.target.value);
-      });
-    }
+    const notesPinInput = document.getElementById('notes-pin');
+    const btnLockNotes = document.getElementById('btn-lock-notes');
+    const btnUnlockNotes = document.getElementById('btn-unlock-notes');
+
+    btnLockNotes.addEventListener('click', async () => {
+      const passcode = notesPinInput.value;
+      if (!passcode) {
+        alert('Please enter a PIN/Passcode to encrypt your notes.');
+        return;
+      }
+      const rawNotes = sessionNotes.value;
+      if (!rawNotes) return;
+
+      const encryptedPayload = await cryptoEngine.encrypt(rawNotes, passcode);
+      localStorage.setItem('kingdom_encrypted_notes', encryptedPayload);
+      sessionNotes.value = '';
+      sessionNotes.placeholder = 'Notes locked & encrypted with AES-GCM. Enter PIN to unlock.';
+      alert('Prayer notes encrypted and saved locally!');
+    });
+
+    btnUnlockNotes.addEventListener('click', async () => {
+      const passcode = notesPinInput.value;
+      if (!passcode) {
+        alert('Please enter your PIN/Passcode.');
+        return;
+      }
+      const encryptedPayload = localStorage.getItem('kingdom_encrypted_notes');
+      if (!encryptedPayload) {
+        alert('No encrypted notes found on this device.');
+        return;
+      }
+
+      try {
+        const decryptedNotes = await cryptoEngine.decrypt(encryptedPayload, passcode);
+        sessionNotes.value = decryptedNotes;
+        sessionNotes.placeholder = 'Jot down names, requests, or Scriptures shared during prayer...';
+      } catch (err) {
+        alert('Incorrect PIN/Passcode or corrupt payload.');
+      }
+    });
 
     function extractText(contentArray) {
       if (!Array.isArray(contentArray)) return '';
       return contentArray.map(item => {
-        if (typeof item === 'string') return item;
+        if (typeof item === 'string') return sanitizeText(item);
         else if (typeof item === 'object' && item !== null) {
-          if (item.text) return item.text;
+          if (item.text) return sanitizeText(item.text);
           if (item.content) return extractText(item.content);
         }
         return '';
@@ -593,7 +699,7 @@
           bookName = data.book.name;
         }
 
-        titleDiv.innerText = `${bookName} ${chapter}`;
+        titleDiv.innerText = `${sanitizeText(bookName)} ${sanitizeText(String(chapter))}`;
 
         let passageHtml = "<p>";
         currentRawText = `${bookName} ${chapter} (BSB)\n\n`;
