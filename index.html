@@ -67,7 +67,7 @@
       padding-bottom: 1rem;
       font-family: system-ui, -apple-system, sans-serif;
     }
-    .controls, .reader-toolbar {
+    .controls, .reader-toolbar, .search-bar {
       display: flex;
       gap: 0.5rem;
       margin-bottom: 1rem;
@@ -104,16 +104,16 @@
       background: var(--text);
       color: var(--bg);
     }
-    .topic-pills {
+    .topic-pills, .bookmarks-bar {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       font-family: system-ui, -apple-system, sans-serif;
     }
-    .topic-btn {
+    .topic-btn, .bookmark-pill {
       font-size: 0.95rem;
-      padding: 0.4rem 0.8rem;
+      padding: 0.3rem 0.7rem;
     }
     .large-type {
       font-size: 1.2rem;
@@ -124,6 +124,11 @@
       padding: 1.25rem;
       margin-bottom: 1.25rem;
       border-radius: 6px;
+    }
+    .ref-link {
+      color: var(--accent);
+      cursor: pointer;
+      text-decoration: underline;
     }
     
     #passage-content { font-size: var(--reader-font-size); }
@@ -161,7 +166,7 @@
     [hidden] { display: none !important; }
 
     @media print {
-      nav, .controls, .reader-toolbar, .topic-pills, button, footer, .notes-section { display: none !important; }
+      nav, .controls, .reader-toolbar, .search-bar, .topic-pills, .bookmarks-bar, button, footer, .notes-section { display: none !important; }
       body { background: white; color: black; font-size: 12pt; padding: 0; }
       main, section { max-width: 100%; margin: 0; }
     }
@@ -186,7 +191,15 @@
     <section id="reader-view" aria-labelledby="reader-heading">
       <h1 id="reader-heading" class="sr-only">Abide Bible Reader</h1>
 
-      <div class="controls" role="search" aria-label="Passage Navigation">
+      <!-- Local Search Bar -->
+      <div class="search-bar" role="search">
+        <input type="text" id="search-input" placeholder="Search keywords in local Bible..." style="flex-grow: 1;">
+        <button id="btn-search" class="highlight">Search</button>
+      </div>
+      <div id="search-results" hidden class="card" style="font-family: system-ui, sans-serif; font-size: 0.95rem;"></div>
+
+      <!-- Passage Navigation Controls -->
+      <div class="controls" aria-label="Passage Navigation">
         <button id="btn-prev-chap" aria-label="Previous Chapter">← Prev</button>
 
         <label for="book-select" class="sr-only">Book</label>
@@ -266,9 +279,14 @@
         
         <button id="btn-next-chap" aria-label="Next Chapter">Next →</button>
         <button id="btn-load" class="highlight">Go</button>
+        <button id="btn-bookmark">🔖 Bookmark</button>
         <button id="btn-export-open" style="margin-left: auto;">🖨️ Export</button>
       </div>
 
+      <!-- Bookmarks List -->
+      <div id="bookmarks-container" class="bookmarks-bar" aria-label="Saved Bookmarks"></div>
+
+      <!-- Customization Toolbar -->
       <div class="reader-toolbar" role="region" aria-label="Reader View Options">
         <span style="font-weight: bold; font-size: 0.9rem;">View Settings:</span>
         
@@ -309,65 +327,59 @@
 
       <div id="topic-identity" class="topic-content" role="tabpanel">
         <div class="card">
-          <strong>2 Corinthians 5:17, 21</strong>
+          <strong class="ref-link" onclick="jumpToPassage('2CO', 5)">2 Corinthians 5:17, 21</strong>
           <p>“Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come... God made Him who knew no sin to be sin for us, so that in Him we might become the righteousness of God.”</p>
         </div>
         <div class="card">
-          <strong>Galatians 2:20</strong>
+          <strong class="ref-link" onclick="jumpToPassage('GAL', 2)">Galatians 2:20</strong>
           <p>“I have been crucified with Christ, and I no longer live, but Christ lives in me. The life I now live in the body, I live by faith in the Son of God, who loved me and gave Himself up for me.”</p>
         </div>
       </div>
 
       <div id="topic-gospel" class="topic-content" role="tabpanel" hidden>
         <div class="card">
-          <strong>Romans 3:23 & 6:23 (The Need & The Gift)</strong>
+          <strong class="ref-link" onclick="jumpToPassage('ROM', 3)">Romans 3:23 & 6:23 (The Need & The Gift)</strong>
           <p>“For all have sinned and fall short of the glory of God... For the wages of sin is death, but the gift of God is eternal life in Christ Jesus our Lord.”</p>
         </div>
         <div class="card">
-          <strong>Romans 5:8 & 10:9 (God's Love & Confession)</strong>
+          <strong class="ref-link" onclick="jumpToPassage('ROM', 5)">Romans 5:8 & 10:9 (God's Love & Confession)</strong>
           <p>“But God proves His love for us in this: While we were still sinners, Christ died for us... If you confess with your mouth, ‘Jesus is Lord,’ and believe in your heart that God raised Him from the dead, you will be saved.”</p>
         </div>
         <div class="card">
-          <strong>Ephesians 2:8–9 (By Grace Alone)</strong>
+          <strong class="ref-link" onclick="jumpToPassage('EPH', 2)">Ephesians 2:8–9 (By Grace Alone)</strong>
           <p>“For it is by grace you have been saved through faith, and this is not from yourselves; it is the gift of God, not by works, so that no one can boast.”</p>
         </div>
       </div>
 
       <div id="topic-healing" class="topic-content" role="tabpanel" hidden>
         <div class="card">
-          <strong>Psalm 107:20</strong>
+          <strong class="ref-link" onclick="jumpToPassage('PSA', 107)">Psalm 107:20</strong>
           <p>“He sent His word and healed them, and delivered them from their destructions.”</p>
         </div>
         <div class="card">
-          <strong>Isaiah 53:4–5</strong>
+          <strong class="ref-link" onclick="jumpToPassage('ISA', 53)">Isaiah 53:4–5</strong>
           <p>“Surely He took up our infirmities and carried our sorrows... and by His wounds we are healed.”</p>
         </div>
       </div>
 
       <div id="topic-peace" class="topic-content" role="tabpanel" hidden>
         <div class="card">
-          <strong>Philippians 4:6–7</strong>
+          <strong class="ref-link" onclick="jumpToPassage('PHP', 4)">Philippians 4:6–7</strong>
           <p>“Be anxious for nothing, but in everything, by prayer and petition, with thanksgiving, present your requests to God. And the peace of God, which surpasses all understanding, will guard your hearts and minds in Christ Jesus.”</p>
         </div>
         <div class="card">
-          <strong>Isaiah 41:10 & 2 Timothy 1:7</strong>
+          <strong class="ref-link" onclick="jumpToPassage('ISA', 41)">Isaiah 41:10 & 2 Timothy 1:7</strong>
           <p>“Do not fear, for I am with you; do not be dismayed, for I am your God... For God has not given us a spirit of fear, but of power, love, and a sound mind.”</p>
-        </div>
-        <div class="card" style="border-left: 4px solid var(--accent);">
-          <strong>Scripture Grounding Exercise</strong>
-          <p style="font-size: 1rem; margin-bottom: 0.5rem;">Take a slow breath in and out while meditating on Christ's presence:</p>
-          <p style="font-size: 1.05rem; font-style: italic; margin: 0;">Inhale: "Lord, You guard my heart in peace..."<br>Exhale: "I cast all my anxiety on You." (1 Peter 5:7)</p>
         </div>
       </div>
 
       <div id="topic-encouragement" class="topic-content" role="tabpanel" hidden>
         <div class="card">
-          <strong>1 Corinthians 14:3 (Scripture Guardrail)</strong>
+          <strong class="ref-link" onclick="jumpToPassage('1CO', 14)">1 Corinthians 14:3 (Scripture Guardrail)</strong>
           <p>“On the other hand, the one who prophesies speaks to people for their strengthening, encouraging and comfort.”</p>
-          <p style="font-size: 1rem; font-style: italic;">Speak plainly and humbly: "I was reading this passage and felt encouraged to share it with you."</p>
         </div>
         <div class="card">
-          <strong>Zephaniah 3:17</strong>
+          <strong class="ref-link" onclick="jumpToPassage('ZEP', 3)">Zephaniah 3:17</strong>
           <p>“The LORD your God is in your midst, a Mighty One who will save. He will quiet you with His love; He will rejoice over you with singing.”</p>
         </div>
       </div>
@@ -375,7 +387,7 @@
       <div id="topic-wimber" class="topic-content" role="tabpanel" hidden>
         <div class="card">
           <strong>Step 1: The Interview</strong>
-          <p style="font-size: 1.1rem;">"Where does it hurt?" or "What would you like prayer for?" Ask simple, natural questions. Listen to the Spirit as they speak.</p>
+          <p style="font-size: 1.1rem;">"Where does it hurt?" or "What would you like prayer for?" Ask simple, natural questions.</p>
         </div>
         <div class="card">
           <strong>Step 2: The Diagnosis</strong>
@@ -383,15 +395,15 @@
         </div>
         <div class="card">
           <strong>Step 3: Prayer Strategy</strong>
-          <p style="font-size: 1.1rem;">Determine whether to pray a blessing, ask the Father, or speak with Kingdom authority over the pain in Jesus' name.</p>
+          <p style="font-size: 1.1rem;">Determine whether to pray a blessing, ask the Father, or speak with Kingdom authority.</p>
         </div>
         <div class="card">
           <strong>Step 4: Command / Prayer</strong>
-          <p style="font-size: 1.1rem;">Pray with eyes open. Keep it quiet and humble. Speak directly to the condition in the authority of Christ.</p>
+          <p style="font-size: 1.1rem;">Pray with eyes open. Keep it quiet and humble. Speak directly in the authority of Christ.</p>
         </div>
         <div class="card">
           <strong>Step 5: Post-Prayer Direction</strong>
-          <p style="font-size: 1.1rem;">Ask: "What are you experiencing right now?" Reassure them of God’s love and encourage them to walk in identity.</p>
+          <p style="font-size: 1.1rem;">Ask: "What are you experiencing right now?" Reassure them of God’s love.</p>
         </div>
       </div>
 
@@ -434,7 +446,6 @@
   </footer>
 
   <script>
-    // Security Utility: Strict Input & Text Sanitizer (XSS Defense)
     function sanitizeText(str) {
       if (typeof str !== 'string') return '';
       const tempDiv = document.createElement('div');
@@ -444,7 +455,6 @@
       });
     }
 
-    // Web Crypto API Engine (AES-GCM Client-Side Encryption)
     const cryptoEngine = {
       async deriveKey(passcode, salt) {
         const enc = new TextEncoder();
@@ -529,7 +539,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-          .then(() => console.log('Kingdom Utility: Hardened Engine Active'))
+          .then(() => console.log('Kingdom Utility: Offline Engine Active'))
           .catch((err) => console.log('Service Worker failed:', err));
       });
     }
@@ -556,6 +566,12 @@
       btnMinistry.setAttribute('aria-pressed', 'true');
       btnReader.setAttribute('aria-pressed', 'false');
     });
+
+    // Jump to passage directly from Prayer Mode references
+    function jumpToPassage(bookId, chapter) {
+      btnReader.click();
+      fetchPassage(bookId, chapter);
+    }
 
     const toggleHeadings = document.getElementById('toggle-headings');
     const toggleVerses = document.getElementById('toggle-verses');
@@ -598,7 +614,94 @@
       clickedBtn.setAttribute('aria-selected', 'true');
     }
 
-    // Encrypted Prayer Notes Event Handling
+    // Local Bookmarks Management
+    let bookmarks = JSON.parse(localStorage.getItem('kingdom_bookmarks') || '[]');
+    const bookmarksContainer = document.getElementById('bookmarks-container');
+
+    function renderBookmarks() {
+      bookmarksContainer.innerHTML = '';
+      if (bookmarks.length === 0) return;
+
+      bookmarks.forEach((bm, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'bookmark-pill';
+        btn.innerHTML = `${bm.title} <span onclick="removeBookmark(event, ${index})">×</span>`;
+        btn.onclick = () => fetchPassage(bm.bookId, bm.chapter);
+        bookmarksContainer.appendChild(btn);
+      });
+    }
+
+    function removeBookmark(e, index) {
+      e.stopPropagation();
+      bookmarks.splice(index, 1);
+      localStorage.setItem('kingdom_bookmarks', JSON.stringify(bookmarks));
+      renderBookmarks();
+    }
+
+    document.getElementById('btn-bookmark').addEventListener('click', () => {
+      const bookId = document.getElementById('book-select').value;
+      const chapter = document.getElementById('chapter-input').value;
+      const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
+      const title = `${bookObj ? bookObj.name : bookId} ${chapter}`;
+
+      if (!bookmarks.some(bm => bm.bookId === bookId && bm.chapter === chapter)) {
+        bookmarks.push({ bookId, chapter, title });
+        localStorage.setItem('kingdom_bookmarks', JSON.stringify(bookmarks));
+        renderBookmarks();
+      }
+    });
+
+    // Local Keyword Search Engine
+    document.getElementById('btn-search').addEventListener('click', () => {
+      const query = document.getElementById('search-input').value.trim().toLowerCase();
+      const resultsDiv = document.getElementById('search-results');
+      if (!query) return;
+
+      resultsDiv.hidden = false;
+      resultsDiv.innerHTML = '<p><em>Searching local dataset...</em></p>';
+
+      let matches = [];
+      const searchDataset = (dataset) => {
+        if (!dataset) return;
+        for (const [bookId, chapters] of Object.entries(dataset)) {
+          for (const [chapNum, chapData] of Object.entries(chapters)) {
+            if (chapData.content) {
+              chapData.content.forEach(item => {
+                if (item.type === 'verse') {
+                  const text = extractText(item.content);
+                  if (text.toLowerCase().includes(query)) {
+                    matches.push({
+                      bookId,
+                      bookName: chapData.name || bookId,
+                      chapter: chapNum,
+                      verse: item.number,
+                      text
+                    });
+                  }
+                }
+              });
+            }
+          }
+        }
+      };
+
+      searchDataset(localNtData);
+      searchDataset(localOtData);
+
+      if (matches.length === 0) {
+        resultsDiv.innerHTML = `<p>No local matches found for "<strong>${sanitizeText(query)}</strong>". Try checking passages loaded in local storage.</p>`;
+      } else {
+        let html = `<strong>Found ${matches.length} match(es):</strong><ul style="padding-left: 1.2rem; margin-top: 0.5rem;">`;
+        matches.slice(0, 10).forEach(m => {
+          html += `<li style="margin-bottom: 0.5rem;">
+            <span class="ref-link" onclick="jumpToPassage('${m.bookId}', ${m.chapter})">${m.bookName} ${m.chapter}:${m.verse}</span> — ${sanitizeText(m.text)}
+          </li>`;
+        });
+        html += '</ul>';
+        resultsDiv.innerHTML = html;
+      }
+    });
+
     const sessionNotes = document.getElementById('session-notes');
     const notesPinInput = document.getElementById('notes-pin');
     const btnLockNotes = document.getElementById('btn-lock-notes');
@@ -773,6 +876,7 @@
 
     window.addEventListener('DOMContentLoaded', async () => {
       await loadLocalDatasets();
+      renderBookmarks();
       fetchPassage('JHN', 15);
     });
   </script>
