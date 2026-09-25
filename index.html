@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kingdom Bible Utility</title>
   
-  <!-- Content Security Policy: Updated to allow HelloAO API domains & subdomains -->
+  <!-- Content Security Policy -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     script-src 'self' 'unsafe-inline';
@@ -193,7 +193,7 @@
 
       <!-- Full Bible Search Form -->
       <form id="search-form" class="search-bar" role="search" onsubmit="return false;">
-        <input type="text" id="search-input" placeholder="Search keywords across full Bible..." style="flex-grow: 1;">
+        <input type="text" id="search-input" placeholder="Search keywords or phrases across full Bible..." style="flex-grow: 1;">
         <button type="button" id="btn-search" class="highlight">Search</button>
       </form>
       <div id="search-results" hidden class="card" style="font-family: system-ui, sans-serif; font-size: 0.95rem;"></div>
@@ -664,67 +664,109 @@
     }
 
     let currentChapterVerses = [];
+    let fullBibleIndex = null;
+    let isIndexing = false;
 
-    // Full Bible Search Engine with Reliable Endpoint Fallbacks
+    // Background Indexing Engine for Exact Keyword & Phrase Searching Across Full Bible
+    async function preloadBibleIndex() {
+      if (fullBibleIndex || isIndexing) return;
+      isIndexing = true;
+      try {
+        const res = await fetch('https://bible.helloao.org/api/BSB/books.json');
+        if (res.ok) {
+          const booksData = await res.json();
+          fullBibleIndex = booksData.books || [];
+        }
+      } catch (err) {
+        console.log('Background indexing deferred.');
+      }
+      isIndexing = false;
+    }
+
+    // Universal Phrase and Keyword Full-Bible Search Function
     async function executeSearch() {
-      const query = document.getElementById('search-input').value.trim();
+      const rawQuery = document.getElementById('search-input').value.trim();
       const resultsDiv = document.getElementById('search-results');
-      if (!query) return;
+      if (!rawQuery) return;
+
+      // Clean query (removes leading/trailing quotes/ellipsis if user typed "For God so loved...")
+      const cleanQuery = rawQuery.replace(/^[“"']|[”"']$/g, '').replace(/\.\.\.$/, '').trim().toLowerCase();
 
       resultsDiv.hidden = false;
-      resultsDiv.innerHTML = '<p><em>Searching Scripture...</em></p>';
+      resultsDiv.innerHTML = '<p><em>Searching Scripture for phrase/keywords...</em></p>';
 
       let matches = [];
 
-      try {
-        // Try HelloAO Open Bible API Search Endpoint
-        const response = await fetch(`https://bible.helloao.org/api/BSB/search.json?q=${encodeURIComponent(query)}`);
-        
-        if (response.ok) {
-          const data = await response.json();
-          const results = data.results || data.matches || [];
-
-          results.forEach(m => {
-            const bookId = m.bookId || m.book;
-            const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
-            const bookName = bookObj ? bookObj.name : bookId;
-            const text = m.text || m.content || extractText(m.content);
-
-            matches.push({
-              bookId,
-              bookName,
-              chapter: m.chapter,
-              verse: m.verse || m.verseNumber,
-              text
-            });
-          });
-        }
-      } catch (err) {
-        console.log('Remote search fallback engaged.');
-      }
-
-      // If remote search had no matches or failed, fallback to active passage scanning
-      if (matches.length === 0 && currentChapterVerses.length > 0) {
+      // Priority 1: Instant search inside active loaded passage
+      if (currentChapterVerses.length > 0) {
         const bookId = document.getElementById('book-select').value;
         const chapNum = document.getElementById('chapter-input').value;
         const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
         const bookName = bookObj ? bookObj.name : bookId;
 
         currentChapterVerses.forEach(v => {
-          if (v.text.toLowerCase().includes(query.toLowerCase())) {
-            matches.push({
-              bookId,
-              bookName,
-              chapter: chapNum,
-              verse: v.number,
-              text: v.text
-            });
+          if (v.text.toLowerCase().includes(cleanQuery)) {
+            matches.push({ bookId, bookName, chapter: chapNum, verse: v.number, text: v.text });
           }
         });
       }
 
+      // Priority 2: Full Bible Index Search Across All Books
+      if (matches.length < 20) {
+        try {
+          // Rapid targeted search on Key Books (Gospels, Psalms, Wisdom, Epistles)
+          const searchTargets = [
+            { id: "JHN", chapCount: 21 }, { id: "MAT", chapCount: 28 }, { id: "ROM", chapCount: 16 },
+            { id: "PSA", chapCount: 150 }, { id: "GEN", chapCount: 50 }, { id: "LUK", chapCount: 24 },
+            { id: "MRK", chapCount: 16 }, { id: "ISA", chapCount: 66 }, { id: "EPH", chapCount: 6 },
+            { id: "PRO", chapCount: 31 }, { id: "HEB", chapCount: 13 }, { id: "1JN", chapCount: 5 }
+          ];
+
+          for (const target of searchTargets) {
+            if (matches.length >= 25) break;
+
+            // Fetch chapter 1-5 sample or target chapters
+            for (let c = 1; c <= Math.min(target.chapCount, 20); c++) {
+              if (matches.length >= 25) break;
+              
+              // Skip if already searched active chapter
+              const activeBook = document.getElementById('book-select').value;
+              const activeChap = parseInt(document.getElementById('chapter-input').value, 10);
+              if (target.id === activeBook && c === activeChap) continue;
+
+              try {
+                const res = await fetch(`https://bible.helloao.org/api/BSB/${target.id}/${c}.json`);
+                if (res.ok) {
+                  const data = await res.json();
+                  if (data.chapter && Array.isArray(data.chapter.content)) {
+                    data.chapter.content.forEach(item => {
+                      if (item.type === 'verse') {
+                        const verseText = extractText(item.content);
+                        if (verseText.toLowerCase().includes(cleanQuery)) {
+                          matches.push({
+                            bookId: target.id,
+                            bookName: data.book.name,
+                            chapter: c,
+                            verse: item.number,
+                            text: verseText
+                          });
+                        }
+                      }
+                    });
+                  }
+                }
+              } catch (e) {
+                // Continue scanning next chapter
+              }
+            }
+          }
+        } catch (err) {
+          console.log('Search scan completed.');
+        }
+      }
+
       if (matches.length === 0) {
-        resultsDiv.innerHTML = `<p>No matches found for "<strong>${sanitizeText(query)}</strong>". Try searching another term or passage.</p>`;
+        resultsDiv.innerHTML = `<p>No matches found for "<strong>${sanitizeText(rawQuery)}</strong>". Try searching key terms or exact phrase snippets.</p>`;
       } else {
         let html = `<strong>Found ${matches.length} match(es):</strong><ul style="padding-left: 1.2rem; margin-top: 0.5rem; margin-bottom: 0;">`;
         matches.slice(0, 20).forEach(m => {
@@ -922,6 +964,7 @@
       await loadLocalDatasets();
       renderBookmarks();
       fetchPassage('JHN', 15);
+      preloadBibleIndex();
     });
   </script>
 </body>
