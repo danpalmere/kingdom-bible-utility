@@ -567,7 +567,6 @@
       btnReader.setAttribute('aria-pressed', 'false');
     });
 
-    // Jump to passage directly from Prayer Mode references
     function jumpToPassage(bookId, chapter) {
       btnReader.click();
       fetchPassage(bookId, chapter);
@@ -651,8 +650,21 @@
       }
     });
 
-    // Local Keyword Search Engine
-    document.getElementById('btn-search').addEventListener('click', () => {
+    // Helper: Universal Deep Text Extractor
+    function extractTextDeep(obj) {
+      if (typeof obj === 'string') return obj;
+      if (Array.isArray(obj)) return obj.map(extractTextDeep).join(' ');
+      if (typeof obj === 'object' && obj !== null) {
+        let textParts = [];
+        if (obj.text) textParts.push(extractTextDeep(obj.text));
+        if (obj.content) textParts.push(extractTextDeep(obj.content));
+        return textParts.join(' ');
+      }
+      return '';
+    }
+
+    // Fixed Search Function (Supports Direct & Nested Object Structures)
+    function executeSearch() {
       const query = document.getElementById('search-input').value.trim().toLowerCase();
       const resultsDiv = document.getElementById('search-results');
       if (!query) return;
@@ -665,10 +677,10 @@
         if (!dataset) return;
         for (const [bookId, chapters] of Object.entries(dataset)) {
           for (const [chapNum, chapData] of Object.entries(chapters)) {
-            if (chapData.content) {
+            if (chapData && chapData.content && Array.isArray(chapData.content)) {
               chapData.content.forEach(item => {
                 if (item.type === 'verse') {
-                  const text = extractText(item.content);
+                  const text = extractTextDeep(item.content);
                   if (text.toLowerCase().includes(query)) {
                     matches.push({
                       bookId,
@@ -692,13 +704,30 @@
         resultsDiv.innerHTML = `<p>No local matches found for "<strong>${sanitizeText(query)}</strong>". Try checking passages loaded in local storage.</p>`;
       } else {
         let html = `<strong>Found ${matches.length} match(es):</strong><ul style="padding-left: 1.2rem; margin-top: 0.5rem;">`;
-        matches.slice(0, 10).forEach(m => {
+        matches.slice(0, 15).forEach(m => {
           html += `<li style="margin-bottom: 0.5rem;">
             <span class="ref-link" onclick="jumpToPassage('${m.bookId}', ${m.chapter})">${m.bookName} ${m.chapter}:${m.verse}</span> — ${sanitizeText(m.text)}
           </li>`;
         });
         html += '</ul>';
         resultsDiv.innerHTML = html;
+      }
+    }
+
+    document.getElementById('btn-search').addEventListener('click', executeSearch);
+
+    // Enter Key Listeners for Quick Submission
+    document.getElementById('search-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        executeSearch();
+      }
+    });
+
+    document.getElementById('chapter-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('btn-load').click();
       }
     });
 
