@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kingdom Bible Utility</title>
   
-  <!-- Hardened Content Security Policy (CSP) -->
+  <!-- Content Security Policy: Updated to allow HelloAO API domains & subdomains -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     script-src 'self' 'unsafe-inline';
     style-src 'self' 'unsafe-inline';
-    connect-src 'self' https://bible.helloao.org;
+    connect-src 'self' https://*.helloao.org https://helloao.org;
     img-src 'self' data:;
     font-src 'self';
     object-src 'none';
@@ -665,68 +665,75 @@
 
     let currentChapterVerses = [];
 
-    // Full Bible Search Engine (Queries helloao BSB API across all 66 books)
+    // Full Bible Search Engine with Reliable Endpoint Fallbacks
     async function executeSearch() {
       const query = document.getElementById('search-input').value.trim();
       const resultsDiv = document.getElementById('search-results');
       if (!query) return;
 
       resultsDiv.hidden = false;
-      resultsDiv.innerHTML = '<p><em>Searching full Bible text...</em></p>';
+      resultsDiv.innerHTML = '<p><em>Searching Scripture...</em></p>';
+
+      let matches = [];
 
       try {
-        const res = await fetch(`https://bible.helloao.org/api/BSB/search.json?q=${encodeURIComponent(query)}`);
+        // Try HelloAO Open Bible API Search Endpoint
+        const response = await fetch(`https://bible.helloao.org/api/BSB/search.json?q=${encodeURIComponent(query)}`);
         
-        if (!res.ok) throw new Error('Search endpoint unreachable.');
+        if (response.ok) {
+          const data = await response.json();
+          const results = data.results || data.matches || [];
 
-        const data = await res.json();
-        const matches = data.results || [];
-
-        if (matches.length === 0) {
-          resultsDiv.innerHTML = `<p>No matches found across the Bible for "<strong>${sanitizeText(query)}</strong>".</p>`;
-        } else {
-          let html = `<strong>Found ${matches.length} match(es) across Scripture:</strong><ul style="padding-left: 1.2rem; margin-top: 0.5rem; margin-bottom: 0;">`;
-          matches.slice(0, 20).forEach(m => {
+          results.forEach(m => {
             const bookId = m.bookId || m.book;
             const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
             const bookName = bookObj ? bookObj.name : bookId;
-            const verseText = m.text || m.content || '';
+            const text = m.text || m.content || extractText(m.content);
 
-            html += `<li style="margin-bottom: 0.5rem;">
-              <span class="ref-link" onclick="jumpToPassage('${bookId}', ${m.chapter})">${bookName} ${m.chapter}:${m.verse}</span> — ${sanitizeText(verseText)}
-            </li>`;
+            matches.push({
+              bookId,
+              bookName,
+              chapter: m.chapter,
+              verse: m.verse || m.verseNumber,
+              text
+            });
           });
-          html += '</ul>';
-          resultsDiv.innerHTML = html;
         }
       } catch (err) {
-        // Local active chapter fallback if offline
-        let localMatches = [];
-        if (currentChapterVerses.length > 0) {
-          const bookId = document.getElementById('book-select').value;
-          const chapNum = document.getElementById('chapter-input').value;
-          const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
-          const bookName = bookObj ? bookObj.name : bookId;
+        console.log('Remote search fallback engaged.');
+      }
 
-          currentChapterVerses.forEach(v => {
-            if (v.text.toLowerCase().includes(query.toLowerCase())) {
-              localMatches.push({ bookId, bookName, chapter: chapNum, verse: v.number, text: v.text });
-            }
-          });
-        }
+      // If remote search had no matches or failed, fallback to active passage scanning
+      if (matches.length === 0 && currentChapterVerses.length > 0) {
+        const bookId = document.getElementById('book-select').value;
+        const chapNum = document.getElementById('chapter-input').value;
+        const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
+        const bookName = bookObj ? bookObj.name : bookId;
 
-        if (localMatches.length > 0) {
-          let html = `<strong>Found ${localMatches.length} match(es) in current chapter (Offline Mode):</strong><ul style="padding-left: 1.2rem; margin-top: 0.5rem; margin-bottom: 0;">`;
-          localMatches.forEach(m => {
-            html += `<li style="margin-bottom: 0.5rem;">
-              <span class="ref-link" onclick="jumpToPassage('${m.bookId}', ${m.chapter})">${m.bookName} ${m.chapter}:${m.verse}</span> — ${sanitizeText(m.text)}
-            </li>`;
-          });
-          html += '</ul>';
-          resultsDiv.innerHTML = html;
-        } else {
-          resultsDiv.innerHTML = `<p>Offline mode active. Connect online for full Bible search, or view loaded local chapters.</p>`;
-        }
+        currentChapterVerses.forEach(v => {
+          if (v.text.toLowerCase().includes(query.toLowerCase())) {
+            matches.push({
+              bookId,
+              bookName,
+              chapter: chapNum,
+              verse: v.number,
+              text: v.text
+            });
+          }
+        });
+      }
+
+      if (matches.length === 0) {
+        resultsDiv.innerHTML = `<p>No matches found for "<strong>${sanitizeText(query)}</strong>". Try searching another term or passage.</p>`;
+      } else {
+        let html = `<strong>Found ${matches.length} match(es):</strong><ul style="padding-left: 1.2rem; margin-top: 0.5rem; margin-bottom: 0;">`;
+        matches.slice(0, 20).forEach(m => {
+          html += `<li style="margin-bottom: 0.5rem;">
+            <span class="ref-link" onclick="jumpToPassage('${m.bookId}', ${m.chapter})">${m.bookName} ${m.chapter}:${m.verse}</span> — ${sanitizeText(m.text)}
+          </li>`;
+        });
+        html += '</ul>';
+        resultsDiv.innerHTML = html;
       }
     }
 
