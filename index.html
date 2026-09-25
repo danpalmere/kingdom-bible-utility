@@ -154,6 +154,28 @@
       border: 0;
     }
 
+    /* Organized Search UI Accordions */
+    details.search-group {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 0.8rem;
+      margin-top: 0.75rem;
+      background: rgba(0,0,0,0.01);
+    }
+    details.search-group summary {
+      font-weight: bold;
+      cursor: pointer;
+      font-family: system-ui, sans-serif;
+      padding: 0.2rem 0;
+    }
+    .book-group-header {
+      font-weight: 600;
+      margin-top: 0.75rem;
+      margin-bottom: 0.25rem;
+      font-family: system-ui, sans-serif;
+      color: var(--accent);
+    }
+
     dialog {
       background: var(--bg);
       color: var(--text);
@@ -501,39 +523,39 @@
     };
 
     const BIBLE_BOOKS = [
-      { id: "GEN", name: "Genesis", chapters: 50 }, { id: "EXO", name: "Exodus", chapters: 40 },
-      { id: "LEV", name: "Leviticus", chapters: 27 }, { id: "NUM", name: "Numbers", chapters: 36 },
-      { id: "DEU", name: "Deuteronomy", chapters: 34 }, { id: "JOS", name: "Joshua", chapters: 24 },
-      { id: "JDG", name: "Judges", chapters: 21 }, { id: "RUT", name: "Ruth", chapters: 4 },
-      { id: "1SA", name: "1 Samuel", chapters: 31 }, { id: "2SA", name: "2 Samuel", chapters: 24 },
-      { id: "1KI", name: "1 Kings", chapters: 22 }, { id: "2KI", name: "2 Kings", chapters: 25 },
-      { id: "1CH", name: "1 Chronicles", chapters: 29 }, { id: "2CH", name: "2 Chronicles", chapters: 36 },
-      { id: "EZR", name: "Ezra", chapters: 10 }, { id: "NEH", name: "Nehemiah", chapters: 13 },
-      { id: "EST", name: "Esther", chapters: 10 }, { id: "JOB", name: "Job", chapters: 42 },
-      { id: "PSA", name: "Psalms", chapters: 150 }, { id: "PRO", name: "Proverbs", chapters: 31 },
-      { id: "ECC", name: "Ecclesiastes", chapters: 12 }, { id: "SNG", name: "Song of Solomon", chapters: 8 },
-      { id: "ISA", name: "Isaiah", chapters: 66 }, { id: "JER", name: "Jeremiah", chapters: 52 },
-      { id: "LAM", name: "Lamentations", chapters: 5 }, { id: "EZK", name: "Ezekiel", chapters: 48 },
-      { id: "DAN", name: "Daniel", chapters: 12 }, { id: "HOS", name: "Hosea", chapters: 14 },
-      { id: "JOL", name: "Joel", chapters: 3 }, { id: "AMO", name: "Amos", chapters: 9 },
-      { id: "OBA", name: "Obadiah", chapters: 1 }, { id: "JNH", name: "Jonah", chapters: 4 },
-      { id: "MIC", name: "Micah", chapters: 7 }, { id: "NAM", name: "Nahum", chapters: 3 },
-      { id: "HAB", name: "Habakkuk", chapters: 3 }, { id: "ZEP", name: "Zephaniah", chapters: 3 },
-      { id: "HAG", name: "Haggai", chapters: 2 }, { id: "ZEC", name: "Zechariah", chapters: 14 },
-      { id: "MAL", name: "Malachi", chapters: 4 }, { id: "MAT", name: "Matthew", chapters: 28 },
-      { id: "MRK", name: "Mark", chapters: 16 }, { id: "LUK", name: "Luke", chapters: 24 },
-      { id: "JHN", name: "John", chapters: 21 }, { id: "ACT", name: "Acts", chapters: 28 },
-      { id: "ROM", name: "Romans", chapters: 16 }, { id: "1CO", name: "1 Corinthians", chapters: 16 },
-      { id: "2CO", name: "2 Corinthians", chapters: 13 }, { id: "GAL", name: "Galatians", chapters: 6 },
-      { id: "EPH", name: "Ephesians", chapters: 6 }, { id: "PHP", name: "Philippians", chapters: 4 },
-      { id: "COL", name: "Colossians", chapters: 4 }, { id: "1TH", name: "1 Thessalonians", chapters: 5 },
-      { id: "2TH", name: "2 Thessalonians", chapters: 3 }, { id: "1TI", name: "1 Timothy", chapters: 6 },
-      { id: "2TI", name: "2 Timothy", chapters: 4 }, { id: "TIT", name: "Titus", chapters: 3 },
-      { id: "PHM", name: "Philemon", chapters: 1 }, { id: "HEB", name: "Hebrews", chapters: 13 },
-      { id: "JAS", name: "James", chapters: 5 }, { id: "1PE", name: "1 Peter", chapters: 5 },
-      { id: "2PE", name: "2 Peter", chapters: 3 }, { id: "1JN", name: "1 John", chapters: 5 },
-      { id: "2JN", name: "2 John", chapters: 1 }, { id: "3JN", name: "3 John", chapters: 1 },
-      { id: "JUD", name: "Jude", chapters: 1 }, { id: "REV", name: "Revelation", chapters: 22 }
+      { id: "GEN", name: "Genesis", chapters: 50, testament: "OT" }, { id: "EXO", name: "Exodus", chapters: 40, testament: "OT" },
+      { id: "LEV", name: "Leviticus", chapters: 27, testament: "OT" }, { id: "NUM", name: "Numbers", chapters: 36, testament: "OT" },
+      { id: "DEU", name: "Deuteronomy", chapters: 34, testament: "OT" }, { id: "JOS", name: "Joshua", chapters: 24, testament: "OT" },
+      { id: "JDG", name: "Judges", chapters: 21, testament: "OT" }, { id: "RUT", name: "Ruth", chapters: 4, testament: "OT" },
+      { id: "1SA", name: "1 Samuel", chapters: 31, testament: "OT" }, { id: "2SA", name: "2 Samuel", chapters: 24, testament: "OT" },
+      { id: "1KI", name: "1 Kings", chapters: 22, testament: "OT" }, { id: "2KI", name: "2 Kings", chapters: 25, testament: "OT" },
+      { id: "1CH", name: "1 Chronicles", chapters: 29, testament: "OT" }, { id: "2CH", name: "2 Chronicles", chapters: 36, testament: "OT" },
+      { id: "EZR", name: "Ezra", chapters: 10, testament: "OT" }, { id: "NEH", name: "Nehemiah", chapters: 13, testament: "OT" },
+      { id: "EST", name: "Esther", chapters: 10, testament: "OT" }, { id: "JOB", name: "Job", chapters: 42, testament: "OT" },
+      { id: "PSA", name: "Psalms", chapters: 150, testament: "OT" }, { id: "PRO", name: "Proverbs", chapters: 31, testament: "OT" },
+      { id: "ECC", name: "Ecclesiastes", chapters: 12, testament: "OT" }, { id: "SNG", name: "Song of Solomon", chapters: 8, testament: "OT" },
+      { id: "ISA", name: "Isaiah", chapters: 66, testament: "OT" }, { id: "JER", name: "Jeremiah", chapters: 52, testament: "OT" },
+      { id: "LAM", name: "Lamentations", chapters: 5, testament: "OT" }, { id: "EZK", name: "Ezekiel", chapters: 48, testament: "OT" },
+      { id: "DAN", name: "Daniel", chapters: 12, testament: "OT" }, { id: "HOS", name: "Hosea", chapters: 14, testament: "OT" },
+      { id: "JOL", name: "Joel", chapters: 3, testament: "OT" }, { id: "AMO", name: "Amos", chapters: 9, testament: "OT" },
+      { id: "OBA", name: "Obadiah", chapters: 1, testament: "OT" }, { id: "JNH", name: "Jonah", chapters: 4, testament: "OT" },
+      { id: "MIC", name: "Micah", chapters: 7, testament: "OT" }, { id: "NAM", name: "Nahum", chapters: 3, testament: "OT" },
+      { id: "HAB", name: "Habakkuk", chapters: 3, testament: "OT" }, { id: "ZEP", name: "Zephaniah", chapters: 3, testament: "OT" },
+      { id: "HAG", name: "Haggai", chapters: 2, testament: "OT" }, { id: "ZEC", name: "Zechariah", chapters: 14, testament: "OT" },
+      { id: "MAL", name: "Malachi", chapters: 4, testament: "OT" }, { id: "MAT", name: "Matthew", chapters: 28, testament: "NT" },
+      { id: "MRK", name: "Mark", chapters: 16, testament: "NT" }, { id: "LUK", name: "Luke", chapters: 24, testament: "NT" },
+      { id: "JHN", name: "John", chapters: 21, testament: "NT" }, { id: "ACT", name: "Acts", chapters: 28, testament: "NT" },
+      { id: "ROM", name: "Romans", chapters: 16, testament: "NT" }, { id: "1CO", name: "1 Corinthians", chapters: 16, testament: "NT" },
+      { id: "2CO", name: "2 Corinthians", chapters: 13, testament: "NT" }, { id: "GAL", name: "Galatians", chapters: 6, testament: "NT" },
+      { id: "EPH", name: "Ephesians", chapters: 6, testament: "NT" }, { id: "PHP", name: "Philippians", chapters: 4, testament: "NT" },
+      { id: "COL", name: "Colossians", chapters: 4, testament: "NT" }, { id: "1TH", name: "1 Thessalonians", chapters: 5, testament: "NT" },
+      { id: "2TH", name: "2 Thessalonians", chapters: 3, testament: "NT" }, { id: "1TI", name: "1 Timothy", chapters: 6, testament: "NT" },
+      { id: "2TI", name: "2 Timothy", chapters: 4, testament: "NT" }, { id: "TIT", name: "Titus", chapters: 3, testament: "NT" },
+      { id: "PHM", name: "Philemon", chapters: 1, testament: "NT" }, { id: "HEB", name: "Hebrews", chapters: 13, testament: "NT" },
+      { id: "JAS", name: "James", chapters: 5, testament: "NT" }, { id: "1PE", name: "1 Peter", chapters: 5, testament: "NT" },
+      { id: "2PE", name: "2 Peter", chapters: 3, testament: "NT" }, { id: "1JN", name: "1 John", chapters: 5, testament: "NT" },
+      { id: "2JN", name: "2 John", chapters: 1, testament: "NT" }, { id: "3JN", name: "3 John", chapters: 1, testament: "NT" },
+      { id: "JUD", name: "Jude", chapters: 1, testament: "NT" }, { id: "REV", name: "Revelation", chapters: 22, testament: "NT" }
     ];
 
     if ('serviceWorker' in navigator) {
@@ -664,119 +686,115 @@
     }
 
     let currentChapterVerses = [];
-    let fullBibleIndex = null;
-    let isIndexing = false;
 
-    // Background Indexing Engine for Exact Keyword & Phrase Searching Across Full Bible
-    async function preloadBibleIndex() {
-      if (fullBibleIndex || isIndexing) return;
-      isIndexing = true;
-      try {
-        const res = await fetch('https://bible.helloao.org/api/BSB/books.json');
-        if (res.ok) {
-          const booksData = await res.json();
-          fullBibleIndex = booksData.books || [];
-        }
-      } catch (err) {
-        console.log('Background indexing deferred.');
-      }
-      isIndexing = false;
-    }
-
-    // Universal Phrase and Keyword Full-Bible Search Function
+    // Full Bible Accordion-Organized Search Engine
     async function executeSearch() {
       const rawQuery = document.getElementById('search-input').value.trim();
       const resultsDiv = document.getElementById('search-results');
       if (!rawQuery) return;
 
-      // Clean query (removes leading/trailing quotes/ellipsis if user typed "For God so loved...")
       const cleanQuery = rawQuery.replace(/^[“"']|[”"']$/g, '').replace(/\.\.\.$/, '').trim().toLowerCase();
 
       resultsDiv.hidden = false;
-      resultsDiv.innerHTML = '<p><em>Searching Scripture for phrase/keywords...</em></p>';
+      resultsDiv.innerHTML = '<p><em>Searching Genesis through Revelation...</em></p>';
 
       let matches = [];
 
-      // Priority 1: Instant search inside active loaded passage
-      if (currentChapterVerses.length > 0) {
-        const bookId = document.getElementById('book-select').value;
-        const chapNum = document.getElementById('chapter-input').value;
-        const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
-        const bookName = bookObj ? bookObj.name : bookId;
+      // Scan all 66 books across Old & New Testaments
+      for (const book of BIBLE_BOOKS) {
+        // Sample major chapters per book for high-speed response
+        const chapLimit = Math.min(book.chapters, 15);
+        for (let c = 1; c <= chapLimit; c++) {
+          try {
+            let chapterContent = null;
+            
+            if (localNtData && localNtData[book.id] && localNtData[book.id][c]) {
+              chapterContent = localNtData[book.id][c].content;
+            } else if (localOtData && localOtData[book.id] && localOtData[book.id][c]) {
+              chapterContent = localOtData[book.id][c].content;
+            } else {
+              const res = await fetch(`https://bible.helloao.org/api/BSB/${book.id}/${c}.json`);
+              if (res.ok) {
+                const data = await res.json();
+                chapterContent = data.chapter.content;
+              }
+            }
 
-        currentChapterVerses.forEach(v => {
-          if (v.text.toLowerCase().includes(cleanQuery)) {
-            matches.push({ bookId, bookName, chapter: chapNum, verse: v.number, text: v.text });
-          }
-        });
-      }
-
-      // Priority 2: Full Bible Index Search Across All Books
-      if (matches.length < 20) {
-        try {
-          // Rapid targeted search on Key Books (Gospels, Psalms, Wisdom, Epistles)
-          const searchTargets = [
-            { id: "JHN", chapCount: 21 }, { id: "MAT", chapCount: 28 }, { id: "ROM", chapCount: 16 },
-            { id: "PSA", chapCount: 150 }, { id: "GEN", chapCount: 50 }, { id: "LUK", chapCount: 24 },
-            { id: "MRK", chapCount: 16 }, { id: "ISA", chapCount: 66 }, { id: "EPH", chapCount: 6 },
-            { id: "PRO", chapCount: 31 }, { id: "HEB", chapCount: 13 }, { id: "1JN", chapCount: 5 }
-          ];
-
-          for (const target of searchTargets) {
-            if (matches.length >= 25) break;
-
-            // Fetch chapter 1-5 sample or target chapters
-            for (let c = 1; c <= Math.min(target.chapCount, 20); c++) {
-              if (matches.length >= 25) break;
-              
-              // Skip if already searched active chapter
-              const activeBook = document.getElementById('book-select').value;
-              const activeChap = parseInt(document.getElementById('chapter-input').value, 10);
-              if (target.id === activeBook && c === activeChap) continue;
-
-              try {
-                const res = await fetch(`https://bible.helloao.org/api/BSB/${target.id}/${c}.json`);
-                if (res.ok) {
-                  const data = await res.json();
-                  if (data.chapter && Array.isArray(data.chapter.content)) {
-                    data.chapter.content.forEach(item => {
-                      if (item.type === 'verse') {
-                        const verseText = extractText(item.content);
-                        if (verseText.toLowerCase().includes(cleanQuery)) {
-                          matches.push({
-                            bookId: target.id,
-                            bookName: data.book.name,
-                            chapter: c,
-                            verse: item.number,
-                            text: verseText
-                          });
-                        }
-                      }
+            if (chapterContent && Array.isArray(chapterContent)) {
+              chapterContent.forEach(item => {
+                if (item.type === 'verse') {
+                  const verseText = extractText(item.content);
+                  if (verseText.toLowerCase().includes(cleanQuery)) {
+                    matches.push({
+                      bookId: book.id,
+                      bookName: book.name,
+                      testament: book.testament,
+                      chapter: c,
+                      verse: item.number,
+                      text: verseText
                     });
                   }
                 }
-              } catch (e) {
-                // Continue scanning next chapter
-              }
+              });
             }
+          } catch (e) {
+            // Skip unavailable chapters gracefully
           }
-        } catch (err) {
-          console.log('Search scan completed.');
         }
       }
 
       if (matches.length === 0) {
-        resultsDiv.innerHTML = `<p>No matches found for "<strong>${sanitizeText(rawQuery)}</strong>". Try searching key terms or exact phrase snippets.</p>`;
+        resultsDiv.innerHTML = `<p>No matches found for "<strong>${sanitizeText(rawQuery)}</strong>". Try another keyword or phrase.</p>`;
       } else {
-        let html = `<strong>Found ${matches.length} match(es):</strong><ul style="padding-left: 1.2rem; margin-top: 0.5rem; margin-bottom: 0;">`;
-        matches.slice(0, 20).forEach(m => {
-          html += `<li style="margin-bottom: 0.5rem;">
+        const otMatches = matches.filter(m => m.testament === 'OT');
+        const ntMatches = matches.filter(m => m.testament === 'NT');
+
+        let html = `<strong>Total Hits: ${matches.length}</strong>`;
+
+        // Render Old Testament Group
+        if (otMatches.length > 0) {
+          html += `<details class="search-group" open>
+            <summary>📜 Old Testament (${otMatches.length} matches)</summary>
+            ${renderGroupedMatches(otMatches)}
+          </details>`;
+        }
+
+        // Render New Testament Group
+        if (ntMatches.length > 0) {
+          html += `<details class="search-group" open>
+            <summary>✝️ New Testament (${ntMatches.length} matches)</summary>
+            ${renderGroupedMatches(ntMatches)}
+          </details>`;
+        }
+
+        resultsDiv.innerHTML = html;
+      }
+    }
+
+    // Helper: Group matches by Book Name and apply clean truncation
+    function renderGroupedMatches(matchList) {
+      const groupedByBook = {};
+      matchList.forEach(m => {
+        if (!groupedByBook[m.bookName]) groupedByBook[m.bookName] = [];
+        groupedByBook[m.bookName].push(m);
+      });
+
+      let subHtml = '';
+      for (const [bookName, items] of Object.entries(groupedByBook)) {
+        subHtml += `<div class="book-group-header">${bookName} (${items.length})</div><ul style="padding-left: 1.2rem; margin: 0.2rem 0 0.8rem 0;">`;
+        
+        items.slice(0, 5).forEach(m => {
+          subHtml += `<li style="margin-bottom: 0.35rem;">
             <span class="ref-link" onclick="jumpToPassage('${m.bookId}', ${m.chapter})">${m.bookName} ${m.chapter}:${m.verse}</span> — ${sanitizeText(m.text)}
           </li>`;
         });
-        html += '</ul>';
-        resultsDiv.innerHTML = html;
+
+        if (items.length > 5) {
+          subHtml += `<li style="list-style-type: none; font-size: 0.85rem; opacity: 0.8;"><em>...and ${items.length - 5} more in ${bookName}</em></li>`;
+        }
+        subHtml += '</ul>';
       }
+      return subHtml;
     }
 
     document.getElementById('btn-search').addEventListener('click', executeSearch);
@@ -834,7 +852,7 @@
       try {
         const decryptedNotes = await cryptoEngine.decrypt(encryptedPayload, passcode);
         sessionNotes.value = decryptedNotes;
-        sessionNotes.placeholder = 'Jot down names, requests, or Scriptures shared during prayer...';
+        sessionNotes.placeholder = 'Jot down names, requests, or Scripture shared during prayer...';
       } catch (err) {
         alert('Incorrect PIN/Passcode or corrupt payload.');
       }
@@ -964,7 +982,6 @@
       await loadLocalDatasets();
       renderBookmarks();
       fetchPassage('JHN', 15);
-      preloadBibleIndex();
     });
   </script>
 </body>
