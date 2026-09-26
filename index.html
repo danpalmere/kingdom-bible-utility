@@ -29,8 +29,9 @@
       --accent: #2b5797;
       --border: #444;
       --focus-ring: #005a9c;
-      --max-width: 720px;
-      --reader-font-size: 1.25rem;
+      --max-width: 760px;
+      --reader-font-size: 1.2rem;
+      --reader-font-family: Georgia, serif;
 
       /* Highlighting & Emphasis Palette */
       --hl-red: rgba(239, 83, 80, 0.4);
@@ -59,10 +60,10 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: Georgia, serif;
+      font-family: system-ui, -apple-system, sans-serif;
       line-height: 1.85;
       margin: 0;
-      padding: 2rem 1rem 5rem 1rem;
+      padding: 1rem 1rem 6rem 1rem;
     }
     
     *:focus-visible {
@@ -72,32 +73,38 @@
 
     header, main, section, footer, dialog {
       max-width: var(--max-width);
-      margin: 0 auto 2rem auto;
+      margin: 0 auto 1.5rem auto;
     }
     nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 2px solid var(--border);
-      padding-bottom: 1rem;
-      font-family: system-ui, -apple-system, sans-serif;
+      padding-bottom: 0.8rem;
     }
+    .clean-nav-group {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    /* Layout & Toolbar Styles */
     .controls, .reader-toolbar, .search-bar {
       display: flex;
       gap: 0.5rem;
-      margin-bottom: 1rem;
-      font-family: system-ui, -apple-system, sans-serif;
+      margin-bottom: 0.8rem;
       flex-wrap: wrap;
       align-items: center;
     }
     .reader-toolbar {
-      padding: 0.75rem;
+      padding: 0.6rem 0.8rem;
       border: 1px solid var(--border);
       border-radius: 6px;
       background: rgba(0,0,0,0.02);
+      font-size: 0.9rem;
     }
     label {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 600;
       display: flex;
       align-items: center;
@@ -107,11 +114,11 @@
       background: var(--bg);
       border: 1px solid var(--text);
       color: var(--text);
-      padding: 0.5rem 0.8rem;
-      font-size: 1rem;
+      padding: 0.4rem 0.7rem;
+      font-size: 0.95rem;
       cursor: pointer;
       border-radius: 4px;
-      min-height: 44px;
+      min-height: 40px;
     }
     textarea { cursor: text; }
     button:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -119,16 +126,42 @@
       background: var(--text);
       color: var(--bg);
     }
+
+    /* Sticky Bottom Chapter Navigation Bar */
+    #sticky-bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--bg);
+      border-top: 2px solid var(--border);
+      padding: 0.5rem 1rem;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+      z-index: 990;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      box-sizing: border-box;
+    }
+    #sticky-bottom-nav .nav-container {
+      max-width: var(--max-width);
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
     .topic-pills, .bookmarks-bar {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.4rem;
       margin-bottom: 1rem;
-      font-family: system-ui, -apple-system, sans-serif;
     }
     .topic-btn, .bookmark-pill {
-      font-size: 0.95rem;
-      padding: 0.3rem 0.7rem;
+      font-size: 0.9rem;
+      padding: 0.25rem 0.6rem;
     }
     .large-type {
       font-size: 1.2rem;
@@ -146,7 +179,25 @@
       text-decoration: underline;
     }
     
-    #passage-content { font-size: var(--reader-font-size); }
+    /* Passage Typography & Multi-Column Layout */
+    .passage-text-area {
+      font-family: var(--reader-font-family);
+      font-size: var(--reader-font-size);
+      line-height: 1.85;
+    }
+    .passage-text-area.column-view {
+      column-count: 2;
+      column-gap: 2rem;
+    }
+    .split-reader-container {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .split-pane {
+      flex: 1;
+      min-width: 0;
+    }
+
     .verse-num {
       font-size: 0.8em;
       vertical-align: super;
@@ -156,12 +207,9 @@
       font-weight: bold;
       cursor: pointer;
     }
-    .verse-word {
+    .verse-word.strongs-active {
       cursor: pointer;
-      border-bottom: 1px dotted transparent;
-    }
-    .verse-word:hover {
-      border-bottom-color: var(--accent);
+      border-bottom: 1px dotted var(--accent);
     }
     
     .hide-headings h4 { display: none !important; }
@@ -180,7 +228,7 @@
     /* Floating Study Suite FAB & Dock */
     #floating-suite-container {
       position: fixed;
-      bottom: 1.5rem;
+      bottom: 4.5rem;
       right: 1.5rem;
       z-index: 1050;
       display: flex;
@@ -202,11 +250,10 @@
       flex-direction: column;
       gap: 0.5rem;
       max-width: 320px;
-      font-family: system-ui, sans-serif;
     }
     #fab-toggle {
       border-radius: 50px;
-      padding: 0.6rem 1.2rem;
+      padding: 0.5rem 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       font-weight: bold;
     }
@@ -238,34 +285,6 @@
     /* Emphasis Styles */
     .emph-underline { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
     .emph-box { border: 2px solid var(--text); padding: 0 4px; border-radius: 3px; display: inline-block; }
-
-    /* Organized Search UI Accordions */
-    details.search-group {
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.5rem 0.8rem;
-      margin-top: 0.75rem;
-      background: rgba(0,0,0,0.01);
-    }
-    details.search-group summary {
-      font-weight: bold;
-      cursor: pointer;
-      font-family: system-ui, sans-serif;
-      padding: 0.2rem 0;
-    }
-    .book-group-header {
-      font-weight: 600;
-      margin-top: 0.75rem;
-      margin-bottom: 0.25rem;
-      font-family: system-ui, sans-serif;
-      color: var(--accent);
-    }
-    .btn-show-more {
-      font-size: 0.85rem;
-      padding: 0.2rem 0.6rem;
-      min-height: 32px;
-      margin-top: 0.4rem;
-    }
 
     /* Parallel Drawer Sidebar Overlay */
     #parallel-drawer-backdrop {
@@ -309,7 +328,7 @@
     [hidden] { display: none !important; }
 
     @media print {
-      nav, .controls, .reader-toolbar, .search-bar, .topic-pills, .bookmarks-bar, button, footer, .notes-section, #parallel-drawer, #floating-suite-container { display: none !important; }
+      nav, .controls, .reader-toolbar, .search-bar, .topic-pills, .bookmarks-bar, button, footer, .notes-section, #parallel-drawer, #floating-suite-container, #sticky-bottom-nav { display: none !important; }
       body { background: white; color: black; font-size: 12pt; padding: 0; }
       main, section { max-width: 100%; margin: 0; }
     }
@@ -319,10 +338,13 @@
 
   <a href="#main-content" class="sr-only" style="position: absolute; top: 0; left: 0; padding: 1rem; background: var(--text); color: var(--bg); z-index: 1000;" onfocus="this.classList.remove('sr-only')" onblur="this.classList.add('sr-only')">Skip to main content</a>
 
+  <!-- Elegant Top Header -->
   <header role="banner">
     <nav aria-label="Main Navigation">
-      <strong>Kingdom Utility</strong>
-      <div>
+      <div class="clean-nav-group">
+        <strong style="font-size: 1.15rem; letter-spacing: -0.02em;">Kingdom Utility</strong>
+      </div>
+      <div class="clean-nav-group">
         <button id="btn-reader" class="highlight" aria-pressed="true">Abide Reader</button>
         <button id="btn-ministry" aria-pressed="false">Prayer Mode</button>
       </div>
@@ -340,133 +362,93 @@
         <button type="button" id="btn-search" class="highlight">Search</button>
         <button type="button" id="btn-clear-search" style="display: none;">Clear</button>
       </form>
-      <div id="search-results" hidden class="card" style="font-family: system-ui, sans-serif; font-size: 0.95rem;"></div>
+      <div id="search-results" hidden class="card" style="font-size: 0.95rem;"></div>
 
-      <!-- Passage Navigation Controls -->
+      <!-- Compact Top Passage Form -->
       <form id="nav-form" class="controls" aria-label="Passage Navigation" onsubmit="return false;">
-        <button type="button" id="btn-prev-chap" aria-label="Previous Chapter">← Prev</button>
-
         <label for="book-select" class="sr-only">Book</label>
-        <select id="book-select">
+        <select id="book-select" style="font-weight: 600;">
           <!-- Old Testament -->
-          <option value="GEN">Genesis</option>
-          <option value="EXO">Exodus</option>
-          <option value="LEV">Leviticus</option>
-          <option value="NUM">Numbers</option>
-          <option value="DEU">Deuteronomy</option>
-          <option value="JOS">Joshua</option>
-          <option value="JDG">Judges</option>
-          <option value="RUT">Ruth</option>
-          <option value="1SA">1 Samuel</option>
-          <option value="2SA">2 Samuel</option>
-          <option value="1KI">1 Kings</option>
-          <option value="2KI">2 Kings</option>
-          <option value="1CH">1 Chronicles</option>
-          <option value="2CH">2 Chronicles</option>
-          <option value="EZR">Ezra</option>
-          <option value="NEH">Nehemiah</option>
-          <option value="EST">Esther</option>
-          <option value="JOB">Job</option>
-          <option value="PSA">Psalms</option>
-          <option value="PRO">Proverbs</option>
-          <option value="ECC">Ecclesiastes</option>
-          <option value="SNG">Song of Solomon</option>
-          <option value="ISA">Isaiah</option>
-          <option value="JER">Jeremiah</option>
-          <option value="LAM">Lamentations</option>
-          <option value="EZK">Ezekiel</option>
-          <option value="DAN">Daniel</option>
-          <option value="HOS">Hosea</option>
-          <option value="JOL">Joel</option>
-          <option value="AMO">Amos</option>
-          <option value="OBA">Obadiah</option>
-          <option value="JNH">Jonah</option>
-          <option value="MIC">Micah</option>
-          <option value="NAM">Nahum</option>
-          <option value="HAB">Habakkuk</option>
-          <option value="ZEP">Zephaniah</option>
-          <option value="HAG">Haggai</option>
-          <option value="ZEC">Zechariah</option>
-          <option value="MAL">Malachi</option>
+          <option value="GEN">Genesis</option><option value="EXO">Exodus</option><option value="LEV">Leviticus</option><option value="NUM">Numbers</option><option value="DEU">Deuteronomy</option><option value="JOS">Joshua</option><option value="JDG">Judges</option><option value="RUT">Ruth</option><option value="1SA">1 Samuel</option><option value="2SA">2 Samuel</option><option value="1KI">1 Kings</option><option value="2KI">2 Kings</option><option value="1CH">1 Chronicles</option><option value="2CH">2 Chronicles</option><option value="EZR">Ezra</option><option value="NEH">Nehemiah</option><option value="EST">Esther</option><option value="JOB">Job</option><option value="PSA">Psalms</option><option value="PRO">Proverbs</option><option value="ECC">Ecclesiastes</option><option value="SNG">Song of Solomon</option><option value="ISA">Isaiah</option><option value="JER">Jeremiah</option><option value="LAM">Lamentations</option><option value="EZK">Ezekiel</option><option value="DAN">Daniel</option><option value="HOS">Hosea</option><option value="JOL">Joel</option><option value="AMO">Amos</option><option value="OBA">Obadiah</option><option value="JNH">Jonah</option><option value="MIC">Micah</option><option value="NAM">Nahum</option><option value="HAB">Habakkuk</option><option value="ZEP">Zephaniah</option><option value="HAG">Haggai</option><option value="ZEC">Zechariah</option><option value="MAL">Malachi</option>
           <!-- New Testament -->
-          <option value="MAT">Matthew</option>
-          <option value="MRK">Mark</option>
-          <option value="LUK">Luke</option>
-          <option value="JHN" selected>John</option>
-          <option value="ACT">Acts</option>
-          <option value="ROM">Romans</option>
-          <option value="1CO">1 Corinthians</option>
-          <option value="2CO">2 Corinthians</option>
-          <option value="GAL">Galatians</option>
-          <option value="EPH">Ephesians</option>
-          <option value="PHP">Philippians</option>
-          <option value="COL">Colossians</option>
-          <option value="1TH">1 Thessalonians</option>
-          <option value="2TH">2 Thessalonians</option>
-          <option value="1TI">1 Timothy</option>
-          <option value="2TI">2 Timothy</option>
-          <option value="TIT">Titus</option>
-          <option value="PHM">Philemon</option>
-          <option value="HEB">Hebrews</option>
-          <option value="JAS">James</option>
-          <option value="1PE">1 Peter</option>
-          <option value="2PE">2 Peter</option>
-          <option value="1JN">1 John</option>
-          <option value="2JN">2 John</option>
-          <option value="3JN">3 John</option>
-          <option value="JUD">Jude</option>
-          <option value="REV">Revelation</option>
+          <option value="MAT">Matthew</option><option value="MRK">Mark</option><option value="LUK">Luke</option><option value="JHN" selected>John</option><option value="ACT">Acts</option><option value="ROM">Romans</option><option value="1CO">1 Corinthians</option><option value="2CO">2 Corinthians</option><option value="GAL">Galatians</option><option value="EPH">Ephesians</option><option value="PHP">Philippians</option><option value="COL">Colossians</option><option value="1TH">1 Thessalonians</option><option value="2TH">2 Thessalonians</option><option value="1TI">1 Timothy</option><option value="2TI">2 Timothy</option><option value="TIT">Titus</option><option value="PHM">Philemon</option><option value="HEB">Hebrews</option><option value="JAS">James</option><option value="1PE">1 Peter</option><option value="2PE">2 Peter</option><option value="1JN">1 John</option><option value="2JN">2 John</option><option value="3JN">3 John</option><option value="JUD">Jude</option><option value="REV">Revelation</option>
         </select>
         
         <label for="chapter-input" class="sr-only">Chapter</label>
-        <input type="number" id="chapter-input" value="15" min="1" max="150" style="width: 65px;" aria-label="Chapter Number">
+        <input type="number" id="chapter-input" value="15" min="1" max="150" style="width: 60px;" aria-label="Chapter Number">
         
-        <button type="button" id="btn-next-chap" aria-label="Next Chapter">Next →</button>
         <button type="button" id="btn-load" class="highlight">Go</button>
         <button type="button" id="btn-bookmark">🔖 Bookmark</button>
         <button type="button" id="btn-export-open" style="margin-left: auto;">🖨️ Export</button>
       </form>
 
-      <!-- Return Link Banner (Visible after jumping via parallel/cross reference) -->
-      <div id="return-history-banner" hidden style="margin-bottom: 1rem; padding: 0.5rem 0.8rem; border: 1px solid var(--accent); border-radius: 6px; font-family: system-ui, sans-serif;">
+      <!-- Return Link Banner -->
+      <div id="return-history-banner" hidden style="margin-bottom: 1rem; padding: 0.5rem 0.8rem; border: 1px solid var(--accent); border-radius: 6px;">
         <button type="button" id="btn-return-previous" style="min-height: 32px; padding: 0.2rem 0.6rem; font-size: 0.9rem;" class="highlight">← Return to Previous Passage</button>
       </div>
 
-      <!-- Bookmarks List -->
+      <!-- Bookmarks Bar -->
       <div id="bookmarks-container" class="bookmarks-bar" aria-label="Saved Bookmarks"></div>
 
-      <!-- Customization Toolbar -->
+      <!-- Reader View Options Bar -->
       <div class="reader-toolbar" role="region" aria-label="Reader View Options">
-        <span style="font-weight: bold; font-size: 0.9rem;">View Settings:</span>
-        
-        <label style="margin-left: 0.5rem;">
-          <input type="checkbox" id="toggle-headings" checked> Headings
-        </label>
-        
-        <label style="margin-left: 0.5rem;">
-          <input type="checkbox" id="toggle-verses" checked> Verses
-        </label>
+        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; width: 100%;">
+          <span><strong>Layout & View:</strong></span>
+          
+          <label><input type="checkbox" id="toggle-headings" checked> Headings</label>
+          <label><input type="checkbox" id="toggle-verses" checked> Verses</label>
+          <label><input type="checkbox" id="toggle-columns"> 2-Column</label>
+          <label><input type="checkbox" id="toggle-split-view"> Split OT/NT</label>
+          <label><input type="checkbox" id="toggle-strongs-mode"> 📖 Strong's Mode</label>
 
-        <div style="margin-left: auto; display: flex; gap: 0.3rem; align-items: center;">
-          <span style="font-size: 0.9rem; font-weight: bold;">Text Size:</span>
-          <button id="btn-font-smaller" aria-label="Decrease text size" style="padding: 0.2rem 0.6rem;">A-</button>
-          <button id="btn-font-larger" aria-label="Increase text size" style="padding: 0.2rem 0.6rem;">A+</button>
+          <div style="margin-left: auto; display: flex; gap: 0.4rem; align-items: center;">
+            <select id="font-family-select" style="min-height: 32px; font-size: 0.85rem; padding: 0.1rem 0.4rem;">
+              <option value="Georgia, serif">Serif (Georgia)</option>
+              <option value="system-ui, sans-serif">Sans-Serif (System)</option>
+              <option value="Courier New, monospace">Monospace</option>
+            </select>
+            <button id="btn-font-smaller" aria-label="Decrease font" style="padding: 0.1rem 0.5rem; min-height: 32px;">A-</button>
+            <button id="btn-font-larger" aria-label="Increase font" style="padding: 0.1rem 0.5rem; min-height: 32px;">A+</button>
+          </div>
         </div>
       </div>
 
-      <h2 id="passage-title">John 15</h2>
-      
-      <article id="passage-content" aria-live="polite">
-        <p><em>Loading passage...</em></p>
-      </article>
+      <!-- Main Reader Layout Container (Supports Single or Split Parallel Passages) -->
+      <div id="reader-layout-container">
+        <div id="primary-pane" class="split-pane">
+          <h2 id="passage-title">John 15</h2>
+          <article id="passage-content" class="passage-text-area" aria-live="polite">
+            <p><em>Loading passage...</em></p>
+          </article>
+        </div>
 
-      <!-- 5. Chapter-Specific Local Study Notes -->
-      <div id="chapter-notes-card" class="card" style="margin-top: 2rem; font-family: system-ui, sans-serif;">
+        <!-- Split Pane (Parallel OT/NT View) -->
+        <div id="secondary-pane" class="split-pane" hidden style="border-left: 1px solid var(--border); padding-left: 1.5rem;">
+          <div style="display: flex; gap: 0.4rem; margin-bottom: 0.5rem; align-items: center;">
+            <strong style="font-size: 0.9rem;">Parallel Reader:</strong>
+            <select id="sec-book-select" style="font-size: 0.85rem; min-height: 32px; padding: 0.1rem 0.3rem;">
+              <option value="PSA" selected>Psalms</option>
+              <option value="ISA">Isaiah</option>
+              <option value="GEN">Genesis</option>
+              <option value="ROM">Romans</option>
+            </select>
+            <input type="number" id="sec-chapter-input" value="1" min="1" max="150" style="width: 50px; min-height: 32px; font-size: 0.85rem; padding: 0.1rem 0.3rem;">
+            <button type="button" style="min-height: 32px; padding: 0.1rem 0.5rem; font-size: 0.85rem;" onclick="fetchSecondaryPassage()">Go</button>
+          </div>
+          <h3 id="sec-passage-title" style="margin-top: 0.5rem; font-size: 1.2rem;">Psalm 1</h3>
+          <article id="sec-passage-content" class="passage-text-area" style="font-size: var(--reader-font-size);">
+            <p><em>Loading parallel passage...</em></p>
+          </article>
+        </div>
+      </div>
+
+      <!-- Chapter-Specific Study Notes Card -->
+      <div id="chapter-notes-card" class="card" style="margin-top: 2rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
           <strong id="chapter-notes-title">📝 Study Notes for John 15</strong>
           <span style="font-size: 0.8rem; opacity: 0.8;">Auto-saved locally</span>
         </div>
-        <textarea id="chapter-notes-input" placeholder="Jot down personal observations, cross-references, or key insights for this chapter..." style="width: 100%; height: 100px; box-sizing: border-box; font-family: system-ui, sans-serif; font-size: 0.95rem;"></textarea>
+        <textarea id="chapter-notes-input" placeholder="Jot down personal observations, cross-references, or key insights for this chapter..." style="width: 100%; height: 90px; box-sizing: border-box; font-size: 0.95rem;"></textarea>
       </div>
     </section>
 
@@ -582,11 +564,20 @@
     </section>
   </main>
 
-  <!-- Floating Action Button (FAB) & Floating Study Dock -->
+  <!-- Sticky Bottom Chapter Navigation Bar -->
+  <div id="sticky-bottom-nav">
+    <div class="nav-container">
+      <button type="button" id="btn-bottom-prev" style="min-height: 36px; padding: 0.2rem 0.6rem;">← Prev</button>
+      <span id="bottom-passage-indicator" style="font-weight: bold; font-size: 0.95rem;">John 15</span>
+      <button type="button" id="btn-bottom-next" style="min-height: 36px; padding: 0.2rem 0.6rem;">Next →</button>
+    </div>
+  </div>
+
+  <!-- Floating Action Button (FAB) & Dock -->
   <div id="floating-suite-container">
     <div id="floating-dock" hidden>
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <strong style="font-size: 0.95rem;">⚙️ Floating Study Suite</strong>
+        <strong style="font-size: 0.95rem;">⚙️ Study Suite</strong>
         <button type="button" style="min-height: 28px; padding: 0.1rem 0.4rem; font-size: 0.8rem;" onclick="toggleFloatingDock()">✕</button>
       </div>
       
@@ -606,7 +597,6 @@
       <div style="display: flex; gap: 0.3rem; flex-wrap: wrap;">
         <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 36px;" id="btn-dock-assign-memory">🧠 Memory</button>
         <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 36px;" id="btn-dock-parallel">↔️ Cross-Ref</button>
-        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 36px;" id="btn-dock-strongs">📖 Strong's</button>
       </div>
     </div>
     <button type="button" id="fab-toggle" class="highlight" onclick="toggleFloatingDock()">⚙️ Study Suite</button>
@@ -616,18 +606,18 @@
   <div id="parallel-drawer-backdrop" onclick="closeParallelDrawer()"></div>
   <aside id="parallel-drawer" aria-label="Parallel Passage Drawer">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-      <strong style="font-size: 1.1rem;">↔️ Cross-References & Parallels</strong>
+      <strong style="font-size: 1.1rem;">↔️ Verse Action & Cross-Ref</strong>
       <button onclick="closeParallelDrawer()">✕</button>
     </div>
-    <div id="drawer-content" style="font-size: 0.95rem; font-family: system-ui, sans-serif;">
-      <p><em>Click any verse number in the passage to load cross-references side-by-side.</em></p>
+    <div id="drawer-content" style="font-size: 0.95rem;">
+      <p><em>Click any verse number in the passage to view cross-references or assign it to memory.</em></p>
     </div>
   </aside>
 
   <!-- Strong's Concordance Word Study Modal -->
   <dialog id="strongs-modal" aria-labelledby="strongs-title">
     <h2 id="strongs-title" style="margin-top:0; font-size: 1.3rem;">📖 Strong's Word Study (Public Domain)</h2>
-    <div id="strongs-modal-content" style="font-family: system-ui, sans-serif; font-size: 0.95rem; line-height: 1.6;"></div>
+    <div id="strongs-modal-content" style="font-size: 0.95rem; line-height: 1.6;"></div>
     <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
       <button onclick="document.getElementById('strongs-modal').close()">Close</button>
     </div>
@@ -637,7 +627,7 @@
   <dialog id="memory-modal" aria-labelledby="memory-title">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
       <h2 id="memory-title" style="margin:0; font-size: 1.3rem;">🧠 Scripture Memory Deck</h2>
-      <button type="button" style="font-size: 0.85rem; padding: 0.2rem 0.6rem;" onclick="loadActivePassageIntoMemory()">Load Current Passage</button>
+      <button type="button" style="font-size: 0.85rem; padding: 0.2rem 0.6rem;" onclick="loadActivePassageIntoMemory()">Load Chapter Verse 1</button>
     </div>
     <div style="margin-bottom: 1rem; display: flex; gap: 0.4rem; flex-wrap: wrap;">
       <button class="highlight" onclick="setMemoryStage('full')">Full Read</button>
@@ -650,7 +640,7 @@
       <div id="memory-practice-container" style="margin-top: 0.5rem;">
         <p id="memory-practice-text">“I am the vine; you are the branches. If you remain in Me and I in you, you will bear much fruit; apart from Me you can do nothing.”</p>
       </div>
-      <div id="memory-feedback" style="margin-top: 0.5rem; font-family: system-ui, sans-serif; font-size: 0.95rem;"></div>
+      <div id="memory-feedback" style="margin-top: 0.5rem; font-size: 0.95rem;"></div>
     </div>
     <div style="display: flex; justify-content: flex-end;">
       <button onclick="document.getElementById('memory-modal').close()">Close Deck</button>
@@ -672,7 +662,7 @@
 
   <footer role="contentinfo">
     <hr>
-    <p style="font-size: 0.9rem; font-family: system-ui, sans-serif; text-align: center;">
+    <p style="font-size: 0.9rem; text-align: center;">
       0 Ads. 0 Trackers. 0 Subscriptions. Built for the Kingdom.<br>
       <em>Freely given, freely share. Scripture taken from Berean Standard Bible (BSB). Word definitions based on original 1890 Strong's Concordance (Public Domain).</em>
     </p>
@@ -835,10 +825,15 @@
       }
     });
 
+    // 4. View Customization Controls
     const toggleHeadings = document.getElementById('toggle-headings');
     const toggleVerses = document.getElementById('toggle-verses');
+    const toggleColumns = document.getElementById('toggle-columns');
+    const toggleSplitView = document.getElementById('toggle-split-view');
+    const toggleStrongsMode = document.getElementById('toggle-strongs-mode');
+    const fontFamilySelect = document.getElementById('font-family-select');
     const passageContent = document.getElementById('passage-content');
-    let currentFontSize = 1.25;
+    let currentFontSize = 1.2;
 
     toggleHeadings.addEventListener('change', (e) => {
       if (e.target.checked) passageContent.classList.remove('hide-headings');
@@ -848,6 +843,37 @@
     toggleVerses.addEventListener('change', (e) => {
       if (e.target.checked) passageContent.classList.remove('hide-verses');
       else passageContent.classList.add('hide-verses');
+    });
+
+    toggleColumns.addEventListener('change', (e) => {
+      if (e.target.checked) passageContent.classList.add('column-view');
+      else passageContent.classList.remove('column-view');
+    });
+
+    toggleSplitView.addEventListener('change', (e) => {
+      const secPane = document.getElementById('secondary-pane');
+      const layoutContainer = document.getElementById('reader-layout-container');
+      if (e.target.checked) {
+        secPane.hidden = false;
+        layoutContainer.classList.add('split-reader-container');
+        fetchSecondaryPassage();
+      } else {
+        secPane.hidden = true;
+        layoutContainer.classList.remove('split-reader-container');
+      }
+    });
+
+    // 3. Strong's Mode Toggle
+    toggleStrongsMode.addEventListener('change', (e) => {
+      const isModeOn = e.target.checked;
+      document.querySelectorAll('.verse-word').forEach(el => {
+        if (isModeOn) el.classList.add('strongs-active');
+        else el.classList.remove('strongs-active');
+      });
+    });
+
+    fontFamilySelect.addEventListener('change', (e) => {
+      document.documentElement.style.setProperty('--reader-font-family', e.target.value);
     });
 
     document.getElementById('btn-font-larger').addEventListener('click', () => {
@@ -876,7 +902,7 @@
       clickedBtn.setAttribute('aria-selected', 'true');
     }
 
-    // Local Bookmarks Management
+    // Bookmarks Management
     let bookmarks = JSON.parse(localStorage.getItem('kingdom_bookmarks') || '[]');
     const bookmarksContainer = document.getElementById('bookmarks-container');
 
@@ -928,7 +954,7 @@
 
     let currentChapterVerses = [];
 
-    // Robust Universal Search Engine
+    // Full Bible Search
     const searchInput = document.getElementById('search-input');
     const btnClearSearch = document.getElementById('btn-clear-search');
 
@@ -1109,7 +1135,6 @@
       }
     });
 
-    // Floating Dock Toggle
     function toggleFloatingDock() {
       const dock = document.getElementById('floating-dock');
       dock.hidden = !dock.hidden;
@@ -1123,19 +1148,14 @@
       openParallelDrawer('Current Passage', 1);
     });
 
-    document.getElementById('btn-dock-strongs').addEventListener('click', () => {
-      openStrongsWordModal();
-    });
-
-    // 4. Reliable Selection Preservation Engine
+    // 1. Persistent Local Highlighting Engine
     let savedSelectionRange = null;
 
     document.addEventListener('selectionchange', () => {
       const sel = window.getSelection();
       if (sel && sel.rangeCount > 0 && sel.toString().trim().length > 0) {
         const anchorNode = sel.anchorNode;
-        const passage = document.getElementById('passage-content');
-        if (passage && passage.contains(anchorNode)) {
+        if (passageContent && passageContent.contains(anchorNode)) {
           savedSelectionRange = sel.getRangeAt(0).cloneRange();
         }
       }
@@ -1143,11 +1163,10 @@
 
     function applyHighlight(className) {
       if (!savedSelectionRange) {
-        const container = document.getElementById('passage-content');
         const existing = document.getElementById('highlight-toast');
         if (existing) existing.remove();
 
-        container.insertAdjacentHTML('beforebegin', '<div id="highlight-toast" style="padding:0.4rem 0.8rem; background:var(--accent); color:white; border-radius:4px; margin-bottom:0.5rem; font-family:sans-serif; font-size:0.85rem;">Tip: Highlight words in the verse text first!</div>');
+        passageContent.insertAdjacentHTML('beforebegin', '<div id="highlight-toast" style="padding:0.4rem 0.8rem; background:var(--accent); color:white; border-radius:4px; margin-bottom:0.5rem; font-size:0.85rem;">Tip: Highlight words in the verse text first!</div>');
         setTimeout(() => { const t = document.getElementById('highlight-toast'); if(t) t.remove(); }, 3000);
         return;
       }
@@ -1165,20 +1184,55 @@
       
       window.getSelection().removeAllRanges();
       savedSelectionRange = null;
+
+      // Save formatted passage locally for future visits
+      savePassageHighlightsLocally();
     }
 
     function clearSelectionStyles() {
-      const passage = document.getElementById('passage-content');
-      const styledSpans = passage.querySelectorAll('span[class^="hl-"], span[class^="emph-"]');
+      const styledSpans = passageContent.querySelectorAll('span[class^="hl-"], span[class^="emph-"]');
       styledSpans.forEach(span => {
         const parent = span.parentNode;
         while (span.firstChild) parent.insertBefore(span.firstChild, span);
         parent.removeChild(span);
       });
       savedSelectionRange = null;
+      savePassageHighlightsLocally();
     }
 
-    // 2. Assign Verse directly to Memory Deck
+    function savePassageHighlightsLocally() {
+      const bookId = document.getElementById('book-select').value;
+      const chapter = document.getElementById('chapter-input').value;
+      const key = `kingdom_hl_${bookId}_${chapter}`;
+      localStorage.setItem(key, passageContent.innerHTML);
+    }
+
+    function loadPassageHighlightsLocally(bookId, chapter) {
+      const key = `kingdom_hl_${bookId}_${chapter}`;
+      const savedHtml = localStorage.getItem(key);
+      if (savedHtml) {
+        passageContent.innerHTML = savedHtml;
+      }
+    }
+
+    // 2. Select Specific Verse to Add to Memory Deck
+    function addSpecificVerseToMemory(verseNum) {
+      const verseObj = currentChapterVerses.find(v => v.number === verseNum);
+      const bookId = document.getElementById('book-select').value;
+      const chapter = document.getElementById('chapter-input').value;
+      const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
+      const bookName = bookObj ? bookObj.name : bookId;
+
+      if (verseObj) {
+        activeMemoryTitle = `${bookName} ${chapter}:${verseNum} (BSB)`;
+        activeMemoryText = verseObj.text;
+        document.getElementById('memory-ref-title').innerText = activeMemoryTitle;
+        setMemoryStage('full');
+        closeParallelDrawer();
+        document.getElementById('memory-modal').showModal();
+      }
+    }
+
     function assignSelectedOrActiveToMemory() {
       const selText = savedSelectionRange ? savedSelectionRange.toString().trim() : '';
       const title = document.getElementById('passage-title').innerText;
@@ -1233,7 +1287,7 @@
         container.innerHTML = html;
       } else if (stage === 'type-test') {
         container.innerHTML = `
-          <textarea id="memory-input" placeholder="Type verse from memory here..." style="width:100%; height:90px; font-family:serif; font-size:1rem; box-sizing:border-box; margin-bottom:0.5rem;"></textarea>
+          <textarea id="memory-input" placeholder="Type verse from memory here..." style="width:100%; height:90px; font-size:1rem; box-sizing:border-box; margin-bottom:0.5rem;"></textarea>
           <div style="display:flex; gap:0.4rem;">
             <button type="button" class="highlight" onclick="evaluateTypingTest()">Check Accuracy</button>
             <button type="button" onclick="resetTypingTest()">Clear / Retry</button>
@@ -1288,7 +1342,7 @@
       if (feedback) feedback.innerHTML = '';
     }
 
-    // 1. Parallel Drawer Overlay & Floating Suite Shift
+    // Parallel Drawer & Verse Action Routing
     function openParallelDrawer(bookName, verseNum) {
       const drawer = document.getElementById('parallel-drawer');
       const backdrop = document.getElementById('parallel-drawer-backdrop');
@@ -1306,6 +1360,7 @@
         <div class="card" style="margin-top:0.5rem;">
           <strong>Focus Verse: ${sanitizeText(bookName)} ${verseNum}</strong>
           <p style="margin-top:0.3rem;">“${sanitizeText(verseText)}”</p>
+          <button type="button" class="highlight" style="margin-top:0.5rem; font-size:0.85rem; padding:0.2rem 0.6rem;" onclick="addSpecificVerseToMemory(${verseNum})">🧠 Add to Memory Deck</button>
         </div>
         <strong style="color:var(--accent);">Parallel Gospel / OT Cross-References:</strong>
         <ul style="padding-left:1.2rem; margin-top:0.5rem;">
@@ -1326,7 +1381,12 @@
       if (suiteContainer) suiteContainer.classList.remove('shifted');
     }
 
-    // 3. Word-Level Strong's Concordance Study
+    // 3. Conditional Word Click Handler (Respects Strong's Mode Toggle)
+    function handleWordClick(wordText) {
+      if (!toggleStrongsMode.checked) return; // Ignore if Strong's Mode toggle is OFF
+      openStrongsWordModal(wordText);
+    }
+
     function openStrongsWordModal(wordText) {
       const modal = document.getElementById('strongs-modal');
       const content = document.getElementById('strongs-modal-content');
@@ -1342,7 +1402,7 @@
       if (!targetWord || targetWord.length === 0) {
         content.innerHTML = `
           <strong>Strong's Lexical Word Study (${sanitizeText(bookName)} ${chapNum})</strong>
-          <p style="margin-top:0.5rem;"><em>Tip: Click or double-click any word directly in the passage text to analyze its original Greek/Hebrew definition!</em></p>
+          <p style="margin-top:0.5rem;"><em>Tip: Enable "📖 Strong's Mode" in settings above to click any word directly in the passage text!</em></p>
         `;
       } else {
         const cleanWord = targetWord.replace(/[^\w]/g, '');
@@ -1362,7 +1422,7 @@
       modal.showModal();
     }
 
-    // 5. Local Chapter Notes Engine
+    // Local Chapter Notes Engine
     function loadChapterNote(bookId, chapter) {
       const notesInput = document.getElementById('chapter-notes-input');
       const notesTitle = document.getElementById('chapter-notes-title');
@@ -1445,6 +1505,7 @@
       const titleDiv = document.getElementById('passage-title');
       const bookSelect = document.getElementById('book-select');
       const chapterInput = document.getElementById('chapter-input');
+      const bottomIndicator = document.getElementById('bottom-passage-indicator');
       
       bookSelect.value = bookId;
       chapterInput.value = chapter;
@@ -1471,10 +1532,14 @@
           bookName = data.book.name;
         }
 
-        titleDiv.innerText = `${sanitizeText(bookName)} ${sanitizeText(String(chapter))}`;
+        const formattedTitle = `${sanitizeText(bookName)} ${sanitizeText(String(chapter))}`;
+        titleDiv.innerText = formattedTitle;
+        if (bottomIndicator) bottomIndicator.innerText = formattedTitle;
 
         let passageHtml = "<p>";
         currentRawText = `${bookName} ${chapter} (BSB)\n\n`;
+
+        const isStrongsActive = toggleStrongsMode.checked ? 'strongs-active' : '';
 
         chapterContent.forEach(item => {
           if (item.type === 'heading') {
@@ -1482,9 +1547,9 @@
             passageHtml += `</p><h4 style="margin-top: 1.5rem; color: var(--accent); font-family: system-ui, sans-serif;">${headingText}</h4><p>`;
           } else if (item.type === 'verse') {
             const verseText = extractText(item.content);
-            const wordWrappedText = verseText.split(' ').map(w => `<span class="verse-word" onclick="openStrongsWordModal('${sanitizeText(w)}')">${sanitizeText(w)}</span>`).join(' ');
+            const wordWrappedText = verseText.split(' ').map(w => `<span class="verse-word ${isStrongsActive}" onclick="handleWordClick('${sanitizeText(w)}')">${sanitizeText(w)}</span>`).join(' ');
             
-            passageHtml += `<span class="verse-num" aria-hidden="true" title="Click to view cross-references" onclick="openParallelDrawer('${bookName}', ${item.number})">${item.number}</span>${wordWrappedText} `;
+            passageHtml += `<span class="verse-num" aria-hidden="true" title="Click to view options" onclick="openParallelDrawer('${bookName}', ${item.number})">${item.number}</span>${wordWrappedText} `;
             currentRawText += `${item.number}. ${verseText}\n`;
             currentChapterVerses.push({ number: item.number, text: verseText });
           } else if (item.type === 'line_break') {
@@ -1494,9 +1559,52 @@
         passageHtml += "</p>";
 
         passageContent.innerHTML = passageHtml;
+        loadPassageHighlightsLocally(bookId, chapter);
         loadChapterNote(bookId, chapter);
       } catch (err) {
         passageContent.innerHTML = "<p><em>Unable to load text. Check connection or verify local dataset.</em></p>";
+      }
+    }
+
+    async function fetchSecondaryPassage() {
+      const bookId = document.getElementById('sec-book-select').value;
+      const chapter = document.getElementById('sec-chapter-input').value;
+      const secTitle = document.getElementById('sec-passage-title');
+      const secContent = document.getElementById('sec-passage-content');
+
+      secContent.innerHTML = "<p><em>Loading parallel passage...</em></p>";
+
+      try {
+        let chapterContent = null;
+        let bookName = bookId;
+
+        if (localOtData && localOtData[bookId] && localOtData[bookId][chapter] && localOtData[bookId][chapter].content) {
+          chapterContent = localOtData[bookId][chapter].content;
+          bookName = localOtData[bookId].name || bookId;
+        } else if (localNtData && localNtData[bookId] && localNtData[bookId][chapter] && localNtData[bookId][chapter].content) {
+          chapterContent = localNtData[bookId][chapter].content;
+          bookName = localNtData[bookId].name || bookId;
+        } else {
+          const response = await fetch(`https://bible.helloao.org/api/BSB/${bookId}/${chapter}.json`);
+          const data = await response.json();
+          chapterContent = data.chapter.content;
+          bookName = data.book.name;
+        }
+
+        secTitle.innerText = `${sanitizeText(bookName)} ${sanitizeText(String(chapter))}`;
+
+        let passageHtml = "<p>";
+        chapterContent.forEach(item => {
+          if (item.type === 'heading') {
+            passageHtml += `</p><h4 style="margin-top: 1rem; color: var(--accent); font-size: 0.95rem;">${extractText(item.content)}</h4><p>`;
+          } else if (item.type === 'verse') {
+            passageHtml += `<span class="verse-num">${item.number}</span>${extractText(item.content)} `;
+          }
+        });
+        passageHtml += "</p>";
+        secContent.innerHTML = passageHtml;
+      } catch (err) {
+        secContent.innerHTML = "<p><em>Parallel passage unavailable.</em></p>";
       }
     }
 
@@ -1526,8 +1634,9 @@
       }
     }
 
-    document.getElementById('btn-prev-chap').addEventListener('click', () => navigateChapter('prev'));
-    document.getElementById('btn-next-chap').addEventListener('click', () => navigateChapter('next'));
+    // Nav Bindings (Top & Sticky Bottom)
+    document.getElementById('btn-bottom-prev').addEventListener('click', () => navigateChapter('prev'));
+    document.getElementById('btn-bottom-next').addEventListener('click', () => navigateChapter('next'));
 
     document.getElementById('btn-load').addEventListener('click', () => {
       const bookId = document.getElementById('book-select').value;
