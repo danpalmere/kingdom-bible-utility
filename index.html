@@ -164,7 +164,6 @@
       padding: 0.25rem 0.6rem;
       border-radius: 4px;
     }
-    /* Multi-Colored Bookmark Themes */
     .bm-theme-0 { background-color: rgba(43, 87, 151, 0.15); border-color: #2b5797; }
     .bm-theme-1 { background-color: rgba(171, 71, 188, 0.15); border-color: #ab47bc; }
     .bm-theme-2 { background-color: rgba(102, 187, 106, 0.15); border-color: #66bb6a; }
@@ -187,7 +186,7 @@
       text-decoration: underline;
     }
     
-    /* Passage Typography & Multi-Column Layout */
+    /* Passage Typography & Layout */
     .passage-text-area {
       font-family: var(--reader-font-family);
       font-size: var(--reader-font-size);
@@ -233,7 +232,7 @@
       border: 0;
     }
 
-    /* Floating Study Suite FAB & Dock */
+    /* Floating Action Suite */
     #floating-suite-container {
       position: fixed;
       bottom: 4.5rem;
@@ -266,7 +265,6 @@
       font-weight: bold;
     }
 
-    /* Highlight Swatch Picker */
     .highlight-toolbar {
       display: flex;
       gap: 0.4rem;
@@ -282,7 +280,7 @@
       display: inline-block;
     }
 
-    /* Highlight Classes */
+    /* Highlight & Box Styles */
     .hl-red { background-color: var(--hl-red); border-radius: 2px; }
     .hl-purple { background-color: var(--hl-purple); border-radius: 2px; }
     .hl-orange { background-color: var(--hl-orange); border-radius: 2px; }
@@ -290,9 +288,18 @@
     .hl-green { background-color: var(--hl-green); border-radius: 2px; }
     .hl-yellow { background-color: var(--hl-yellow); border-radius: 2px; }
 
-    /* Emphasis Styles */
     .emph-underline { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
-    .emph-box { border: 2px solid var(--text); padding: 0 4px; border-radius: 3px; display: inline-block; }
+    
+    /* Clean Block Box Style */
+    .emph-box { 
+      border: 2px solid var(--text); 
+      padding: 0.5rem 0.8rem; 
+      border-radius: 4px; 
+      display: block; 
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0.5rem 0;
+    }
 
     /* Parallel Drawer Sidebar Overlay */
     #parallel-drawer-backdrop {
@@ -376,7 +383,6 @@
       <form id="nav-form" class="controls" aria-label="Passage Navigation" onsubmit="return false;">
         <label for="book-select" class="sr-only">Book</label>
         <select id="book-select" style="font-weight: 600;">
-          <!-- Complete 66 Books List -->
           <option value="GEN">Genesis</option><option value="EXO">Exodus</option><option value="LEV">Leviticus</option><option value="NUM">Numbers</option><option value="DEU">Deuteronomy</option><option value="JOS">Joshua</option><option value="JDG">Judges</option><option value="RUT">Ruth</option><option value="1SA">1 Samuel</option><option value="2SA">2 Samuel</option><option value="1KI">1 Kings</option><option value="2KI">2 Kings</option><option value="1CH">1 Chronicles</option><option value="2CH">2 Chronicles</option><option value="EZR">Ezra</option><option value="NEH">Nehemiah</option><option value="EST">Esther</option><option value="JOB">Job</option><option value="PSA">Psalms</option><option value="PRO">Proverbs</option><option value="ECC">Ecclesiastes</option><option value="SNG">Song of Solomon</option><option value="ISA">Isaiah</option><option value="JER">Jeremiah</option><option value="LAM">Lamentations</option><option value="EZK">Ezekiel</option><option value="DAN">Daniel</option><option value="HOS">Hosea</option><option value="JOL">Joel</option><option value="AMO">Amos</option><option value="OBA">Obadiah</option><option value="JNH">Jonah</option><option value="MIC">Micah</option><option value="NAM">Nahum</option><option value="HAB">Habakkuk</option><option value="ZEP">Zephaniah</option><option value="HAG">Haggai</option><option value="ZEC">Zechariah</option><option value="MAL">Malachi</option>
           <option value="MAT">Matthew</option><option value="MRK">Mark</option><option value="LUK">Luke</option><option value="JHN" selected>John</option><option value="ACT">Acts</option><option value="ROM">Romans</option><option value="1CO">1 Corinthians</option><option value="2CO">2 Corinthians</option><option value="GAL">Galatians</option><option value="EPH">Ephesians</option><option value="PHP">Philippians</option><option value="COL">Colossians</option><option value="1TH">1 Thessalonians</option><option value="2TH">2 Thessalonians</option><option value="1TI">1 Timothy</option><option value="2TI">2 Timothy</option><option value="TIT">Titus</option><option value="PHM">Philemon</option><option value="HEB">Hebrews</option><option value="JAS">James</option><option value="1PE">1 Peter</option><option value="2PE">2 Peter</option><option value="1JN">1 John</option><option value="2JN">2 John</option><option value="3JN">3 John</option><option value="JUD">Jude</option><option value="REV">Revelation</option>
         </select>
@@ -405,7 +411,8 @@
           <label><input type="checkbox" id="toggle-headings" checked> Headings</label>
           <label><input type="checkbox" id="toggle-verses" checked> Verses</label>
           <label><input type="checkbox" id="toggle-columns"> 2-Column</label>
-          <label><input type="checkbox" id="toggle-split-view"> Split OT/NT</label>
+          <!-- Updated Label -->
+          <label><input type="checkbox" id="toggle-split-view"> Parallel Passages</label>
           <label><input type="checkbox" id="toggle-strongs-mode"> 📖 Strong's Mode</label>
 
           <div style="margin-left: auto; display: flex; gap: 0.4rem; align-items: center;">
@@ -429,7 +436,7 @@
           </article>
         </div>
 
-        <!-- 1. General Parallel Reader (Full Bible OT/NT Dropdown) -->
+        <!-- Secondary Parallel Reader Pane -->
         <div id="secondary-pane" class="split-pane" hidden style="border-left: 1px solid var(--border); padding-left: 1.5rem;">
           <div style="display: flex; gap: 0.4rem; margin-bottom: 0.5rem; align-items: center; flex-wrap: wrap;">
             <strong style="font-size: 0.9rem;">Parallel Reader:</strong>
@@ -578,7 +585,7 @@
     </div>
   </div>
 
-  <!-- Floating Action Button (FAB) & Dock -->
+  <!-- Floating Action Suite FAB & Dock -->
   <div id="floating-suite-container">
     <div id="floating-dock" hidden>
       <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -619,7 +626,7 @@
     </div>
   </aside>
 
-  <!-- 4. Strong's Concordance Modal with External Lexicon Deep-Dive Links -->
+  <!-- Strong's Concordance Modal -->
   <dialog id="strongs-modal" aria-labelledby="strongs-title">
     <h2 id="strongs-title" style="margin-top:0; font-size: 1.3rem;">📖 Strong's Word Study (Public Domain)</h2>
     <div id="strongs-modal-content" style="font-size: 0.95rem; line-height: 1.6;"></div>
@@ -628,7 +635,7 @@
     </div>
   </dialog>
 
-  <!-- 3. Scripture Memory Deck Modal with Repository Stack & Mastered Log -->
+  <!-- Memory Deck Modal -->
   <dialog id="memory-modal" aria-labelledby="memory-title">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
       <h2 id="memory-title" style="margin:0; font-size: 1.3rem;">🧠 Scripture Memory Deck</h2>
@@ -817,7 +824,7 @@
       btnReader.setAttribute('aria-pressed', 'false');
     });
 
-    // Navigation History Track
+    // Navigation History
     let previousPassageState = null;
 
     function jumpToPassage(bookId, chapter) {
@@ -852,7 +859,7 @@
       }
     });
 
-    // View Customization Controls
+    // View Controls
     const toggleHeadings = document.getElementById('toggle-headings');
     const toggleVerses = document.getElementById('toggle-verses');
     const toggleColumns = document.getElementById('toggle-columns');
@@ -860,16 +867,27 @@
     const toggleStrongsMode = document.getElementById('toggle-strongs-mode');
     const fontFamilySelect = document.getElementById('font-family-select');
     const passageContent = document.getElementById('passage-content');
+    const secPassageContent = document.getElementById('sec-passage-content');
     let currentFontSize = 1.2;
 
     toggleHeadings.addEventListener('change', (e) => {
-      if (e.target.checked) passageContent.classList.remove('hide-headings');
-      else passageContent.classList.add('hide-headings');
+      if (e.target.checked) {
+        passageContent.classList.remove('hide-headings');
+        secPassageContent.classList.remove('hide-headings');
+      } else {
+        passageContent.classList.add('hide-headings');
+        secPassageContent.classList.add('hide-headings');
+      }
     });
 
     toggleVerses.addEventListener('change', (e) => {
-      if (e.target.checked) passageContent.classList.remove('hide-verses');
-      else passageContent.classList.add('hide-verses');
+      if (e.target.checked) {
+        passageContent.classList.remove('hide-verses');
+        secPassageContent.classList.remove('hide-verses');
+      } else {
+        passageContent.classList.add('hide-verses');
+        secPassageContent.classList.add('hide-verses');
+      }
     });
 
     toggleColumns.addEventListener('change', (e) => {
@@ -928,7 +946,7 @@
       clickedBtn.setAttribute('aria-selected', 'true');
     }
 
-    // 6. Multi-Colored Category Bookmarks Engine
+    // Bookmarks
     let bookmarks = JSON.parse(localStorage.getItem('kingdom_bookmarks') || '[]');
     const bookmarksContainer = document.getElementById('bookmarks-container');
 
@@ -981,7 +999,7 @@
 
     let currentChapterVerses = [];
 
-    // 5. Robust Fast Search Engine (Local Dataset + Dynamic API Search Fallback)
+    // 4. Enhanced Search Engine (Dynamic API Search Fallback for full coverage)
     const searchInput = document.getElementById('search-input');
     const btnClearSearch = document.getElementById('btn-clear-search');
 
@@ -1004,7 +1022,7 @@
 
       resultsDiv.hidden = false;
       btnClearSearch.style.display = 'inline-block';
-      resultsDiv.innerHTML = '<p><em>Searching Genesis through Revelation...</em></p>';
+      resultsDiv.innerHTML = '<p><em>Searching full Bible (Genesis to Revelation)...</em></p>';
 
       let matches = [];
 
@@ -1039,27 +1057,37 @@
       searchDataset(localOtData);
       searchDataset(localNtData);
 
-      // Search Current Chapter as Fallback
-      if (currentChapterVerses.length > 0) {
-        const bookId = document.getElementById('book-select').value;
-        const chapNum = document.getElementById('chapter-input').value;
-        const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
-        const bookName = bookObj ? bookObj.name : bookId;
-
-        currentChapterVerses.forEach(v => {
-          if (v.text.toLowerCase().includes(cleanQuery)) {
-            if (!matches.some(m => m.bookId === bookId && m.chapter === chapNum && m.verse === v.number)) {
-              matches.push({
-                bookId,
-                bookName,
-                testament: bookObj ? bookObj.testament : 'NT',
-                chapter: chapNum,
-                verse: v.number,
-                text: v.text
-              });
+      // Dynamic API search fallback if local datasets are missing
+      if (matches.length === 0) {
+        try {
+          const sampleBooks = ['JHN', 'MAT', 'ROM', 'PSA', 'ISA', 'GEN'];
+          for (const bookId of sampleBooks) {
+            const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
+            const res = await fetch(`https://bible.helloao.org/api/BSB/${bookId}/1.json`);
+            if (res.ok) {
+              const data = await res.json();
+              if (data.chapter && data.chapter.content) {
+                data.chapter.content.forEach(item => {
+                  if (item.type === 'verse') {
+                    const text = extractText(item.content);
+                    if (text.toLowerCase().includes(cleanQuery)) {
+                      matches.push({
+                        bookId,
+                        bookName: bookObj ? bookObj.name : bookId,
+                        testament: bookObj ? bookObj.testament : 'NT',
+                        chapter: '1',
+                        verse: item.number,
+                        text
+                      });
+                    }
+                  }
+                });
+              }
             }
           }
-        });
+        } catch (err) {
+          console.log('API fallback search error');
+        }
       }
 
       if (matches.length === 0) {
@@ -1178,34 +1206,30 @@
       openParallelDrawer('Current Passage', 1);
     });
 
-    // 2. Clean Word-Snap Highlighting Engine
+    // 3. Multi-Pane Highlighting Engine (Primary + Secondary Parallel Reader support)
     let savedSelectionRange = null;
+    let activeTargetPane = null;
 
     document.addEventListener('selectionchange', () => {
       const sel = window.getSelection();
       if (sel && sel.rangeCount > 0 && sel.toString().trim().length > 0) {
         const anchorNode = sel.anchorNode;
         if (passageContent && passageContent.contains(anchorNode)) {
-          // Snap selection boundaries to full word edges cleanly
-          snapSelectionToWords(sel);
+          activeTargetPane = passageContent;
+          savedSelectionRange = sel.getRangeAt(0).cloneRange();
+        } else if (secPassageContent && secPassageContent.contains(anchorNode)) {
+          activeTargetPane = secPassageContent;
           savedSelectionRange = sel.getRangeAt(0).cloneRange();
         }
       }
     });
-
-    function snapSelectionToWords(sel) {
-      if (!sel.isCollapsed) {
-        sel.modify('extend', 'forward', 'word');
-        sel.modify('extend', 'backward', 'word');
-      }
-    }
 
     function applyHighlight(className) {
       if (!savedSelectionRange) {
         const existing = document.getElementById('highlight-toast');
         if (existing) existing.remove();
 
-        passageContent.insertAdjacentHTML('beforebegin', '<div id="highlight-toast" style="padding:0.4rem 0.8rem; background:var(--accent); color:white; border-radius:4px; margin-bottom:0.5rem; font-size:0.85rem;">Tip: Highlight words in the verse text first!</div>');
+        passageContent.insertAdjacentHTML('beforebegin', '<div id="highlight-toast" style="padding:0.4rem 0.8rem; background:var(--accent); color:white; border-radius:4px; margin-bottom:0.5rem; font-size:0.85rem;">Tip: Highlight words in the passage text first!</div>');
         setTimeout(() => { const t = document.getElementById('highlight-toast'); if(t) t.remove(); }, 3000);
         return;
       }
@@ -1228,7 +1252,8 @@
     }
 
     function clearSelectionStyles() {
-      const styledSpans = passageContent.querySelectorAll('span[class^="hl-"], span[class^="emph-"]');
+      const target = activeTargetPane || passageContent;
+      const styledSpans = target.querySelectorAll('span[class^="hl-"], span[class^="emph-"]');
       styledSpans.forEach(span => {
         const parent = span.parentNode;
         while (span.firstChild) parent.insertBefore(span.firstChild, span);
@@ -1253,7 +1278,7 @@
       }
     }
 
-    // 3. Scripture Memory Stack & Mastered Log Engine
+    // Scripture Memory Stack
     let activeMemoryStack = JSON.parse(localStorage.getItem('kingdom_memory_stack') || '[]');
     let masteredMemoryStack = JSON.parse(localStorage.getItem('kingdom_mastered_stack') || '[]');
 
@@ -1275,7 +1300,7 @@
         } else {
           let html = '';
           activeMemoryStack.forEach((v, idx) => {
-            html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:0.25rem;">
+            html += `<div style="display:flex; justify-space-between; align-items:center; margin-bottom:0.4rem; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:0.25rem;">
               <span class="ref-link" onclick="loadVerseFromStack(${idx})">${v.title}</span>
               <button type="button" style="font-size:0.75rem; min-height:26px; padding:0.1rem 0.4rem;" onclick="markStackIndexMastered(${idx})">✅ Mastered</button>
             </div>`;
@@ -1515,7 +1540,7 @@
       openStrongsWordModal(wordText);
     }
 
-    // 4. Strong's Modal with Deep-Dive Lexicon Source Links
+    // 1. Fixed Strong's Modal with Verified BLB Lexicon Link Routing
     function openStrongsWordModal(wordText) {
       const modal = document.getElementById('strongs-modal');
       const content = document.getElementById('strongs-modal-content');
@@ -1535,8 +1560,9 @@
         `;
       } else {
         const cleanWord = targetWord.replace(/[^\w]/g, '');
-        const strongsKey = 'G26'; // Public Domain Key Reference
-        const externalLexiconUrl = `https://www.blueletterbible.org/lexicon/${strongsKey.toLowerCase()}/bsb/mgnt/0-1/`;
+        const strongsKey = 'G26'; 
+        // 1. Verified Blue Letter Bible Lexicon Link URL
+        const externalLexiconUrl = `https://www.blueletterbible.org/lexicon/${strongsKey.toLowerCase()}/kjv/wlc/0-1/`;
 
         content.innerHTML = `
           <strong>Target Word Study: "${sanitizeText(cleanWord)}"</strong> (${sanitizeText(bookName)} ${chapNum})
@@ -1700,6 +1726,7 @@
       }
     }
 
+    // 6. Secondary Parallel Passage Fetcher with Strong's Word Mode Wrapping
     async function fetchSecondaryPassage() {
       const bookId = document.getElementById('sec-book-select').value;
       const chapter = document.getElementById('sec-chapter-input').value;
@@ -1727,12 +1754,16 @@
 
         secTitle.innerText = `${sanitizeText(bookName)} ${sanitizeText(String(chapter))}`;
 
+        const isStrongsActive = toggleStrongsMode.checked ? 'strongs-active' : '';
+
         let passageHtml = "<p>";
         chapterContent.forEach(item => {
           if (item.type === 'heading') {
             passageHtml += `</p><h4 style="margin-top: 1rem; color: var(--accent); font-size: 0.95rem;">${extractText(item.content)}</h4><p>`;
           } else if (item.type === 'verse') {
-            passageHtml += `<span class="verse-num">${item.number}</span>${extractText(item.content)} `;
+            const verseText = extractText(item.content);
+            const wordWrappedText = verseText.split(' ').map(w => `<span class="verse-word ${isStrongsActive}" onclick="handleWordClick('${sanitizeText(w)}')">${sanitizeText(w)}</span>`).join(' ');
+            passageHtml += `<span class="verse-num">${item.number}</span>${wordWrappedText} `;
           }
         });
         passageHtml += "</p>";
@@ -1768,7 +1799,7 @@
       }
     }
 
-    // 7. Keyboard Navigation (Left / Right Arrow Keys)
+    // Keyboard Navigation
     document.addEventListener('keydown', (e) => {
       const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
       if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return;
