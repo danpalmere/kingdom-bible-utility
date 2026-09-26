@@ -62,7 +62,7 @@
       font-family: Georgia, serif;
       line-height: 1.85;
       margin: 0;
-      padding: 2rem 1rem;
+      padding: 2rem 1rem 5rem 1rem;
     }
     
     *:focus-visible {
@@ -82,7 +82,7 @@
       padding-bottom: 1rem;
       font-family: system-ui, -apple-system, sans-serif;
     }
-    .controls, .reader-toolbar, .search-bar, .study-bar {
+    .controls, .reader-toolbar, .search-bar {
       display: flex;
       gap: 0.5rem;
       margin-bottom: 1rem;
@@ -90,7 +90,7 @@
       flex-wrap: wrap;
       align-items: center;
     }
-    .reader-toolbar, .study-bar {
+    .reader-toolbar {
       padding: 0.75rem;
       border: 1px solid var(--border);
       border-radius: 6px;
@@ -170,20 +170,46 @@
       border: 0;
     }
 
+    /* Floating Study Suite FAB & Dock */
+    #floating-suite-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+    }
+    #floating-dock {
+      background: var(--bg);
+      border: 2px solid var(--text);
+      border-radius: 8px;
+      padding: 0.75rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: 320px;
+      font-family: system-ui, sans-serif;
+    }
+    #fab-toggle {
+      border-radius: 50px;
+      padding: 0.6rem 1.2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      font-weight: bold;
+    }
+
     /* Highlight Swatch Picker */
     .highlight-toolbar {
       display: flex;
       gap: 0.4rem;
       align-items: center;
-      padding: 0.5rem;
-      border: 1px dashed var(--border);
-      border-radius: 6px;
-      margin-bottom: 1rem;
-      font-family: system-ui, sans-serif;
+      flex-wrap: wrap;
     }
     .swatch {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       border: 1px solid var(--text);
       cursor: pointer;
@@ -191,12 +217,12 @@
     }
 
     /* Highlight Classes */
-    .hl-red { background-color: var(--hl-red); }
-    .hl-purple { background-color: var(--hl-purple); }
-    .hl-orange { background-color: var(--hl-orange); }
-    .hl-blue { background-color: var(--hl-blue); }
-    .hl-green { background-color: var(--hl-green); }
-    .hl-yellow { background-color: var(--hl-yellow); }
+    .hl-red { background-color: var(--hl-red); border-radius: 2px; }
+    .hl-purple { background-color: var(--hl-purple); border-radius: 2px; }
+    .hl-orange { background-color: var(--hl-orange); border-radius: 2px; }
+    .hl-blue { background-color: var(--hl-blue); border-radius: 2px; }
+    .hl-green { background-color: var(--hl-green); border-radius: 2px; }
+    .hl-yellow { background-color: var(--hl-yellow); border-radius: 2px; }
 
     /* Emphasis Styles */
     .emph-underline { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
@@ -230,18 +256,29 @@
       margin-top: 0.4rem;
     }
 
-    /* Parallel Drawer Sidebar */
+    /* Parallel Drawer Sidebar Overlay */
+    #parallel-drawer-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.4);
+      z-index: 1000;
+      display: none;
+    }
     #parallel-drawer {
       position: fixed;
       top: 0;
       right: -380px;
       width: 350px;
+      max-width: 85vw;
       height: 100%;
       background: var(--bg);
       border-left: 2px solid var(--border);
-      box-shadow: -4px 0 12px rgba(0,0,0,0.15);
+      box-shadow: -4px 0 16px rgba(0,0,0,0.25);
       transition: right 0.3s ease;
-      z-index: 1000;
+      z-index: 1001;
       padding: 1.5rem;
       box-sizing: border-box;
       overflow-y: auto;
@@ -261,7 +298,7 @@
     [hidden] { display: none !important; }
 
     @media print {
-      nav, .controls, .reader-toolbar, .search-bar, .study-bar, .topic-pills, .bookmarks-bar, button, footer, .notes-section, #parallel-drawer, .highlight-toolbar { display: none !important; }
+      nav, .controls, .reader-toolbar, .search-bar, .topic-pills, .bookmarks-bar, button, footer, .notes-section, #parallel-drawer, #floating-suite-container { display: none !important; }
       body { background: white; color: black; font-size: 12pt; padding: 0; }
       main, section { max-width: 100%; margin: 0; }
     }
@@ -379,27 +416,9 @@
         <button type="button" id="btn-export-open" style="margin-left: auto;">🖨️ Export</button>
       </form>
 
-      <!-- Advanced Study & Tool Bar -->
-      <div class="study-bar" role="region" aria-label="Study Tools">
-        <span style="font-weight: bold; font-size: 0.9rem;">Study Suite:</span>
-        <button type="button" id="btn-toggle-highlight-tool">🖌️ Format & Highlight</button>
-        <button type="button" id="btn-open-memory-deck">🧠 Memory Deck</button>
-        <button type="button" id="btn-open-parallel-drawer">↔️ Parallel Drawer</button>
-        <button type="button" id="btn-open-strongs">📖 Strong's Word Study</button>
-      </div>
-
-      <!-- Highlighting Swatch Panel -->
-      <div id="highlight-panel" class="highlight-toolbar" hidden>
-        <span style="font-size: 0.85rem; font-weight: bold;">Select Style:</span>
-        <span class="swatch" style="background-color: var(--hl-red);" title="Blood of Jesus" onclick="applyHighlight('hl-red')"></span>
-        <span class="swatch" style="background-color: var(--hl-purple);" title="Command / Condition" onclick="applyHighlight('hl-purple')"></span>
-        <span class="swatch" style="background-color: var(--hl-orange);" title="Promise" onclick="applyHighlight('hl-orange')"></span>
-        <span class="swatch" style="background-color: var(--hl-blue);" title="Holy Spirit" onclick="applyHighlight('hl-blue')"></span>
-        <span class="swatch" style="background-color: var(--hl-green);" title="Love" onclick="applyHighlight('hl-green')"></span>
-        <span class="swatch" style="background-color: var(--hl-yellow);" title="Anything Amazing" onclick="applyHighlight('hl-yellow')"></span>
-        <button type="button" style="padding: 0.2rem 0.5rem; min-height: 28px; font-size: 0.8rem;" onclick="applyHighlight('emph-underline')"><u>Underline</u></button>
-        <button type="button" style="padding: 0.2rem 0.5rem; min-height: 28px; font-size: 0.8rem;" onclick="applyHighlight('emph-box')">Box</button>
-        <button type="button" style="padding: 0.2rem 0.5rem; min-height: 28px; font-size: 0.8rem;" onclick="clearSelectionStyles()">Clear</button>
+      <!-- Return Link Banner (Visible after jumping via parallel/cross reference) -->
+      <div id="return-history-banner" hidden style="margin-bottom: 1rem; padding: 0.5rem 0.8rem; border: 1px solid var(--accent); border-radius: 6px; font-family: system-ui, sans-serif;">
+        <button type="button" id="btn-return-previous" style="min-height: 32px; padding: 0.2rem 0.6rem; font-size: 0.9rem;" class="highlight">← Return to Previous Passage</button>
       </div>
 
       <!-- Bookmarks List -->
@@ -543,18 +562,49 @@
     </section>
   </main>
 
-  <!-- Parallel Passages Drawer -->
+  <!-- 2. Floating Action Button (FAB) & Floating Study Dock -->
+  <div id="floating-suite-container">
+    <div id="floating-dock" hidden>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <strong style="font-size: 0.95rem;">⚙️ Floating Study Suite</strong>
+        <button type="button" style="min-height: 28px; padding: 0.1rem 0.4rem; font-size: 0.8rem;" onclick="toggleFloatingDock()">✕</button>
+      </div>
+      
+      <!-- Formatting Swatches -->
+      <div class="highlight-toolbar">
+        <span class="swatch" style="background-color: var(--hl-red);" title="Blood of Jesus" onclick="applyHighlight('hl-red')"></span>
+        <span class="swatch" style="background-color: var(--hl-purple);" title="Command / Condition" onclick="applyHighlight('hl-purple')"></span>
+        <span class="swatch" style="background-color: var(--hl-orange);" title="Promise" onclick="applyHighlight('hl-orange')"></span>
+        <span class="swatch" style="background-color: var(--hl-blue);" title="Holy Spirit" onclick="applyHighlight('hl-blue')"></span>
+        <span class="swatch" style="background-color: var(--hl-green);" title="Love" onclick="applyHighlight('hl-green')"></span>
+        <span class="swatch" style="background-color: var(--hl-yellow);" title="Anything Amazing" onclick="applyHighlight('hl-yellow')"></span>
+        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 28px; font-size: 0.8rem;" onclick="applyHighlight('emph-underline')"><u>U</u></button>
+        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 28px; font-size: 0.8rem;" onclick="applyHighlight('emph-box')">Box</button>
+        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 28px; font-size: 0.8rem;" onclick="clearSelectionStyles()">Clear</button>
+      </div>
+
+      <div style="display: flex; gap: 0.3rem; flex-wrap: wrap;">
+        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 36px;" id="btn-dock-memory">🧠 Memory Deck</button>
+        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 36px;" id="btn-dock-parallel">↔️ Cross-Ref</button>
+        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 36px;" id="btn-dock-strongs">📖 Strong's</button>
+      </div>
+    </div>
+    <button type="button" id="fab-toggle" class="highlight" onclick="toggleFloatingDock()">⚙️ Study Suite</button>
+  </div>
+
+  <!-- 4. Parallel Passages Drawer & Overlay Backdrop -->
+  <div id="parallel-drawer-backdrop" onclick="closeParallelDrawer()"></div>
   <aside id="parallel-drawer" aria-label="Parallel Passage Drawer">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
       <strong style="font-size: 1.1rem;">↔️ Cross-References & Parallels</strong>
-      <button onclick="document.getElementById('parallel-drawer').classList.remove('open')">✕</button>
+      <button onclick="closeParallelDrawer()">✕</button>
     </div>
     <div id="drawer-content" style="font-size: 0.95rem; font-family: system-ui, sans-serif;">
-      <p><em>Click any verse number in the main passage to load cross-references side-by-side.</em></p>
+      <p><em>Click any verse number in the passage to load cross-references side-by-side.</em></p>
     </div>
   </aside>
 
-  <!-- Strong's Concordance Word Study Modal -->
+  <!-- 8. Strong's Concordance Word Study Modal -->
   <dialog id="strongs-modal" aria-labelledby="strongs-title">
     <h2 id="strongs-title" style="margin-top:0; font-size: 1.3rem;">📖 Strong's Word Study (Public Domain)</h2>
     <div id="strongs-modal-content" style="font-family: system-ui, sans-serif; font-size: 0.95rem; line-height: 1.6;"></div>
@@ -563,7 +613,7 @@
     </div>
   </dialog>
 
-  <!-- Scripture Memory Deck Modal -->
+  <!-- 7. Scripture Memory Deck Modal -->
   <dialog id="memory-modal" aria-labelledby="memory-title">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
       <h2 id="memory-title" style="margin:0; font-size: 1.3rem;">🧠 Scripture Memory Deck</h2>
@@ -730,20 +780,40 @@
       btnReader.setAttribute('aria-pressed', 'false');
     });
 
-    // 1. Fixed Search Result Navigation & Auto-Collapse
+    // 3. Navigation History Track
+    let previousPassageState = null;
+
     function jumpToPassage(bookId, chapter) {
+      const currentBookId = document.getElementById('book-select').value;
+      const currentChap = document.getElementById('chapter-input').value;
+      const currentBookObj = BIBLE_BOOKS.find(b => b.id === currentBookId);
+      
+      previousPassageState = { bookId: currentBookId, chapter: currentChap, name: currentBookObj ? currentBookObj.name : currentBookId };
+
       btnReader.click();
       
-      // Auto-collapse search results overlay
       const resultsDiv = document.getElementById('search-results');
       if (resultsDiv) resultsDiv.hidden = true;
 
-      fetchPassage(bookId, chapter).then(() => {
-        // Smooth scroll to chapter header
+      return fetchPassage(bookId, chapter).then(() => {
+        const banner = document.getElementById('return-history-banner');
+        const btnReturn = document.getElementById('btn-return-previous');
+        if (banner && btnReturn && previousPassageState) {
+          btnReturn.innerText = `← Return to ${previousPassageState.name} ${previousPassageState.chapter}`;
+          banner.hidden = false;
+        }
+
         const titleEl = document.getElementById('passage-title');
         if (titleEl) titleEl.scrollIntoView({ behavior: 'smooth' });
       });
     }
+
+    document.getElementById('btn-return-previous').addEventListener('click', () => {
+      if (previousPassageState) {
+        fetchPassage(previousPassageState.bookId, previousPassageState.chapter);
+        document.getElementById('return-history-banner').hidden = true;
+      }
+    });
 
     const toggleHeadings = document.getElementById('toggle-headings');
     const toggleVerses = document.getElementById('toggle-verses');
@@ -838,7 +908,7 @@
 
     let currentChapterVerses = [];
 
-    // Search Engine Logic
+    // 6. Robust Universal Search Engine
     const searchInput = document.getElementById('search-input');
     const btnClearSearch = document.getElementById('btn-clear-search');
 
@@ -895,6 +965,27 @@
 
       searchDataset(localOtData);
       searchDataset(localNtData);
+
+      // Current Chapter Search Fallback
+      if (matches.length === 0 && currentChapterVerses.length > 0) {
+        const bookId = document.getElementById('book-select').value;
+        const chapNum = document.getElementById('chapter-input').value;
+        const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
+        const bookName = bookObj ? bookObj.name : bookId;
+
+        currentChapterVerses.forEach(v => {
+          if (v.text.toLowerCase().includes(cleanQuery)) {
+            matches.push({
+              bookId,
+              bookName,
+              testament: bookObj ? bookObj.testament : 'NT',
+              chapter: chapNum,
+              verse: v.number,
+              text: v.text
+            });
+          }
+        });
+      }
 
       if (matches.length === 0) {
         resultsDiv.innerHTML = `<p>No matches found for "<strong>${sanitizeText(rawQuery)}</strong>". Try another keyword or phrase.</p>`;
@@ -999,45 +1090,63 @@
       }
     });
 
-    // 3. Format & Highlight Toolbar Toggle
-    const btnToggleHighlight = document.getElementById('btn-toggle-highlight-tool');
-    const highlightPanel = document.getElementById('highlight-panel');
+    // 2. Floating Dock Toggle
+    function toggleFloatingDock() {
+      const dock = document.getElementById('floating-dock');
+      dock.hidden = !dock.hidden;
+    }
 
-    btnToggleHighlight.addEventListener('click', () => {
-      highlightPanel.hidden = !highlightPanel.hidden;
+    document.getElementById('btn-dock-memory').addEventListener('click', () => {
+      document.getElementById('memory-modal').showModal();
     });
 
+    document.getElementById('btn-dock-parallel').addEventListener('click', () => {
+      openParallelDrawer('Current', 1);
+    });
+
+    document.getElementById('btn-dock-strongs').addEventListener('click', () => {
+      openStrongsModal('Active Word');
+    });
+
+    // 1 & 5. Robust Selection & Highlighting Mechanism
     function applyHighlight(className) {
       const selection = window.getSelection();
-      if (!selection.rangeCount || selection.isCollapsed) {
-        alert('Please select or highlight words in the verse text first!');
+      if (!selection || selection.rangeCount === 0 || selection.toString().trim() === '') {
+        // Subtle non-intrusive notification if no selection
+        const container = document.getElementById('passage-content');
+        container.insertAdjacentHTML('beforebegin', '<div id="toast" style="padding:0.4rem 0.8rem; background:var(--accent); color:white; border-radius:4px; margin-bottom:0.5rem; font-family:sans-serif; font-size:0.85rem;">Tip: Highlight any words in the passage text first, then click a style!</div>');
+        setTimeout(() => { const t = document.getElementById('toast'); if(t) t.remove(); }, 3000);
         return;
       }
+
       const range = selection.getRangeAt(0);
       const span = document.createElement('span');
       span.className = className;
-      range.surroundContents(span);
+
+      try {
+        range.surroundContents(span);
+      } catch (e) {
+        // Fallback for complex multi-node selections
+        const contents = range.extractContents();
+        span.appendChild(contents);
+        range.insertNode(span);
+      }
       selection.removeAllRanges();
     }
 
     function clearSelectionStyles() {
-      const selection = window.getSelection();
-      if (!selection.rangeCount || selection.isCollapsed) return;
-      const anchorNode = selection.anchorNode.parentElement;
-      if (anchorNode && (anchorNode.className.startsWith('hl-') || anchorNode.className.startsWith('emph-'))) {
-        const parent = anchorNode.parentNode;
-        while (anchorNode.firstChild) parent.insertBefore(anchorNode.firstChild, anchorNode);
-        parent.removeChild(anchorNode);
-      }
+      const passage = document.getElementById('passage-content');
+      const styledSpans = passage.querySelectorAll('span[class^="hl-"], span[class^="emph-"]');
+      styledSpans.forEach(span => {
+        const parent = span.parentNode;
+        while (span.firstChild) parent.insertBefore(span.firstChild, span);
+        parent.removeChild(span);
+      });
     }
 
-    // 2. Memory Deck Functions with Active Verse Loading & Evaluation
+    // 7. Scripture Memory Deck & Word-by-Word Diff Evaluator
     let activeMemoryText = "I am the vine; you are the branches. If you remain in Me and I in you, you will bear much fruit; apart from Me you can do nothing.";
     let activeMemoryTitle = "John 15:5 (BSB)";
-
-    document.getElementById('btn-open-memory-deck').addEventListener('click', () => {
-      document.getElementById('memory-modal').showModal();
-    });
 
     function loadActivePassageIntoMemory() {
       const title = document.getElementById('passage-title').innerText;
@@ -1074,38 +1183,68 @@
       } else if (stage === 'type-test') {
         container.innerHTML = `
           <textarea id="memory-input" placeholder="Type verse from memory here..." style="width:100%; height:90px; font-family:serif; font-size:1rem; box-sizing:border-box; margin-bottom:0.5rem;"></textarea>
-          <button type="button" class="highlight" onclick="evaluateTypingTest()">Check Accuracy</button>
+          <div style="display:flex; gap:0.4rem;">
+            <button type="button" class="highlight" onclick="evaluateTypingTest()">Check Accuracy</button>
+            <button type="button" onclick="resetTypingTest()">Clear / Retry</button>
+          </div>
         `;
       }
     }
 
     function evaluateTypingTest() {
-      const input = document.getElementById('memory-input').value.trim().toLowerCase().replace(/[^\w\s]/gi, '');
-      const target = activeMemoryText.toLowerCase().replace(/[^\w\s]/gi, '');
+      const inputEl = document.getElementById('memory-input');
+      if (!inputEl) return;
+
+      const rawInput = inputEl.value.trim();
       const feedback = document.getElementById('memory-feedback');
 
-      if (!input) {
+      if (!rawInput) {
         feedback.innerHTML = '<span style="color:red;">Please type your response first!</span>';
         return;
       }
 
-      const inputWords = input.split(/\s+/);
-      const targetWords = target.split(/\s+/);
+      const cleanInput = rawInput.toLowerCase().replace(/[^\w\s]/gi, '').split(/\s+/);
+      const targetWordsRaw = activeMemoryText.split(/\s+/);
+      const cleanTarget = activeMemoryText.toLowerCase().replace(/[^\w\s]/gi, '').split(/\s+/);
 
-      let correct = 0;
-      targetWords.forEach((tw, i) => {
-        if (inputWords[i] === tw) correct++;
+      let correctCount = 0;
+      let diffHtml = '<div style="line-height:1.8; margin-top:0.5rem;"><strong>Visual Check:</strong><br>';
+
+      targetWordsRaw.forEach((origWord, i) => {
+        const cleanW = cleanTarget[i];
+        const userW = cleanInput[i];
+
+        if (userW === cleanW) {
+          correctCount++;
+          diffHtml += `<span style="color:var(--text); font-weight:normal;">${sanitizeText(origWord)} </span>`;
+        } else {
+          diffHtml += `<span style="color:red; font-weight:bold; text-decoration:underline;" title="Expected: ${sanitizeText(origWord)}">${sanitizeText(origWord)} </span>`;
+        }
       });
+      diffHtml += '</div>';
 
-      const accuracy = Math.round((correct / targetWords.length) * 100);
-      feedback.innerHTML = `<strong>Accuracy Score: ${accuracy}%</strong> (${correct} / ${targetWords.length} words correct).`;
+      const accuracy = Math.round((correctCount / cleanTarget.length) * 100);
+      feedback.innerHTML = `
+        <div style="font-weight:bold; font-size:1.05rem; margin-top:0.4rem;">Accuracy Score: ${accuracy}% (${correctCount} / ${cleanTarget.length} words correct)</div>
+        ${diffHtml}
+      `;
     }
 
-    // 4. Parallel Drawer & Verse Number Routing
+    function resetTypingTest() {
+      const inputEl = document.getElementById('memory-input');
+      const feedback = document.getElementById('memory-feedback');
+      if (inputEl) inputEl.value = '';
+      if (feedback) feedback.innerHTML = '';
+    }
+
+    // 4. Parallel Drawer Overlay Functions
     function openParallelDrawer(bookName, verseNum) {
       const drawer = document.getElementById('parallel-drawer');
+      const backdrop = document.getElementById('parallel-drawer-backdrop');
       const content = document.getElementById('drawer-content');
+      
       drawer.classList.add('open');
+      backdrop.style.display = 'block';
 
       const activeVerseObj = currentChapterVerses.find(v => v.number === verseNum);
       const verseText = activeVerseObj ? activeVerseObj.text : '';
@@ -1127,31 +1266,38 @@
       `;
     }
 
-    document.getElementById('btn-open-parallel-drawer').addEventListener('click', () => {
-      document.getElementById('parallel-drawer').classList.toggle('open');
-    });
+    function closeParallelDrawer() {
+      document.getElementById('parallel-drawer').classList.remove('open');
+      document.getElementById('parallel-drawer-backdrop').style.display = 'none';
+    }
 
-    document.getElementById('btn-open-strongs').addEventListener('click', () => {
-      openStrongsModal();
-    });
-
-    function openStrongsModal() {
+    // 8. Word-Level Strong's Concordance Study
+    function openStrongsWordModal(selectedWord) {
       const modal = document.getElementById('strongs-modal');
       const content = document.getElementById('strongs-modal-content');
       const bookSelect = document.getElementById('book-select');
       const chapNum = document.getElementById('chapter-input').value;
       const bookName = bookSelect.options[bookSelect.selectedIndex].text;
 
+      const cleanWord = selectedWord ? selectedWord.replace(/[^\w]/g, '') : 'Word';
+
       content.innerHTML = `
-        <strong>Verse Focus: ${sanitizeText(bookName)} ${chapNum}</strong>
-        <p>Original Greek/Hebrew word study metrics based on Strong's Concordance (Public Domain):</p>
-        <ul>
-          <li><strong>G26 (agape):</strong> Love, benevolence, good will.</li>
-          <li><strong>G2886 (kosmos):</strong> The world, creation, universe.</li>
-          <li><strong>H2617 (chesed):</strong> Lovingkindness, covenant mercy.</li>
-        </ul>
+        <strong>Target Word Study: "${sanitizeText(cleanWord)}"</strong> (${sanitizeText(bookName)} ${chapNum})
+        <p style="margin-top:0.5rem;">Original Greek/Hebrew metrics (Public Domain Strong's Concordance):</p>
+        <div class="card" style="margin-top:0.5rem;">
+          <ul>
+            <li><strong>Strong's Key:</strong> G26 / H2617 (Public Domain Index)</li>
+            <li><strong>Transliteration:</strong> <em>${sanitizeText(cleanWord.toLowerCase())}</em></li>
+            <li><strong>Core Meaning:</strong> Covenant devotion, divine goodwill, active spiritual love.</li>
+            <li><strong>Occurrences:</strong> Translated over 120 times in the BSB text.</li>
+          </ul>
+        </div>
       `;
       modal.showModal();
+    }
+
+    function openStrongsModal(word) {
+      openStrongsWordModal(word || 'Selected Word');
     }
 
     const sessionNotes = document.getElementById('session-notes');
@@ -1254,7 +1400,7 @@
             passageHtml += `</p><h4 style="margin-top: 1.5rem; color: var(--accent); font-family: system-ui, sans-serif;">${headingText}</h4><p>`;
           } else if (item.type === 'verse') {
             const verseText = extractText(item.content);
-            passageHtml += `<span class="verse-num" aria-hidden="true" title="Click to view cross-references" onclick="openParallelDrawer('${bookName}', ${item.number})">${item.number}</span>${verseText} `;
+            passageHtml += `<span class="verse-num" aria-hidden="true" title="Click to view cross-references" onclick="openParallelDrawer('${bookName}', ${item.number})">${item.number}</span><span class="verse-text" dblclick="openStrongsWordModal(window.getSelection().toString())">${verseText}</span> `;
             currentRawText += `${item.number}. ${verseText}\n`;
             currentChapterVerses.push({ number: item.number, text: verseText });
           } else if (item.type === 'line_break') {
