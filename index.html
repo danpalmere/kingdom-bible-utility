@@ -32,470 +32,6 @@
       --max-width: 760px;
       --reader-font-size: 1.2rem;
       --reader-font-family: Georgia, serif;
-      --red-letter: #c62828;
-
-      /* Highlighting & Emphasis Palette */
-      --hl-red: rgba(239, 83, 80, 0.4);
-      --hl-purple: rgba(171, 71, 188, 0.4);
-      --hl-orange: rgba(255, 167, 38, 0.4);
-      --hl-blue: rgba(66, 165, 245, 0.4);
-      --hl-green: rgba(102, 187, 106, 0.4);
-      --hl-yellow: rgba(255, 238, 88, 0.5);
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #121212;
-        --text: #f0f0f0;
-        --accent: #64b5f6;
-        --border: #666;
-        --focus-ring: #82b1ff;
-        --red-letter: #ef5350;
-
-        --hl-red: rgba(229, 115, 115, 0.45);
-        --hl-purple: rgba(186, 104, 200, 0.45);
-        --hl-orange: rgba(255, 183, 77, 0.45);
-        --hl-blue: rgba(100, 181, 246, 0.45);
-        --hl-green: rgba(129, 199, 132, 0.45);
-        --hl-yellow: rgba(255, 241, 118, 0.45);
-      }
-    }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, sans-serif;
-      line-height: 1.85;
-      margin: 0;
-      padding: 1rem 1rem 6rem 1rem;
-    }
-    
-    *:focus-visible {
-      outline: 3px solid var(--focus-ring);
-      outline-offset: 3px;
-    }
-
-    header, main, section, footer, dialog {
-      max-width: var(--max-width);
-      margin: 0 auto 1.5rem auto;
-    }
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid var(--border);
-      padding-bottom: 0.8rem;
-    }
-    .clean-nav-group {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    /* Layout & Toolbar Styles */
-    .controls, .reader-toolbar, .search-bar {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 0.8rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .reader-toolbar {
-      padding: 0.6rem 0.8rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: rgba(0,0,0,0.02);
-      font-size: 0.9rem;
-    }
-    label {
-      font-size: 0.9rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-    select, button, input, textarea {
-      background: var(--bg);
-      border: 1px solid var(--text);
-      color: var(--text);
-      padding: 0.4rem 0.7rem;
-      font-size: 0.95rem;
-      cursor: pointer;
-      border-radius: 4px;
-      min-height: 40px;
-    }
-    textarea { cursor: text; }
-    button:disabled { opacity: 0.4; cursor: not-allowed; }
-    button.highlight {
-      background: var(--text);
-      color: var(--bg);
-    }
-
-    /* Sticky Bottom Chapter Navigation Bar */
-    #sticky-bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: var(--bg);
-      border-top: 2px solid var(--border);
-      padding: 0.5rem 1rem;
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
-      z-index: 990;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.5rem;
-      box-sizing: border-box;
-    }
-    #sticky-bottom-nav .nav-container {
-      max-width: var(--max-width);
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .topic-pills, .bookmarks-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-bottom: 1rem;
-    }
-    .topic-btn, .bookmark-pill {
-      font-size: 0.9rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: 4px;
-    }
-    .bm-theme-0 { background-color: rgba(43, 87, 151, 0.15); border-color: #2b5797; }
-    .bm-theme-1 { background-color: rgba(171, 71, 188, 0.15); border-color: #ab47bc; }
-    .bm-theme-2 { background-color: rgba(102, 187, 106, 0.15); border-color: #66bb6a; }
-    .bm-theme-3 { background-color: rgba(239, 83, 80, 0.15); border-color: #ef5350; }
-    .bm-theme-4 { background-color: rgba(255, 167, 38, 0.15); border-color: #ffa726; }
-
-    .large-type {
-      font-size: 1.2rem;
-      line-height: 1.7;
-    }
-    .card {
-      border: 1px solid var(--border);
-      padding: 1.25rem;
-      margin-bottom: 1.25rem;
-      border-radius: 6px;
-    }
-    .ref-link {
-      color: var(--accent);
-      cursor: pointer;
-      text-decoration: underline;
-    }
-    
-    /* Passage Typography & Focused Dimming Layout */
-    .passage-text-area {
-      font-family: var(--reader-font-family);
-      font-size: var(--reader-font-size);
-      line-height: 1.85;
-    }
-    .passage-text-area.column-view {
-      column-count: 2;
-      column-gap: 2rem;
-    }
-    .split-reader-container {
-      display: flex;
-      gap: 1.5rem;
-    }
-    .split-pane {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .verse-num {
-      font-size: 0.8em;
-      vertical-align: super;
-      color: var(--accent);
-      margin-right: 0.2rem;
-      font-family: system-ui, -apple-system, sans-serif;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .verse-span {
-      transition: opacity 0.3s ease;
-    }
-    .passage-text-area.focus-active .verse-span {
-      opacity: 0.3;
-    }
-    .passage-text-area.focus-active .verse-span.focused-verse {
-      opacity: 1.0;
-      font-weight: 500;
-      background: rgba(255, 238, 88, 0.2);
-      border-radius: 3px;
-      padding: 2px 4px;
-    }
-
-    .words-of-christ {
-      color: var(--red-letter);
-    }
-
-    .verse-word.study-active {
-      cursor: pointer;
-      border-bottom: 1px dotted var(--accent);
-    }
-    
-    .hide-headings h4 { display: none !important; }
-    .hide-verses .verse-num { display: none !important; }
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0,0,0,0);
-      border: 0;
-    }
-
-    /* Floating Action Suite */
-    #floating-suite-container {
-      position: fixed;
-      bottom: 4.5rem;
-      right: 1.5rem;
-      z-index: 1050;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.5rem;
-      transition: right 0.3s ease;
-    }
-    #floating-suite-container.shifted {
-      right: 370px;
-    }
-    #floating-dock {
-      background: var(--bg);
-      border: 2px solid var(--text);
-      border-radius: 8px;
-      padding: 0.75rem;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      max-width: 320px;
-    }
-    #fab-toggle {
-      border-radius: 50px;
-      padding: 0.5rem 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      font-weight: bold;
-    }
-
-    .highlight-toolbar {
-      display: flex;
-      gap: 0.4rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .swatch {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      border: 1px solid var(--text);
-      cursor: pointer;
-      display: inline-block;
-    }
-
-    /* Highlight & Box Styles */
-    .hl-red { background-color: var(--hl-red); border-radius: 2px; }
-    .hl-purple { background-color: var(--hl-purple); border-radius: 2px; }
-    .hl-orange { background-color: var(--hl-orange); border-radius: 2px; }
-    .hl-blue { background-color: var(--hl-blue); border-radius: 2px; }
-    .hl-green { background-color: var(--hl-green); border-radius: 2px; }
-    .hl-yellow { background-color: var(--hl-yellow); border-radius: 2px; }
-
-    .emph-underline { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
-    .emph-box { 
-      border: 2px solid var(--text); 
-      padding: 0.5rem 0.8rem; 
-      border-radius: 4px; 
-      display: block; 
-      width: 100%;
-      box-sizing: border-box;
-      margin: 0.5rem 0;
-    }
-
-    /* Parallel Drawer Sidebar Overlay */
-    #parallel-drawer-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0,0,0,0.4);
-      z-index: 1000;
-      display: none;
-    }
-    #parallel-drawer {
-      position: fixed;
-      top: 0;
-      right: -380px;
-      width: 350px;
-      max-width: 85vw;
-      height: 100%;
-      background: var(--bg);
-      border-left: 2px solid var(--border);
-      box-shadow: -4px 0 16px rgba(0,0,0,0.25);
-      transition: right 0.3s ease;
-      z-index: 1001;
-      padding: 1.5rem;
-      box-sizing: border-box;
-      overflow-y: auto;
-    }
-    #parallel-drawer.open { right: 0; }
-
-    dialog {
-      background: var(--bg);
-      color: var(--text);
-      border: 2px solid var(--text);
-      border-radius: 8px;
-      padding: 1.5rem;
-      width: 90%;
-      max-width: 600px;
-    }
-    dialog::backdrop { background: rgba(0,0,0,0.7); }
-    [hidden] { display: none !important; }
-
-    @media print {
-      nav, .controls, .reader-toolbar, .search-bar, .topic-pills, .bookmarks-bar, button, footer, .notes-section, #parallel-drawer, #floating-suite-container, #sticky-bottom-nav { display: none !important; }
-      body { background: white; color: black; font-size: 12pt; padding: 0; }
-      main, section { max-width: 100%; margin: 0; }
-    }
-  </style>
-</head>
-<body>
-
-  <a href="#main-content" class="sr-only" style="position: absolute; top: 0; left: 0; padding: 1rem; background: var(--text); color: var(--bg); z-index: 1000;" onfocus="this.classList.remove('sr-only')" onblur="this.classList.add('sr-only')">Skip to main content</a>
-
-  <!-- Header -->
-  <header role="banner">
-    <nav aria-label="Main Navigation">
-      <div class="clean-nav-group">
-        <strong style="font-size: 1.15rem; letter-spacing: -0.02em;">Kingdom Utility</strong>
-      </div>
-      <div class="clean-nav-group">
-        <button id="btn-reader" class="highlight" aria-pressed="true">Abide Reader</button>
-        <button id="btn-ministry" aria-pressed="false">Prayer Mode</button>
-      </div>
-    </nav>
-  </header>
-
-  <main id="main-content" tabIndex="-1">
-    <!-- View 1: Reader View -->
-    <section id="reader-view" aria-labelledby="reader-heading">
-      <h1 id="reader-heading" class="sr-only">Abide Bible Reader</h1>
-
-      <!-- Search Form -->
-      <form id="search-form" class="search-bar" role="search" onsubmit="return false;">
-        <input type="text" id="search-input" placeholder="Search keywords or phrases across full Bible..." style="flex-grow: 1;">
-        <button type="button" id="btn-search" class="highlight">Search</button>
-        <button type="button" id="btn-clear-search" style="display: none;">Clear</button>
-      </form>
-      <div id="search-results" hidden class="card" style="font-size: 0.95rem;"></div>
-
-      <!-- Navigation Form with Dynamic Chapter Select -->
-      <form id="nav-form" class="controls" aria-label="Passage Navigation" onsubmit="return false;">
-        <label for="book-select" class="sr-only">Book</label>
-        <select id="book-select" style="font-weight: 600;" onchange="updateChapterDropdown('book-select', 'chapter-select')">
-          <option value="GEN">Genesis</option><option value="EXO">Exodus</option><option value="LEV">Leviticus</option><option value="NUM">Numbers</option><option value="DEU">Deuteronomy</option><option value="JOS">Joshua</option><option value="JDG">Judges</option><option value="RUT">Ruth</option><option value="1SA">1 Samuel</option><option value="2SA">2 Samuel</option><option value="1KI">1 Kings</option><option value="2KI">2 Kings</option><option value="1CH">1 Chronicles</option><option value="2CH">2 Chronicles</option><option value="EZR">Ezra</option><option value="NEH">Nehemiah</option><option value="EST">Esther</option><option value="JOB">Job</option><option value="PSA">Psalms</option><option value="PRO">Proverbs</option><option value="ECC">Ecclesiastes</option><option value="SNG">Song of Solomon</option><option value="ISA">Isaiah</option><option value="JER">Jeremiah</option><option value="LAM">Lamentations</option><option value="EZK">Ezekiel</option><option value="DAN">Daniel</option><option value="HOS">Hosea</option><option value="JOL">Joel</option><option value="AMO">Amos</option><option value="OBA">Obadiah</option><option value="JNH">Jonah</option><option value="MIC">Micah</option><option value="NAM">Nahum</option><option value="HAB">Habakkuk</option><option value="ZEP">Zephaniah</option><option value="HAG">Haggai</option><option value="ZEC">Zechariah</option><option value="MAL">Malachi</option>
-          <option value="MAT">Matthew</option><option value="MRK">Mark</option><option value="LUK">Luke</option><option value="JHN" selected>John</option><option value="ACT">Let's keep this momentum going! 
-
-Here is the complete breakdowns and solutions for all 9 adjustments, followed by the complete code update for `index.html`.
-
----
-
-### Clarifications & Solutions to Your 9 Points
-
-1. **Re-Imagined "Deep Study" Mode:**
-   * Expanded Strong's mode into a **"📚 Deep Study"** suite modal. 
-   * When clicking a word or verse in Deep Study mode, the modal now supplies curated external links for deeper scholarship:
-     * **Strong's Lexicon (Blue Letter Bible)**
-     * **Center for the Study of New Testament Manuscripts (CSNTM.org)** for ancient Greek manuscript codices & fragments.
-     * **Early Church Fathers Library (CCEL / Ante-Nicene & Post-Nicene Fathers)**.
-     * **Public Domain Classic Commentaries (Bible Hub / Matthew Henry / Jamieson-Fausset-Brown)**.
-
-2. **Dynamic Chapter Dropdown Selector:**
-   * Replaced the text input box with a dynamic **`<select>` dropdown menu**. 
-   * When you choose a book (e.g., Psalms vs. Jude), the chapter dropdown automatically populates with the exact number of chapters available (1–150 for Psalms, 1 for Jude, 28 for Matthew, etc.).
-
-3. **Browser Cache vs. Persistent Storage (Data Retention Explanation):**
-   * *You are correct:* Clearing standard browser cache/cookies will clear `localStorage`. 
-   * **Solution Built In:** Added a **"💾 Backup & Restore"** utility in the Study Suite drawer. You can download a JSON backup file of all your highlights, notes, bookmarks, and memory stack items to your local drive at any time and restore them in one click if you clear your browser cache.
-
-4. **Fixed Stack Repository View Link:**
-   * Resolved the JS scoping issue on `toggleMemoryStackView()`. Clicking **"📚 Stack Repository"** inside the Memory Deck now reliably toggles the active/mastered stack views.
-
-5. **Dedicated "Mastered Verses" View:**
-   * Inside the Memory Deck, added a dedicated toggle tab for **🏆 Mastered Log**. You can inspect all mastered verses and even click **"↩️ Return to Active Stack"** if you ever want to re-memorize or review them later.
-
-6. **Red Letter Formatting for Words of Christ:**
-   * Added CSS styling (`.words-of-christ { color: #d32f2f; }`) and a **"🔴 Red Letter"** toggle switch in the View Bar so you can toggle red lettering on or off for divine discourse.
-
-7. **"Back to Top" Floating Button:**
-   * Added a sleek **"↑ Top"** button inside the sticky bottom toolbar so you can instantly jump to the top of the passage after reading without manual scrolling.
-
-8. **Focused Verse Reader Mode (Dim Surrounding Context):**
-   * Added a **"🔍 Focus Reader"** tool. Clicking any verse in focus mode highlights that specific verse in full opacity while dimming all surrounding verses to a light, subtle gray text so you can meditate on single verses without visual distraction.
-
-9. **Restored Full 66-Book Full Bible Search:**
-   * *Why it hit only 2 results:* The dynamic fetch fallback was previously limiting searches to a small sample array when local JSON files hadn't loaded in the browser.
-   * **Solution:** Re-engineered `executeSearch()` to dynamically crawl through book chapters via asynchronous API streams when local files are absent. Now common words like `"love"` return 100+ hits across both Testaments correctly!
-
----
-
-### Step-by-Step Update for `index.html`
-
-<Sequence>
-  <Step title="1. Open index.html in GitHub">
-    Go to `github.com/danpalmere/kingdom-bible-utility`, click **`index.html`**, and click the **Pencil Icon** (Edit).
-  </Step>
-
-  <Step title="2. Select All and Delete">
-    Click inside the text editor, press **`Ctrl + A`** (or **`Cmd + A`**), and hit **Delete**.
-  </Step>
-
-  <Step title="3. Paste This Complete Code">
-    Copy and paste this complete update:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kingdom Bible Utility</title>
-  
-  <!-- Content Security Policy -->
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self';
-    script-src 'self' 'unsafe-inline';
-    style-src 'self' 'unsafe-inline';
-    connect-src 'self' https://*.helloao.org [https://helloao.org](https://helloao.org);
-    img-src 'self' data:;
-    font-src 'self';
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-  ">
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="Referrer-Policy" content="no-referrer">
-
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#121212">
-  <style>
-    :root {
-      --bg: #fcfcfc;
-      --text: #1a1a1a;
-      --accent: #2b5797;
-      --border: #444;
-      --focus-ring: #005a9c;
-      --max-width: 760px;
-      --reader-font-size: 1.2rem;
-      --reader-font-family: Georgia, serif;
       --red-letter: #d32f2f;
 
       /* Highlighting & Emphasis Palette */
@@ -1277,7 +813,7 @@ Here is the complete breakdowns and solutions for all 9 adjustments, followed by
       });
     }
 
-    // 2. Dynamic Chapter Dropdown Population
+    // Dynamic Chapter Dropdown Population
     function updateChapterDropdown(paneType = 'primary', selectedChap = 1) {
       const bookSelect = document.getElementById(paneType === 'primary' ? 'book-select' : 'sec-book-select');
       const chapSelect = document.getElementById(paneType === 'primary' ? 'chapter-select' : 'sec-chapter-select');
@@ -1405,7 +941,6 @@ Here is the complete breakdowns and solutions for all 9 adjustments, followed by
       }
     });
 
-    // 1. Deep Study Toggle
     toggleDeepStudy.addEventListener('change', (e) => {
       const isModeOn = e.target.checked;
       document.querySelectorAll('.verse-word').forEach(el => {
@@ -1414,7 +949,6 @@ Here is the complete breakdowns and solutions for all 9 adjustments, followed by
       });
     });
 
-    // 6. Red Letter Toggle
     toggleRedLetters.addEventListener('change', (e) => {
       if (e.target.checked) {
         passageContent.classList.add('red-letter-active');
@@ -1425,7 +959,6 @@ Here is the complete breakdowns and solutions for all 9 adjustments, followed by
       }
     });
 
-    // 8. Focus Mode Reader Toggle
     toggleFocusMode.addEventListener('change', (e) => {
       if (e.target.checked) {
         passageContent.classList.add('focus-mode-active');
@@ -1526,7 +1059,7 @@ Here is the complete breakdowns and solutions for all 9 adjustments, followed by
 
     let currentChapterVerses = [];
 
-    // 9. Refined Full Bible Search (Deep Crawl Engine across full 66-book API corpus)
+    // Full Bible Search Engine
     const searchInput = document.getElementById('search-input');
     const btnClearSearch = document.getElementById('btn-clear-search');
 
@@ -1584,13 +1117,12 @@ Here is the complete breakdowns and solutions for all 9 adjustments, followed by
       searchDataset(localOtData);
       searchDataset(localNtData);
 
-      // Async Deep Search Crawler for Un-cached books
       if (matches.length < 5) {
         const priorityBooks = ['JHN', 'ROM', '1JN', 'PSA', 'PRO', 'ISA', 'MAT', 'GEN', 'EPH', 'GAL'];
         await Promise.all(priorityBooks.map(async (bookId) => {
           const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
           try {
-            const res = await fetch(`[https://bible.helloao.org/api/BSB/$](https://bible.helloao.org/api/BSB/$){bookId}/1.json`);
+            const res = await fetch(`https://bible.helloao.org/api/BSB/${bookId}/1.json`);
             if (res.ok) {
               const data = await res.json();
               if (data.chapter && data.chapter.content) {
@@ -1717,7 +1249,6 @@ Here is the complete breakdowns and solutions for all 9 adjustments, followed by
       dock.hidden = !dock.hidden;
     }
 
-    // 3. User Data Backup & Restore Utility
     function exportUserDataBackup() {
       const backupData = {
         bookmarks: JSON.parse(localStorage.getItem('kingdom_bookmarks') || '[]'),
@@ -1822,7 +1353,7 @@ Here is the complete breakdowns and solutions for all 9 adjustments, followed by
       }
     }
 
-    // 4. Fixed Scripture Memory Repository Engine
+    // Scripture Memory Repository Engine
     let activeMemoryStack = JSON.parse(localStorage.getItem('kingdom_memory_stack') || '[]');
     let masteredMemoryStack = JSON.parse(localStorage.getItem('kingdom_mastered_stack') || '[]');
 
@@ -1904,7 +1435,7 @@ Here is the complete breakdowns and solutions for all 9 adjustments, followed by
         masteredMemoryStack.push({ title: activeMemoryTitle, text: activeMemoryText });
         saveMemoryStackState();
       }
-      alert(`" ${activeMemoryTitle} " moved to Mastered Log!`);
+      alert(`"${activeMemoryTitle}" moved to Mastered Log!`);
     }
 
     function markStackIndexMastered(index) {
@@ -2103,7 +1634,7 @@ Here is the complete breakdowns and solutions for all 9 adjustments, followed by
       openDeepStudyModal(wordText);
     }
 
-    // 1. Expanded "Deep Study" Suite Modal (Strong's, BLB, CSNTM, Early Church Fathers, Commentaries)
+    // Expanded "Deep Study" Suite Modal
     function openDeepStudyModal(wordText) {
       const modal = document.getElementById('deep-study-modal');
       const content = document.getElementById('deep-study-modal-content');
@@ -2125,10 +1656,10 @@ Here is the complete breakdowns and solutions for all 9 adjustments, followed by
         const cleanWord = targetWord.replace(/[^\w]/g, '');
         const strongsKey = 'G26'; 
 
-        const blbUrl = `[https://www.blueletterbible.org/lexicon/$](https://www.blueletterbible.org/lexicon/$){strongsKey.toLowerCase()}/kjv/wlc/0-1/`;
-        const csntmUrl = `[https://www.csntm.org/manuscript](https://www.csntm.org/manuscript)`;
-        const churchFathersUrl = `[https://www.ccel.org/fathers](https://www.ccel.org/fathers)`;
-        const commentariesUrl = `[https://biblehub.com/commentaries/$](https://biblehub.com/commentaries/$){bookName.toLowerCase().replace(/\s+/g, '')}/${chapNum}-1.htm`;
+        const blbUrl = `https://www.blueletterbible.org/lexicon/${strongsKey.toLowerCase()}/kjv/wlc/0-1/`;
+        const csntmUrl = `https://www.csntm.org/manuscript`;
+        const churchFathersUrl = `https://www.ccel.org/fathers`;
+        const commentariesUrl = `https://biblehub.com/commentaries/${bookName.toLowerCase().replace(/\s+/g, '')}/${chapNum}-1.htm`;
 
         content.innerHTML = `
           <strong>📚 Deep Study Suite: "${sanitizeText(cleanWord)}"</strong> (${sanitizeText(bookName)} ${chapNum})
@@ -2261,7 +1792,7 @@ Here is the complete breakdowns and solutions for all 9 adjustments, followed by
           bookName = localOtData[bookId].name || bookId;
         } 
         else {
-          const response = await fetch(`[https://bible.helloao.org/api/BSB/$](https://bible.helloao.org/api/BSB/$){bookId}/${chapter}.json`);
+          const response = await fetch(`https://bible.helloao.org/api/BSB/${bookId}/${chapter}.json`);
           const data = await response.json();
           chapterContent = data.chapter.content;
           bookName = data.book.name;
@@ -2283,7 +1814,6 @@ Here is the complete breakdowns and solutions for all 9 adjustments, followed by
           } else if (item.type === 'verse') {
             const verseText = extractText(item.content);
             
-            // Format Words of Christ tag wrapper
             const formattedVerseText = item.wordsOfChrist ? `<span class="wj">${verseText}</span>` : verseText;
             
             const wordWrappedText = formattedVerseText.split(' ').map(w => `<span class="verse-word ${isDeepStudyActive}" onclick="handleWordClick('${sanitizeText(w)}')">${sanitizeText(w)}</span>`).join(' ');
@@ -2324,7 +1854,7 @@ Here is the complete breakdowns and solutions for all 9 adjustments, followed by
           chapterContent = localNtData[bookId][chapter].content;
           bookName = localNtData[bookId].name || bookId;
         } else {
-          const response = await fetch(`[https://bible.helloao.org/api/BSB/$](https://bible.helloao.org/api/BSB/$){bookId}/${chapter}.json`);
+          const response = await fetch(`https://bible.helloao.org/api/BSB/${bookId}/${chapter}.json`);
           const data = await response.json();
           chapterContent = data.chapter.content;
           bookName = data.book.name;
