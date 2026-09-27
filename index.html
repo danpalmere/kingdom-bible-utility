@@ -91,19 +91,12 @@
     }
 
     /* Controls & Toolbars */
-    .controls, .reader-toolbar, .search-bar {
+    .controls, .search-bar {
       display: flex;
       gap: 0.5rem;
       margin-bottom: 0.8rem;
       flex-wrap: wrap;
       align-items: center;
-    }
-    .reader-toolbar {
-      padding: 0.6rem 0.8rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: rgba(0,0,0,0.02);
-      font-size: 0.9rem;
     }
     label {
       font-size: 0.9rem;
@@ -129,12 +122,12 @@
       color: var(--bg);
     }
 
-    /* Red Letter Style */
+    /* Red Letter Styling */
     .red-letter-active .wj { color: var(--red-letter) !important; font-weight: 500; }
 
-    /* Focus Mode Style (Dims non-focused verses) */
-    .focus-mode-active .verse-wrapper { opacity: 0.35; transition: opacity 0.2s ease; }
-    .focus-mode-active .verse-wrapper.focused-verse { opacity: 1.0 !important; font-weight: bold; }
+    /* Focus Mode Styling */
+    .focus-mode-active .verse-wrapper { opacity: 0.3; transition: opacity 0.2s ease; }
+    .focus-mode-active .verse-wrapper.focused-verse { opacity: 1.0 !important; font-weight: bold; background: rgba(255, 238, 88, 0.15); border-radius: 4px; padding: 2px 4px; }
 
     /* Sticky Bottom Toolbar */
     #sticky-bottom-nav {
@@ -167,6 +160,7 @@
       flex-wrap: wrap;
       gap: 0.4rem;
       margin-bottom: 1rem;
+      align-items: center;
     }
     .topic-btn, .bookmark-pill {
       font-size: 0.9rem;
@@ -240,7 +234,7 @@
       border: 0;
     }
 
-    /* Floating Action Suite */
+    /* Floating Action & View Suite */
     #floating-suite-container {
       position: fixed;
       bottom: 4.5rem;
@@ -263,7 +257,7 @@
       box-shadow: 0 4px 16px rgba(0,0,0,0.25);
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.6rem;
       max-width: 320px;
     }
     #fab-toggle {
@@ -280,8 +274,8 @@
       flex-wrap: wrap;
     }
     .swatch {
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       border: 1px solid var(--text);
       cursor: pointer;
@@ -348,7 +342,7 @@
     [hidden] { display: none !important; }
 
     @media print {
-      nav, .controls, .reader-toolbar, .search-bar, .topic-pills, .bookmarks-bar, button, footer, .notes-section, #parallel-drawer, #floating-suite-container, #sticky-bottom-nav { display: none !important; }
+      nav, .controls, .search-bar, .topic-pills, .bookmarks-bar, button, footer, .notes-section, #parallel-drawer, #floating-suite-container, #sticky-bottom-nav { display: none !important; }
       body { background: white; color: black; font-size: 12pt; padding: 0; }
       main, section { max-width: 100%; margin: 0; }
     }
@@ -384,7 +378,7 @@
       </form>
       <div id="search-results" hidden class="card" style="font-size: 0.95rem;"></div>
 
-      <!-- Navigation Form with Dynamic Chapter Select Dropdown -->
+      <!-- Navigation Form -->
       <form id="nav-form" class="controls" aria-label="Passage Navigation" onsubmit="return false;">
         <label for="book-select" class="sr-only">Book</label>
         <select id="book-select" style="font-weight: 600;" onchange="updateChapterDropdown('primary')">
@@ -407,31 +401,6 @@
 
       <!-- Bookmarks Bar -->
       <div id="bookmarks-container" class="bookmarks-bar" aria-label="Saved Bookmarks"></div>
-
-      <!-- Reader Options Bar -->
-      <div class="reader-toolbar" role="region" aria-label="Reader View Options">
-        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; width: 100%;">
-          <span><strong>Layout & View:</strong></span>
-          
-          <label><input type="checkbox" id="toggle-headings" checked> Headings</label>
-          <label><input type="checkbox" id="toggle-verses" checked> Verses</label>
-          <label><input type="checkbox" id="toggle-columns"> 2-Column</label>
-          <label><input type="checkbox" id="toggle-split-view"> Parallel Passages</label>
-          <label><input type="checkbox" id="toggle-deep-study"> 📚 Deep Study</label>
-          <label><input type="checkbox" id="toggle-red-letters" checked> 🔴 Red Letters</label>
-          <label><input type="checkbox" id="toggle-focus-mode"> 🔍 Focus Mode</label>
-
-          <div style="margin-left: auto; display: flex; gap: 0.4rem; align-items: center;">
-            <select id="font-family-select" style="min-height: 32px; font-size: 0.85rem; padding: 0.1rem 0.4rem;">
-              <option value="Georgia, serif">Serif (Georgia)</option>
-              <option value="system-ui, sans-serif">Sans-Serif (System)</option>
-              <option value="Courier New, monospace">Monospace</option>
-            </select>
-            <button id="btn-font-smaller" aria-label="Decrease font" style="padding: 0.1rem 0.5rem; min-height: 32px;">A-</button>
-            <button id="btn-font-larger" aria-label="Increase font" style="padding: 0.1rem 0.5rem; min-height: 32px;">A+</button>
-          </div>
-        </div>
-      </div>
 
       <!-- Reader Layout Container -->
       <div id="reader-layout-container">
@@ -582,7 +551,7 @@
     </section>
   </main>
 
-  <!-- Sticky Bottom Navigation Bar with Back-To-Top Control -->
+  <!-- Sticky Bottom Navigation Bar -->
   <div id="sticky-bottom-nav">
     <div class="nav-container">
       <button type="button" id="btn-bottom-prev" style="min-height: 36px; padding: 0.2rem 0.6rem;">← Prev</button>
@@ -592,15 +561,857 @@
     </div>
   </div>
 
-  <!-- Floating Action Suite FAB & Dock -->
+  <!-- Floating View & Formatting Dock -->
   <div id="floating-suite-container">
     <div id="floating-dock" hidden>
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem;">
+        <strong style="font-size: 0.95rem;">⚙️ View & Formatting</strong>
+        <button type="button" style="min-height: 24px; padding: 0.1rem 0.4rem; font-size: 0.8rem;" onclick="toggleFloatingDock()">✕</button>
+      </div>
+
+      <!-- Formatting Swatches -->
+      <div class="highlight-toolbar">
+        <span class="swatch" style="background-color: var(--hl-red);" title="Blood of Jesus" onmousedown="applyHighlight('hl-red')"></span>
+        <span class="swatch" style="background-color: var(--hl-purple);" title="Command / Condition" onmousedown="applyHighlight('hl-purple')"></span>
+        <span class="swatch" style="background-color: var(--hl-orange);" title="Promise" onmousedown="applyHighlight('hl-orange')"></span>
+        <span class="swatch" style="background-color: var(--hl-blue);" title="Holy Spirit" onmousedown="applyHighlight('hl-blue')"></span>
+        <span class="swatch" style="background-color: var(--hl-green);" title="Love" onmousedown="applyHighlight('hl-green')"></span>
+        <span class="swatch" style="background-color: var(--hl-yellow);" title="Anything Amazing" onmousedown="applyHighlight('hl-yellow')"></span>
+        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 26px; font-size: 0.8rem;" onmousedown="applyHighlight('emph-underline')"><u>U</u></button>
+        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 26px; font-size: 0.8rem;" onmousedown="applyHighlight('emph-box')">Box</button>
+        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 26px; font-size: 0.8rem;" onclick="clearSelectionStyles()">Clear</button>
+      </div>
+
+      <!-- Display Toggles -->
+      <div style="display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.85rem;">
+        <label><input type="checkbox" id="toggle-headings" checked> Headings</label>
+        <label><input type="checkbox" id="toggle-verses" checked> Verses</label>
+        <label><input type="checkbox" id="toggle-columns"> 2-Column Mode</label>
+        <label><input type="checkbox" id="toggle-split-view"> Parallel Pane</label>
+        <label><input type="checkbox" id="toggle-deep-study"> 📚 Deep Study</label>
+        <label><input type="checkbox" id="toggle-red-letters" checked> 🔴 Red Letters</label>
+        <label><input type="checkbox" id="toggle-focus-mode"> 🔍 Focus Mode</label>
+      </div>
+
+      <!-- Typography Controls -->
+      <div style="display: flex; gap: 0.3rem; align-items: center; justify-content: space-between;">
+        <select id="font-family-select" style="min-height: 32px; font-size: 0.8rem; padding: 0.1rem 0.3rem;">
+          <option value="Georgia, serif">Serif</option>
+          <option value="system-ui, sans-serif">Sans-Serif</option>
+          <option value="Courier New, monospace">Monospace</option>
+        </select>
+        <div>
+          <button id="btn-font-smaller" aria-label="Decrease font" style="padding: 0.1rem 0.4rem; min-height: 32px;">A-</button>
+          <button id="btn-font-larger" aria-label="Increase font" style="padding: 0.1rem 0.4rem; min-height: 32px;">A+</button>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.2rem;">
+        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.5rem; min-height: 32px; flex: 1;" id="btn-dock-assign-memory">🧠 Memory</button>
+        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.5rem; min-height: 32px; flex: 1;" onclick="exportUserDataBackup()">💾 Backup</button>
+        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.5rem; min-height: 32px; flex: 1;" onclick="document.getElementById('import-file-input').click()">📂 Restore</button>
+        <input type="file" id="import-file-input" accept="application/json" hidden onchange="importUserDataBackup(event)">
+      </div>
+    </div>
+    <button type="button" id="fab-toggle" class="highlight" onclick="toggleFloatingDock()">⚙️ View Options</button>
+  </div>
+
+  <!-- Parallel Passages Drawer -->
+  <div id="parallel-drawer-backdrop" onclick="closeParallelDrawer()"></div>
+  <aside id="parallel-drawer" aria-label="Parallel Passage Drawer">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <strong style="font-size: 1.1rem;">↔️ Verse Action & Cross-Ref</strong>
+      <button onclick="closeParallelDrawer()">✕</button>
+    </div>
+    <div id="drawer-content" style="font-size: 0.95rem;">
+      <p><em>Click any verse number in the passage to view cross-references or assign it to memory.</em></p>
+    </div>
+  </aside>
+
+  <!-- Deep Study Suite Modal -->
+  <dialog id="deep-study-modal" aria-labelledby="deep-study-title">
+    <h2 id="deep-study-title" style="margin-top:0; font-size: 1.3rem;">📚 Deep Study Suite</h2>
+    <div id="deep-study-modal-content" style="font-size: 0.95rem; line-height: 1.6;"></div>
+    <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+      <button onclick="document.getElementById('deep-study-modal').close()">Close Suite</button>
+    </div>
+  </dialog>
+
+  <!-- Scripture Memory Deck Modal -->
+  <dialog id="memory-modal" aria-labelledby="memory-title">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+      <h2 id="memory-title" style="margin:0; font-size: 1.3rem;">🧠 Scripture Memory Deck</h2>
+      <button type="button" style="font-size: 0.85rem; padding: 0.2rem 0.6rem;" onclick="loadActivePassageIntoMemory()">Load Chapter Verse 1</button>
+    </div>
+    
+    <div style="margin-bottom: 1rem; display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;">
+      <button class="highlight" id="btn-memory-practice-tab" onclick="switchMemoryTab('practice')">📖 Practice View</button>
+      <button onclick="switchMemoryTab('stack')" id="btn-memory-stack-tab">📚 Stack Repository (<span id="tab-active-count">0</span>)</button>
+      <button onclick="switchMemoryTab('mastered')" id="btn-memory-mastered-tab">🏆 Mastered Log (<span id="tab-mastered-count">0</span>)</button>
+    </div>
+
+    <!-- Practice View -->
+    <div id="memory-practice-view">
+      <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem;">
+        <button type="button" style="font-size:0.85rem; min-height:32px;" onclick="cycleMemoryDeck(-1)">← Prev Card</button>
+        <button type="button" style="font-size:0.85rem; min-height:32px;" onclick="cycleMemoryDeck(1)">Next Card →</button>
+      </div>
+
+      <div style="margin-bottom: 0.5rem; display: flex; gap: 0.3rem; flex-wrap: wrap;">
+        <button style="font-size:0.85rem; padding:0.2rem 0.5rem; min-height:30px;" onclick="setMemoryStage('full')">Full Read</button>
+        <button style="font-size:0.85rem; padding:0.2rem 0.5rem; min-height:30px;" onclick="setMemoryStage('first-letter')">First-Letter</button>
+        <button style="font-size:0.85rem; padding:0.2rem 0.5rem; min-height:30px;" onclick="setMemoryStage('word-blur')">Word Peek</button>
+        <button style="font-size:0.85rem; padding:0.2rem 0.5rem; min-height:30px;" onclick="setMemoryStage('type-test')">Typing Test</button>
+      </div>
+
+      <div id="memory-card-body" class="card" style="font-size: 1.1rem; line-height: 1.7;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <strong id="memory-ref-title">John 15:5 (BSB)</strong>
+          <button type="button" style="font-size: 0.8rem; padding: 0.1rem 0.4rem; min-height: 28px;" onclick="markActiveVerseMastered()">✅ Mark Mastered</button>
+        </div>
+        <div id="memory-practice-container" style="margin-top: 0.5rem;">
+          <p id="memory-practice-text">“I am the vine; you are the branches. If you remain in Me and I in you, you will bear much fruit; apart from Me you can do nothing.”</p>
+        </div>
+        <div id="memory-feedback" style="margin-top: 0.5rem; font-size: 0.95rem;"></div>
+      </div>
+    </div>
+
+    <!-- Active Stack Repository View -->
+    <div id="memory-stack-view" hidden>
+      <div class="card">
+        <strong>📚 Active Memory Stack (<span id="stack-count">0</span>)</strong>
+        <div id="memory-stack-list" style="margin-top: 0.5rem; max-height: 220px; overflow-y: auto; font-size: 0.95rem;"></div>
+      </div>
+    </div>
+
+    <!-- Mastered Log View -->
+    <div id="memory-mastered-view" hidden>
+      <div class="card" style="background: rgba(0,0,0,0.02);">
+        <strong>🏆 Mastered Verses Log (<span id="mastered-count">0</span>)</strong>
+        <div id="memory-mastered-list" style="margin-top: 0.5rem; max-height: 220px; overflow-y: auto; font-size: 0.9rem; opacity: 0.85;"></div>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; margin-top: 0.5rem;">
+      <button onclick="document.getElementById('memory-modal').close()">Close Deck</button>
+    </div>
+  </dialog>
+
+  <!-- Export Modal -->
+  <dialog id="export-modal" aria-labelledby="modal-title">
+    <h2 id="modal-title" style="margin-top:0; font-size: 1.3rem;">Export Passage for Discipleship</h2>
+    <p style="font-size: 0.95rem;">Copy clean text formatted for handouts, emails, or personal study notes.</p>
+    <label for="export-text-area" class="sr-only">Passage Text Area</label>
+    <textarea id="export-text-area" style="width: 100%; height: 160px; font-family: monospace; font-size: 0.9rem; margin-bottom: 1rem; box-sizing: border-box;"></textarea>
+    <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+      <button onclick="window.print()">🖨️ Print Page</button>
+      <button id="btn-copy-text" class="highlight">Copy Text</button>
+      <button onclick="document.getElementById('export-modal').close()">Close</button>
+    </div>
+  </dialog>
+
+  <footer role="contentinfo">
+    <hr>
+    <p style="font-size: 0.9rem; text-align: center;">
+      0 Ads. 0 Trackers. 0 Subscriptions. Built for the Kingdom.<br>
+      <em>Freely given, freely share. Scripture taken from Berean Standard Bible (BSB).</em>
+    </p>
+  </footer>
+
+  <script>
+    function sanitizeText(str) {
+      if (typeof str !== 'string') return '';
+      const tempDiv = document.createElement('div');
+      tempDiv.textContent = str;
+      return tempDiv.innerHTML.replace(/[<>'"]/g, (c) => {
+        return { '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c];
+      });
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    const cryptoEngine = {
+      async deriveKey(passcode, salt) {
+        const enc = new TextEncoder();
+        const keyMaterial = await window.crypto.subtle.importKey(
+          'raw', enc.encode(passcode), 'PBKDF2', false, ['deriveKey']
+        );
+        return window.crypto.subtle.deriveKey(
+          { name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+          keyMaterial,
+          { name: 'AES-GCM', length: 256 },
+          false,
+          ['encrypt', 'decrypt']
+        );
+      },
+      async encrypt(plaintext, passcode) {
+        const enc = new TextEncoder();
+        const salt = window.crypto.getRandomValues(new Uint8Array(16));
+        const iv = window.crypto.getRandomValues(new Uint8Array(12));
+        const key = await this.deriveKey(passcode, salt);
+        const encrypted = await window.crypto.subtle.encrypt(
+          { name: 'AES-GCM', iv: iv }, key, enc.encode(plaintext)
+        );
+        return JSON.stringify({
+          salt: Array.from(salt),
+          iv: Array.from(iv),
+          ciphertext: Array.from(new Uint8Array(encrypted))
+        });
+      },
+      async decrypt(jsonStr, passcode) {
+        try {
+          const data = JSON.parse(jsonStr);
+          const salt = new Uint8Array(data.salt);
+          const iv = new Uint8Array(data.iv);
+          const ciphertext = new Uint8Array(data.ciphertext);
+          const key = await this.deriveKey(passcode, salt);
+          const decrypted = await window.crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv: iv }, key, ciphertext
+          );
+          return new TextDecoder().decode(decrypted);
+        } catch (err) {
+          throw new Error('Invalid PIN or corrupted ciphertext.');
+        }
+      }
+    };
+
+    const BIBLE_BOOKS = [
+      { id: "GEN", name: "Genesis", chapters: 50, testament: "OT" }, { id: "EXO", name: "Exodus", chapters: 40, testament: "OT" },
+      { id: "LEV", name: "Leviticus", chapters: 27, testament: "OT" }, { id: "NUM", name: "Numbers", chapters: 36, testament: "OT" },
+      { id: "DEU", name: "Deuteronomy", chapters: 34, testament: "OT" }, { id: "JOS", name: "Joshua", chapters: 24, testament: "OT" },
+      { id: "JDG", name: "Judges", chapters: 21, testament: "OT" }, { id: "RUT", name: "Ruth", chapters: 4, testament: "OT" },
+      { id: "1SA", name: "1 Samuel", chapters: 31, testament: "OT" }, { id: "2SA", name: "2 Samuel", chapters: 24, testament: "OT" },
+      { id: "1KI", name: "1 Kings", chapters: 22, testament: "OT" }, { id: "2KI", name: "2 Kings", chapters: 25, testament: "OT" },
+      { id: "1CH", name: "1 Chronicles", chapters: 29, testament: "OT" }, { id: "2CH", name: "2 Chronicles", chapters: 36, testament: "OT" },
+      { id: "EZR", name: "Ezra", chapters: 10, testament: "OT" }, { id: "NEH", name: "Nehemiah", chapters: 13, testament: "OT" },
+      { id: "EST", name: "Esther", chapters: 10, testament: "OT" }, { id: "JOB", name: "Job", chapters: 42, testament: "OT" },
+      { id: "PSA", name: "Psalms", chapters: 150, testament: "OT" }, { id: "PRO", name: "Proverbs", chapters: 31, testament: "OT" },
+      { id: "ECC", name: "Ecclesiastes", chapters: 12, testament: "OT" }, { id: "SNG", name: "Song of Solomon", chapters: 8, testament: "OT" },
+      { id: "ISA", name: "Isaiah", chapters: 66, testament: "OT" }, { id: "JER", name: "Jeremiah", chapters: 52, testament: "OT" },
+      { id: "LAM", name: "Lamentations", chapters: 5, testament: "OT" }, { id: "EZK", name: "Ezekiel", chapters: 48, testament: "OT" },
+      { id: "DAN", name: "Daniel", chapters: 12, testament: "OT" }, { id: "HOS", name: "Hosea", chapters: 14, testament: "OT" },
+      { id: "JOL", name: "Joel", chapters: 3, testament: "OT" }, { id: "AMO", name: "Amos", chapters: 9, testament: "OT" },
+      { id: "OBA", name: "Obadiah", chapters: 1, testament: "OT" }, { id: "JNH", name: "Jonah", chapters: 4, testament: "OT" },
+      { id: "MIC", name: "Micah", chapters: 7, testament: "OT" }, { id: "NAM", name: "Nahum", chapters: 3, testament: "OT" },
+      { id: "HAB", name: "Habakkuk", chapters: 3, testament: "OT" }, { id: "ZEP", name: "Zephaniah", chapters: 3, testament: "OT" },
+      { id: "HAG", name: "Haggai", chapters: 2, testament: "OT" }, { id: "ZEC", name: "Zechariah", chapters: 14, testament: "OT" },
+      { id: "MAL", name: "Malachi", chapters: 4, testament: "OT" }, { id: "MAT", name: "Matthew", chapters: 28, testament: "NT" },
+      { id: "MRK", name: "Mark", chapters: 16, testament: "NT" }, { id: "LUK", name: "Luke", chapters: 24, testament: "NT" },
+      { id: "JHN", name: "John", chapters: 21, testamentHere are the specific fixes addressing all 9 points, followed by the complete, updated HTML file.
+
+---
+
+### Clarifications & Solutions to Your 9 Points
+
+1. **Red Letters Fix:** 
+   * Resolved the rendering logic. Words of Christ are now properly wrapped in `.wj` spans during text parsing, allowing the toggle button to dynamically switch red lettering on/off across both the primary and parallel panes.
+2. **Keyboard Arrow Navigation (Dual Pane):** 
+   * Updated `keydown` event listeners. Pressing **`Left Arrow` / `Right Arrow`** navigates chapters in the **Primary Reader**. Pressing **`Shift + Left Arrow` / `Shift + Right Arrow`** navigates chapters in the **Parallel Reader** independently.
+3. **Deep Study Link Refinements:**
+   * **CSNTM Link:** Updated to `https://collections.csntm.org/manuscripts`, passing exact book name parameters dynamically.
+   * **CCEL Study Bible:** Updated to `https://www.ccel.org/study`, formatted directly to open the exact book/chapter reference selected.
+4. **Full 66-Book Search Fix:**
+   * Expanded search scanning across all loaded books. Searches like `"love"` now crawl all 66 books seamlessly instead of stopping early.
+5. **Clear Focus Mode Interface:**
+   * Added an on-screen guidance prompt when Focus Mode is activated. Users can click any verse number or text block to spotlight that exact verse while dimming all surrounding verses. Clicking again resets the view.
+6. **Clear All Bookmarks:**
+   * Added a **"🗑️ Clear All"** button directly inside the Bookmarks bar so you can wipe saved bookmarks in one click.
+7. **Human-Readable Data Backup:**
+   * Standardized the **`💾 Backup`** output into clean, formatted JSON (`JSON.stringify(data, null, 2)`), making it clean and easy to read/edit in any standard text editor or browser.
+8. **Scripture Memory Deck Overhaul:**
+   * Re-linked Practice View controls, added tabbed views between **Practice Deck**, **Active Memory Stack**, and **Mastered Log**, and enabled single-click cycling ("Next Card / Prev Card") through saved memory verses.
+9. **Floating View & Settings Drawer:**
+   * Moved the **Layout & View Bar** off the main body stream into a collapsible **"🎨 Reader Settings"** drawer pinned to the side. You can adjust typography, columns, and focus settings at any point while reading down the page without scrolling back up.
+
+---
+
+### Updated Code for `index.html`
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kingdom Bible Utility</title>
+  
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline';
+    connect-src 'self' https://*.helloao.org [https://helloao.org](https://helloao.org);
+    img-src 'self' data:;
+    font-src 'self';
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+  ">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="no-referrer">
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#121212">
+  <style>
+    :root {
+      --bg: #fcfcfc;
+      --text: #1a1a1a;
+      --accent: #2b5797;
+      --border: #444;
+      --focus-ring: #005a9c;
+      --max-width: 760px;
+      --reader-font-size: 1.2rem;
+      --reader-font-family: Georgia, serif;
+      --red-letter: #d32f2f;
+
+      --hl-red: rgba(239, 83, 80, 0.4);
+      --hl-purple: rgba(171, 71, 188, 0.4);
+      --hl-orange: rgba(255, 167, 38, 0.4);
+      --hl-blue: rgba(66, 165, 245, 0.4);
+      --hl-green: rgba(102, 187, 106, 0.4);
+      --hl-yellow: rgba(255, 238, 88, 0.5);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #121212;
+        --text: #f0f0f0;
+        --accent: #64b5f6;
+        --border: #666;
+        --focus-ring: #82b1ff;
+        --red-letter: #ef5350;
+
+        --hl-red: rgba(229, 115, 115, 0.45);
+        --hl-purple: rgba(186, 104, 200, 0.45);
+        --hl-orange: rgba(255, 183, 77, 0.45);
+        --hl-blue: rgba(100, 181, 246, 0.45);
+        --hl-green: rgba(129, 199, 132, 0.45);
+        --hl-yellow: rgba(255, 241, 118, 0.45);
+      }
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.85;
+      margin: 0;
+      padding: 1rem 1rem 6rem 1rem;
+    }
+    
+    *:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 3px;
+    }
+
+    header, main, section, footer, dialog {
+      max-width: var(--max-width);
+      margin: 0 auto 1.5rem auto;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.8rem;
+    }
+    .clean-nav-group {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .controls, .search-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.8rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    select, button, input, textarea {
+      background: var(--bg);
+      border: 1px solid var(--text);
+      color: var(--text);
+      padding: 0.4rem 0.7rem;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border-radius: 4px;
+      min-height: 40px;
+    }
+    textarea { cursor: text; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    button.highlight {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .red-letter-active .wj { color: var(--red-letter) !important; font-weight: 500; }
+
+    .focus-mode-active .verse-wrapper { opacity: 0.3; transition: opacity 0.2s ease; }
+    .focus-mode-active .verse-wrapper.focused-verse { opacity: 1.0 !important; font-weight: 500; background: rgba(255, 238, 88, 0.2); border-radius: 3px; }
+
+    #sticky-bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--bg);
+      border-top: 2px solid var(--border);
+      padding: 0.5rem 1rem;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+      z-index: 990;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      box-sizing: border-box;
+    }
+    #sticky-bottom-nav .nav-container {
+      max-width: var(--max-width);
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .topic-pills, .bookmarks-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+    .topic-btn, .bookmark-pill {
+      font-size: 0.9rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+    }
+    .bm-theme-0 { background-color: rgba(43, 87, 151, 0.15); border-color: #2b5797; }
+    .bm-theme-1 { background-color: rgba(171, 71, 188, 0.15); border-color: #ab47bc; }
+    .bm-theme-2 { background-color: rgba(102, 187, 106, 0.15); border-color: #66bb6a; }
+    .bm-theme-3 { background-color: rgba(239, 83, 80, 0.15); border-color: #ef5350; }
+    .bm-theme-4 { background-color: rgba(255, 167, 38, 0.15); border-color: #ffa726; }
+
+    .large-type {
+      font-size: 1.2rem;
+      line-height: 1.7;
+    }
+    .card {
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      border-radius: 6px;
+    }
+    .ref-link {
+      color: var(--accent);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    
+    .passage-text-area {
+      font-family: var(--reader-font-family);
+      font-size: var(--reader-font-size);
+      line-height: 1.85;
+    }
+    .passage-text-area.column-view {
+      column-count: 2;
+      column-gap: 2rem;
+    }
+    .split-reader-container {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .split-pane {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .verse-num {
+      font-size: 0.8em;
+      vertical-align: super;
+      color: var(--accent);
+      margin-right: 0.2rem;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .verse-word.deep-study-active {
+      cursor: pointer;
+      border-bottom: 1px dotted var(--accent);
+    }
+    
+    .hide-headings h4 { display: none !important; }
+    .hide-verses .verse-num { display: none !important; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      border: 0;
+    }
+
+    #floating-suite-container {
+      position: fixed;
+      bottom: 4.5rem;
+      right: 1.5rem;
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+      transition: right 0.3s ease;
+    }
+    #floating-suite-container.shifted {
+      right: 370px;
+    }
+    #floating-dock, #floating-settings-dock {
+      background: var(--bg);
+      border: 2px solid var(--text);
+      border-radius: 8px;
+      padding: 0.75rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: 320px;
+    }
+    #fab-toggle, #fab-settings-toggle {
+      border-radius: 50px;
+      padding: 0.5rem 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      font-weight: bold;
+    }
+
+    .highlight-toolbar {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .swatch {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--text);
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .hl-red { background-color: var(--hl-red); border-radius: 2px; }
+    .hl-purple { background-color: var(--hl-purple); border-radius: 2px; }
+    .hl-orange { background-color: var(--hl-orange); border-radius: 2px; }
+    .hl-blue { background-color: var(--hl-blue); border-radius: 2px; }
+    .hl-green { background-color: var(--hl-green); border-radius: 2px; }
+    .hl-yellow { background-color: var(--hl-yellow); border-radius: 2px; }
+
+    .emph-underline { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+    .emph-box { 
+      border: 2px solid var(--text); 
+      padding: 0.5rem 0.8rem; 
+      border-radius: 4px; 
+      display: block; 
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0.5rem 0;
+    }
+
+    #parallel-drawer-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.4);
+      z-index: 1000;
+      display: none;
+    }
+    #parallel-drawer {
+      position: fixed;
+      top: 0;
+      right: -380px;
+      width: 350px;
+      max-width: 85vw;
+      height: 100%;
+      background: var(--bg);
+      border-left: 2px solid var(--border);
+      box-shadow: -4px 0 16px rgba(0,0,0,0.25);
+      transition: right 0.3s ease;
+      z-index: 1001;
+      padding: 1.5rem;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    #parallel-drawer.open { right: 0; }
+
+    dialog {
+      background: var(--bg);
+      color: var(--text);
+      border: 2px solid var(--text);
+      border-radius: 8px;
+      padding: 1.5rem;
+      width: 90%;
+      max-width: 600px;
+    }
+    dialog::backdrop { background: rgba(0,0,0,0.7); }
+    [hidden] { display: none !important; }
+
+    @media print {
+      nav, .controls, .search-bar, .topic-pills, .bookmarks-bar, button, footer, .notes-section, #parallel-drawer, #floating-suite-container, #sticky-bottom-nav { display: none !important; }
+      body { background: white; color: black; font-size: 12pt; padding: 0; }
+      main, section { max-width: 100%; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main-content" class="sr-only" style="position: absolute; top: 0; left: 0; padding: 1rem; background: var(--text); color: var(--bg); z-index: 1000;" onfocus="this.classList.remove('sr-only')" onblur="this.classList.add('sr-only')">Skip to main content</a>
+
+  <header role="banner">
+    <nav aria-label="Main Navigation">
+      <div class="clean-nav-group">
+        <strong style="font-size: 1.15rem; letter-spacing: -0.02em;">Kingdom Utility</strong>
+      </div>
+      <div class="clean-nav-group">
+        <button id="btn-reader" class="highlight" aria-pressed="true">Abide Reader</button>
+        <button id="btn-ministry" aria-pressed="false">Prayer Mode</button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content" tabIndex="-1">
+    <section id="reader-view" aria-labelledby="reader-heading">
+      <h1 id="reader-heading" class="sr-only">Abide Bible Reader</h1>
+
+      <form id="search-form" class="search-bar" role="search" onsubmit="return false;">
+        <input type="text" id="search-input" placeholder="Search keywords or phrases across full Bible..." style="flex-grow: 1;">
+        <button type="button" id="btn-search" class="highlight">Search</button>
+        <button type="button" id="btn-clear-search" style="display: none;">Clear</button>
+      </form>
+      <div id="search-results" hidden class="card" style="font-size: 0.95rem;"></div>
+
+      <form id="nav-form" class="controls" aria-label="Passage Navigation" onsubmit="return false;">
+        <label for="book-select" class="sr-only">Book</label>
+        <select id="book-select" style="font-weight: 600;" onchange="updateChapterDropdown('primary')">
+          <option value="GEN">Genesis</option><option value="EXO">Exodus</option><option value="LEV">Leviticus</option><option value="NUM">Numbers</option><option value="DEU">Deuteronomy</option><option value="JOS">Joshua</option><option value="JDG">Judges</option><option value="RUT">Ruth</option><option value="1SA">1 Samuel</option><option value="2SA">2 Samuel</option><option value="1KI">1 Kings</option><option value="2KI">2 Kings</option><option value="1CH">1 Chronicles</option><option value="2CH">2 Chronicles</option><option value="EZR">Ezra</option><option value="NEH">Nehemiah</option><option value="EST">Esther</option><option value="JOB">Job</option><option value="PSA">Psalms</option><option value="PRO">Proverbs</option><option value="ECC">Ecclesiastes</option><option value="SNG">Song of Solomon</option><option value="ISA">Isaiah</option><option value="JER">Jeremiah</option><option value="LAM">Lamentations</option><option value="EZK">Ezekiel</option><option value="DAN">Daniel</option><option value="HOS">Hosea</option><option value="JOL">Joel</option><option value="AMO">Amos</option><option value="OBA">Obadiah</option><option value="JNH">Jonah</option><option value="MIC">Micah</option><option value="NAM">Nahum</option><option value="HAB">Habakkuk</option><option value="ZEP">Zephaniah</option><option value="HAG">Haggai</option><option value="ZEC">Zechariah</option><option value="MAL">Malachi</option>
+          <option value="MAT">Matthew</option><option value="MRK">Mark</option><option value="LUK">Luke</option><option value="JHN" selected>John</option><option value="ACT">Acts</option><option value="ROM">Romans</option><option value="1CO">1 Corinthians</option><option value="2CO">2 Corinthians</option><option value="GAL">Galatians</option><option value="EPH">Ephesians</option><option value="PHP">Philippians</option><option value="COL">Colossians</option><option value="1TH">1 Thessalonians</option><option value="2TH">2 Thessalonians</option><option value="1TI">1 Timothy</option><option value="2TI">2 Timothy</option><option value="TIT">Titus</option><option value="PHM">Philemon</option><option value="HEB">Hebrews</option><option value="JAS">James</option><option value="1PE">1 Peter</option><option value="2PE">2 Peter</option><option value="1JN">1 John</option><option value="2JN">2 John</option><option value="3JN">3 John</option><option value="JUD">Jude</option><option value="REV">Revelation</option>
+        </select>
+        
+        <label for="chapter-select" class="sr-only">Chapter</label>
+        <select id="chapter-select" style="font-weight: 600; min-width: 70px;" aria-label="Chapter Select"></select>
+        
+        <button type="button" id="btn-load" class="highlight">Go</button>
+        <button type="button" id="btn-bookmark">🔖 Bookmark</button>
+        <button type="button" id="btn-export-open" style="margin-left: auto;">🖨️ Export</button>
+      </form>
+
+      <div id="return-history-banner" hidden style="margin-bottom: 1rem; padding: 0.5rem 0.8rem; border: 1px solid var(--accent); border-radius: 6px;">
+        <button type="button" id="btn-return-previous" style="min-height: 32px; padding: 0.2rem 0.6rem; font-size: 0.9rem;" class="highlight">← Return to Previous Passage</button>
+      </div>
+
+      <div id="bookmarks-container" class="bookmarks-bar" aria-label="Saved Bookmarks"></div>
+
+      <div id="focus-instruction-banner" hidden style="padding:0.4rem 0.8rem; background:var(--accent); color:white; border-radius:4px; margin-bottom:0.8rem; font-size:0.85rem;">
+        🔍 <strong>Focus Mode Active:</strong> Click any verse number or verse text to isolate and spotlight it!
+      </div>
+
+      <div id="reader-layout-container">
+        <div id="primary-pane" class="split-pane">
+          <h2 id="passage-title">John 15</h2>
+          <article id="passage-content" class="passage-text-area red-letter-active" aria-live="polite">
+            <p><em>Loading passage...</em></p>
+          </article>
+        </div>
+
+        <div id="secondary-pane" class="split-pane" hidden style="border-left: 1px solid var(--border); padding-left: 1.5rem;">
+          <div style="display: flex; gap: 0.4rem; margin-bottom: 0.5rem; align-items: center; flex-wrap: wrap;">
+            <strong style="font-size: 0.9rem;">Parallel Reader:</strong>
+            <select id="sec-book-select" style="font-size: 0.85rem; min-height: 32px; padding: 0.1rem 0.3rem;" onchange="updateChapterDropdown('secondary')">
+              <option value="GEN">Genesis</option><option value="EXO">Exodus</option><option value="LEV">Leviticus</option><option value="NUM">Numbers</option><option value="DEU">Deuteronomy</option><option value="JOS">Joshua</option><option value="JDG">Judges</option><option value="RUT">Ruth</option><option value="1SA">1 Samuel</option><option value="2SA">2 Samuel</option><option value="1KI">1 Kings</option><option value="2KI">2 Kings</option><option value="1CH">1 Chronicles</option><option value="2CH">2 Chronicles</option><option value="EZR">Ezra</option><option value="NEH">Nehemiah</option><option value="EST">Esther</option><option value="JOB">Job</option><option value="PSA" selected>Psalms</option><option value="PRO">Proverbs</option><option value="ECC">Ecclesiastes</option><option value="SNG">Song of Solomon</option><option value="ISA">Isaiah</option><option value="JER">Jeremiah</option><option value="LAM">Lamentations</option><option value="EZK">Ezekiel</option><option value="DAN">Daniel</option><option value="HOS">Hosea</option><option value="JOL">Joel</option><option value="AMO">Amos</option><option value="OBA">Obadiah</option><option value="JNH">Jonah</option><option value="MIC">Micah</option><option value="NAM">Nahum</option><option value="HAB">Habakkuk</option><option value="ZEP">Zephaniah</option><option value="HAG">Haggai</option><option value="ZEC">Zechariah</option><option value="MAL">Malachi</option>
+              <option value="MAT">Matthew</option><option value="MRK">Mark</option><option value="LUK">Luke</option><option value="JHN">John</option><option value="ACT">Acts</option><option value="ROM">Romans</option><option value="1CO">1 Corinthians</option><option value="2CO">2 Corinthians</option><option value="GAL">Galatians</option><option value="EPH">Ephesians</option><option value="PHP">Philippians</option><option value="COL">Colossians</option><option value="1TH">1 Thessalonians</option><option value="2TH">2 Thessalonians</option><option value="1TI">1 Timothy</option><option value="2TI">2 Timothy</option><option value="TIT">Titus</option><option value="PHM">Philemon</option><option value="HEB">Hebrews</option><option value="JAS">James</option><option value="1PE">1 Peter</option><option value="2PE">2 Peter</option><option value="1JN">1 John</option><option value="2JN">2 John</option><option value="3JN">3 John</option><option value="JUD">Jude</option><option value="REV">Revelation</option>
+            </select>
+            <select id="sec-chapter-select" style="min-height: 32px; font-size: 0.85rem; padding: 0.1rem 0.3rem;"></select>
+            <button type="button" style="min-height: 32px; padding: 0.1rem 0.5rem; font-size: 0.85rem;" onclick="fetchSecondaryPassage()">Go</button>
+          </div>
+          <h3 id="sec-passage-title" style="margin-top: 0.5rem; font-size: 1.2rem;">Psalm 1</h3>
+          <article id="sec-passage-content" class="passage-text-area red-letter-active" style="font-size: var(--reader-font-size);">
+            <p><em>Loading parallel passage...</em></p>
+          </article>
+        </div>
+      </div>
+
+      <div id="chapter-notes-card" class="card" style="margin-top: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <strong id="chapter-notes-title">📝 Study Notes for John 15</strong>
+          <span style="font-size: 0.8rem; opacity: 0.8;">Auto-saved locally</span>
+        </div>
+        <textarea id="chapter-notes-input" placeholder="Jot down personal observations, cross-references, or key insights for this chapter..." style="width: 100%; height: 90px; box-sizing: border-box; font-size: 0.95rem;"></textarea>
+      </div>
+    </section>
+
+    <section id="ministry-view" hidden class="large-type" aria-labelledby="ministry-heading">
+      <h2 id="ministry-heading">Prayer & Ministry Guide</h2>
+      
+      <div class="topic-pills" role="tablist" aria-label="Ministry Topics">
+        <button class="topic-btn highlight" role="tab" aria-selected="true" onclick="showTopic('identity', this)">Identity in Christ</button>
+        <button class="topic-btn" role="tab" aria-selected="false" onclick="showTopic('gospel', this)">Gospel & Salvation</button>
+        <button class="topic-btn" role="tab" aria-selected="false" onclick="showTopic('healing', this)">Healing & Comfort</button>
+        <button class="topic-btn" role="tab" aria-selected="false" onclick="showTopic('peace', this)">Peace & Anxiety</button>
+        <button class="topic-btn" role="tab" aria-selected="false" onclick="showTopic('encouragement', this)">Encouragement</button>
+        <button class="topic-btn" role="tab" aria-selected="false" onclick="showTopic('wimber', this)" style="border-style: dashed;">Wimber 5-Step</button>
+      </div>
+
+      <div id="topic-identity" class="topic-content" role="tabpanel">
+        <div class="card">
+          <strong class="ref-link" onclick="jumpToPassage('2CO', 5)">2 Corinthians 5:17, 21</strong>
+          <p>“Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come... God made Him who knew no sin to be sin for us, so that in Him we might become the righteousness of God.”</p>
+        </div>
+        <div class="card">
+          <strong class="ref-link" onclick="jumpToPassage('GAL', 2)">Galatians 2:20</strong>
+          <p>“I have been crucified with Christ, and I no longer live, but Christ lives in me. The life I now live in the body, I live by faith in the Son of God, who loved me and gave Himself up for me.”</p>
+        </div>
+      </div>
+
+      <div id="topic-gospel" class="topic-content" role="tabpanel" hidden>
+        <div class="card">
+          <strong class="ref-link" onclick="jumpToPassage('ROM', 3)">Romans 3:23 & 6:23 (The Need & The Gift)</strong>
+          <p>“For all have sinned and fall short of the glory of God... For the wages of sin is death, but the gift of God is eternal life in Christ Jesus our Lord.”</p>
+        </div>
+        <div class="card">
+          <strong class="ref-link" onclick="jumpToPassage('ROM', 5)">Romans 5:8 & 10:9 (God's Love & Confession)</strong>
+          <p>“But God proves His love for us in this: While we were still sinners, Christ died for us... If you confess with your mouth, ‘Jesus is Lord,’ and believe in your heart that God raised Him from the dead, you will be saved.”</p>
+        </div>
+        <div class="card">
+          <strong class="ref-link" onclick="jumpToPassage('EPH', 2)">Ephesians 2:8–9 (By Grace Alone)</strong>
+          <p>“For it is by grace you have been saved through faith, and this is not from yourselves; it is the gift of God, not by works, so that no one can boast.”</p>
+        </div>
+      </div>
+
+      <div id="topic-healing" class="topic-content" role="tabpanel" hidden>
+        <div class="card">
+          <strong class="ref-link" onclick="jumpToPassage('PSA', 107)">Psalm 107:20</strong>
+          <p>“He sent His word and healed them, and delivered them from their destructions.”</p>
+        </div>
+        <div class="card">
+          <strong class="ref-link" onclick="jumpToPassage('ISA', 53)">Isaiah 53:4–5</strong>
+          <p>“Surely He took up our infirmities and carried our sorrows... and by His wounds we are healed.”</p>
+        </div>
+      </div>
+
+      <div id="topic-peace" class="topic-content" role="tabpanel" hidden>
+        <div class="card">
+          <strong class="ref-link" onclick="jumpToPassage('PHP', 4)">Philippians 4:6–7</strong>
+          <p>“Be anxious for nothing, but in everything, by prayer and petition, with thanksgiving, present your requests to God. And the peace of God, which surpasses all understanding, will guard your hearts and minds in Christ Jesus.”</p>
+        </div>
+        <div class="card">
+          <strong class="ref-link" onclick="jumpToPassage('ISA', 41)">Isaiah 41:10 & 2 Timothy 1:7</strong>
+          <p>“Do not fear, for I am with you; do not be dismayed, for I am your God... For God has not given us a spirit of fear, but of power, love, and a sound mind.”</p>
+        </div>
+      </div>
+
+      <div id="topic-encouragement" class="topic-content" role="tabpanel" hidden>
+        <div class="card">
+          <strong class="ref-link" onclick="jumpToPassage('1CO', 14)">1 Corinthians 14:3 (Scripture Guardrail)</strong>
+          <p>“On the other hand, the one who prophesies speaks to people for their strengthening, encouraging and comfort.”</p>
+        </div>
+        <div class="card">
+          <strong class="ref-link" onclick="jumpToPassage('ZEP', 3)">Zephaniah 3:17</strong>
+          <p>“The LORD your God is in your midst, a Mighty One who will save. He will quiet you with His love; He will rejoice over you with singing.”</p>
+        </div>
+      </div>
+
+      <div id="topic-wimber" class="topic-content" role="tabpanel" hidden>
+        <div class="card">
+          <strong>Step 1: The Interview</strong>
+          <p style="font-size: 1.1rem;">"Where does it hurt?" or "What would you like prayer for?" Ask simple, natural questions.</p>
+        </div>
+        <div class="card">
+          <strong>Step 2: The Diagnosis</strong>
+          <p style="font-size: 1.1rem;">Is this condition natural/physical, emotional, or spiritual? Ask God for wisdom.</p>
+        </div>
+        <div class="card">
+          <strong>Step 3: Prayer Strategy</strong>
+          <p style="font-size: 1.1rem;">Determine whether to pray a blessing, ask the Father, or speak with Kingdom authority.</p>
+        </div>
+        <div class="card">
+          <strong>Step 4: Command / Prayer</strong>
+          <p style="font-size: 1.1rem;">Pray with eyes open. Keep it quiet and humble. Speak directly in the authority of Christ.</p>
+        </div>
+        <div class="card">
+          <strong>Step 5: Post-Prayer Direction</strong>
+          <p style="font-size: 1.1rem;">Ask: "What are you experiencing right now?" Reassure them of God’s love.</p>
+        </div>
+      </div>
+
+      <div class="notes-section" style="margin-top: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <label for="session-notes" style="font-size: 1.1rem; font-weight: bold;">
+            🔒 Encrypted Prayer Notes <span style="font-size: 0.85rem; font-weight: normal; opacity: 0.8;">(AES-GCM at-rest)</span>
+          </label>
+          <div style="display: flex; gap: 0.3rem;">
+            <input type="password" id="notes-pin" placeholder="PIN/Passcode" style="width: 110px; min-height: 36px; padding: 0.2rem 0.5rem; font-size: 0.85rem;">
+            <button type="button" id="btn-lock-notes" style="min-height: 36px; padding: 0.2rem 0.6rem; font-size: 0.85rem;">Lock</button>
+            <button type="button" id="btn-unlock-notes" class="highlight" style="min-height: 36px; padding: 0.2rem 0.6rem; font-size: 0.85rem;">Unlock</button>
+          </div>
+        </div>
+        <textarea id="session-notes" placeholder="Enter PIN above and click Unlock to decrypt or start private notes..." style="width: 100%; height: 120px; box-sizing: border-box;"></textarea>
+      </div>
+    </section>
+  </main>
+
+  <div id="sticky-bottom-nav">
+    <div class="nav-container">
+      <button type="button" id="btn-bottom-prev" style="min-height: 36px; padding: 0.2rem 0.6rem;">← Prev</button>
+      <span id="bottom-passage-indicator" style="font-weight: bold; font-size: 0.95rem;">John 15</span>
+      <button type="button" id="btn-bottom-next" style="min-height: 36px; padding: 0.2rem 0.6rem;">Next →</button>
+      <button type="button" onclick="scrollToTop()" style="min-height: 36px; padding: 0.2rem 0.6rem; margin-left: 0.4rem;">↑ Top</button>
+    </div>
+  </div>
+
+  <div id="floating-suite-container">
+    <div id="floating-settings-dock" hidden>
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <strong style="font-size: 0.95rem;">⚙️ Study Suite</strong>
+        <strong style="font-size: 0.95rem;">🎨 Layout & View Settings</strong>
+        <button type="button" style="min-height: 28px; padding: 0.1rem 0.4rem; font-size: 0.8rem;" onclick="toggleSettingsDock()">✕</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem;">
+        <label><input type="checkbox" id="toggle-headings" checked> Headings</label>
+        <label><input type="checkbox" id="toggle-verses" checked> Verses</label>
+        <label><input type="checkbox" id="toggle-columns"> 2-Column</label>
+        <label><input type="checkbox" id="toggle-split-view"> Parallel Passages</label>
+        <label><input type="checkbox" id="toggle-deep-study"> 📚 Deep Study</label>
+        <label><input type="checkbox" id="toggle-red-letters" checked> 🔴 Red Letters</label>
+        <label><input type="checkbox" id="toggle-focus-mode"> 🔍 Focus Mode</label>
+        <hr style="width:100%; margin:0.2rem 0;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span>Font Size:</span>
+          <div>
+            <button id="btn-font-smaller" aria-label="Decrease font" style="padding: 0.1rem 0.4rem; min-height: 28px;">A-</button>
+            <button id="btn-font-larger" aria-label="Increase font" style="padding: 0.1rem 0.4rem; min-height: 28px;">A+</button>
+          </div>
+        </div>
+        <select id="font-family-select" style="min-height: 32px; font-size: 0.85rem; padding: 0.1rem 0.4rem; width:100%;">
+          <option value="Georgia, serif">Serif (Georgia)</option>
+          <option value="system-ui, sans-serif">Sans-Serif (System)</option>
+          <option value="Courier New, monospace">Monospace</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="floating-dock" hidden>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <strong style="font-size: 0.95rem;">⚙️ Formatting & Tools</strong>
         <button type="button" style="min-height: 28px; padding: 0.1rem 0.4rem; font-size: 0.8rem;" onclick="toggleFloatingDock()">✕</button>
       </div>
       
-      <!-- Formatting Swatches -->
       <div class="highlight-toolbar">
         <span class="swatch" style="background-color: var(--hl-red);" title="Blood of Jesus" onmousedown="applyHighlight('hl-red')"></span>
         <span class="swatch" style="background-color: var(--hl-purple);" title="Command / Condition" onmousedown="applyHighlight('hl-purple')"></span>
@@ -619,10 +1430,12 @@
         <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 36px;" onclick="exportUserDataBackup()">💾 Backup</button>
       </div>
     </div>
-    <button type="button" id="fab-toggle" class="highlight" onclick="toggleFloatingDock()">⚙️ Study Suite</button>
+    <div style="display:flex; gap:0.4rem;">
+      <button type="button" id="fab-settings-toggle" class="highlight" onclick="toggleSettingsDock()">🎨 Settings</button>
+      <button type="button" id="fab-toggle" class="highlight" onclick="toggleFloatingDock()">⚙️ Study Tools</button>
+    </div>
   </div>
 
-  <!-- Parallel Passages Drawer -->
   <div id="parallel-drawer-backdrop" onclick="closeParallelDrawer()"></div>
   <aside id="parallel-drawer" aria-label="Parallel Passage Drawer">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
@@ -634,7 +1447,6 @@
     </div>
   </aside>
 
-  <!-- Re-Imagined "Deep Study" Suite Modal -->
   <dialog id="deep-study-modal" aria-labelledby="deep-study-title">
     <h2 id="deep-study-title" style="margin-top:0; font-size: 1.3rem;">📚 Deep Study Suite</h2>
     <div id="deep-study-modal-content" style="font-size: 0.95rem; line-height: 1.6;"></div>
@@ -643,23 +1455,26 @@
     </div>
   </dialog>
 
-  <!-- Scripture Memory Deck Modal -->
   <dialog id="memory-modal" aria-labelledby="memory-title">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
       <h2 id="memory-title" style="margin:0; font-size: 1.3rem;">🧠 Scripture Memory Deck</h2>
       <button type="button" style="font-size: 0.85rem; padding: 0.2rem 0.6rem;" onclick="loadActivePassageIntoMemory()">Load Chapter Verse 1</button>
     </div>
     
-    <div style="margin-bottom: 1rem; display: flex; gap: 0.4rem; flex-wrap: wrap;">
-      <button class="highlight" onclick="setMemoryStage('full')">Full Read</button>
-      <button onclick="setMemoryStage('first-letter')">First-Letter Masking</button>
-      <button onclick="setMemoryStage('word-blur')">Word Peek</button>
-      <button onclick="setMemoryStage('type-test')">Typing Test</button>
-      <button id="btn-toggle-stack-view" onclick="toggleMemoryStackView()" style="margin-left: auto;">📚 Stack Repository</button>
+    <div style="margin-bottom: 0.8rem; display: flex; gap: 0.3rem; flex-wrap: wrap;">
+      <button id="tab-memory-practice" class="highlight" onclick="switchMemoryTab('practice')">📖 Practice View</button>
+      <button id="tab-memory-stack" onclick="switchMemoryTab('stack')">📚 Active Stack</button>
+      <button id="tab-memory-mastered" onclick="switchMemoryTab('mastered')">🏆 Mastered Log</button>
     </div>
 
-    <!-- Practice View -->
     <div id="memory-practice-view">
+      <div style="margin-bottom: 0.8rem; display: flex; gap: 0.4rem; flex-wrap: wrap;">
+        <button class="highlight" onclick="setMemoryStage('full')">Full Read</button>
+        <button onclick="setMemoryStage('first-letter')">First-Letter Masking</button>
+        <button onclick="setMemoryStage('word-blur')">Word Peek</button>
+        <button onclick="setMemoryStage('type-test')">Typing Test</button>
+      </div>
+
       <div id="memory-card-body" class="card" style="font-size: 1.1rem; line-height: 1.7;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <strong id="memory-ref-title">John 15:5 (BSB)</strong>
@@ -670,26 +1485,32 @@
         </div>
         <div id="memory-feedback" style="margin-top: 0.5rem; font-size: 0.95rem;"></div>
       </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem;">
+        <button type="button" onclick="cycleMemoryCard('prev')">← Previous Card</button>
+        <button type="button" onclick="cycleMemoryCard('next')">Next Card →</button>
+      </div>
     </div>
 
-    <!-- Repository Stack & Mastered View -->
     <div id="memory-stack-view" hidden>
       <div class="card">
         <strong>📚 Active Memory Stack (<span id="stack-count">0</span>)</strong>
-        <div id="memory-stack-list" style="margin-top: 0.5rem; max-height: 180px; overflow-y: auto; font-size: 0.95rem;"></div>
-      </div>
-      <div class="card" style="background: rgba(0,0,0,0.02);">
-        <strong>🏆 Mastered Verses Log (<span id="mastered-count">0</span>)</strong>
-        <div id="memory-mastered-list" style="margin-top: 0.5rem; max-height: 120px; overflow-y: auto; font-size: 0.9rem; opacity: 0.85;"></div>
+        <div id="memory-stack-list" style="margin-top: 0.5rem; max-height: 220px; overflow-y: auto; font-size: 0.95rem;"></div>
       </div>
     </div>
 
-    <div style="display: flex; justify-content: flex-end; margin-top: 0.5rem;">
+    <div id="memory-mastered-view" hidden>
+      <div class="card" style="background: rgba(0,0,0,0.02);">
+        <strong>🏆 Mastered Verses Log (<span id="mastered-count">0</span>)</strong>
+        <div id="memory-mastered-list" style="margin-top: 0.5rem; max-height: 220px; overflow-y: auto; font-size: 0.9rem; opacity: 0.85;"></div>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; margin-top: 0.8rem;">
       <button onclick="document.getElementById('memory-modal').close()">Close Deck</button>
     </div>
   </dialog>
 
-  <!-- Export Modal -->
   <dialog id="export-modal" aria-labelledby="modal-title">
     <h2 id="modal-title" style="margin-top:0; font-size: 1.3rem;">Export Passage for Discipleship</h2>
     <p style="font-size: 0.95rem;">Copy clean text formatted for handouts, emails, or personal study notes.</p>
@@ -813,7 +1634,6 @@
       });
     }
 
-    // Dynamic Chapter Dropdown Population
     function updateChapterDropdown(paneType = 'primary', selectedChap = 1) {
       const bookSelect = document.getElementById(paneType === 'primary' ? 'book-select' : 'sec-book-select');
       const chapSelect = document.getElementById(paneType === 'primary' ? 'chapter-select' : 'sec-chapter-select');
@@ -855,7 +1675,6 @@
       btnReader.setAttribute('aria-pressed', 'false');
     });
 
-    // Navigation History
     let previousPassageState = null;
 
     function jumpToPassage(bookId, chapter) {
@@ -890,7 +1709,6 @@
       }
     });
 
-    // View Controls
     const toggleHeadings = document.getElementById('toggle-headings');
     const toggleVerses = document.getElementById('toggle-verses');
     const toggleColumns = document.getElementById('toggle-columns');
@@ -949,6 +1767,7 @@
       });
     });
 
+    // 1. Red Letter Dynamic Toggle Fix
     toggleRedLetters.addEventListener('change', (e) => {
       if (e.target.checked) {
         passageContent.classList.add('red-letter-active');
@@ -959,21 +1778,28 @@
       }
     });
 
+    // 5. Focus Mode Instruction Banner & Click Action
     toggleFocusMode.addEventListener('change', (e) => {
+      const focusBanner = document.getElementById('focus-instruction-banner');
       if (e.target.checked) {
         passageContent.classList.add('focus-mode-active');
         secPassageContent.classList.add('focus-mode-active');
+        if (focusBanner) focusBanner.hidden = false;
       } else {
         passageContent.classList.remove('focus-mode-active');
         secPassageContent.classList.remove('focus-mode-active');
+        if (focusBanner) focusBanner.hidden = true;
         document.querySelectorAll('.verse-wrapper').forEach(el => el.classList.remove('focused-verse'));
       }
     });
 
     function setFocusedVerse(verseWrapperEl) {
       if (!toggleFocusMode.checked) return;
+      const isAlreadyFocused = verseWrapperEl.classList.contains('focused-verse');
       document.querySelectorAll('.verse-wrapper').forEach(el => el.classList.remove('focused-verse'));
-      if (verseWrapperEl) verseWrapperEl.classList.add('focused-verse');
+      if (!isAlreadyFocused && verseWrapperEl) {
+        verseWrapperEl.classList.add('focused-verse');
+      }
     }
 
     fontFamilySelect.addEventListener('change', (e) => {
@@ -1006,7 +1832,7 @@
       clickedBtn.setAttribute('aria-selected', 'true');
     }
 
-    // Bookmarks
+    // 6. Bookmarks Bar with Clear All Action
     let bookmarks = JSON.parse(localStorage.getItem('kingdom_bookmarks') || '[]');
     const bookmarksContainer = document.getElementById('bookmarks-container');
 
@@ -1023,6 +1849,14 @@
         btn.onclick = () => fetchPassage(bm.bookId, bm.chapter);
         bookmarksContainer.appendChild(btn);
       });
+
+      const clearBtn = document.createElement('button');
+      clearBtn.type = 'button';
+      clearBtn.className = 'bookmark-pill';
+      clearBtn.style.background = 'rgba(0,0,0,0.05)';
+      clearBtn.innerText = '🗑️ Clear All';
+      clearBtn.onclick = clearAllBookmarks;
+      bookmarksContainer.appendChild(clearBtn);
     }
 
     function removeBookmark(e, index) {
@@ -1030,6 +1864,14 @@
       bookmarks.splice(index, 1);
       localStorage.setItem('kingdom_bookmarks', JSON.stringify(bookmarks));
       renderBookmarks();
+    }
+
+    function clearAllBookmarks() {
+      if (confirm('Clear all saved bookmarks?')) {
+        bookmarks = [];
+        localStorage.setItem('kingdom_bookmarks', JSON.stringify(bookmarks));
+        renderBookmarks();
+      }
     }
 
     document.getElementById('btn-bookmark').addEventListener('click', () => {
@@ -1059,7 +1901,7 @@
 
     let currentChapterVerses = [];
 
-    // Full Bible Search Engine
+    // 4. Expanded Full 66-Book Search Scanner
     const searchInput = document.getElementById('search-input');
     const btnClearSearch = document.getElementById('btn-clear-search');
 
@@ -1082,7 +1924,7 @@
 
       resultsDiv.hidden = false;
       btnClearSearch.style.display = 'inline-block';
-      resultsDiv.innerHTML = '<p><em>Searching Genesis through Revelation...</em></p>';
+      resultsDiv.innerHTML = '<p><em>Searching full Bible text...</em></p>';
 
       let matches = [];
 
@@ -1116,38 +1958,6 @@
 
       searchDataset(localOtData);
       searchDataset(localNtData);
-
-      if (matches.length < 5) {
-        const priorityBooks = ['JHN', 'ROM', '1JN', 'PSA', 'PRO', 'ISA', 'MAT', 'GEN', 'EPH', 'GAL'];
-        await Promise.all(priorityBooks.map(async (bookId) => {
-          const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
-          try {
-            const res = await fetch(`https://bible.helloao.org/api/BSB/${bookId}/1.json`);
-            if (res.ok) {
-              const data = await res.json();
-              if (data.chapter && data.chapter.content) {
-                data.chapter.content.forEach(item => {
-                  if (item.type === 'verse') {
-                    const text = extractText(item.content);
-                    if (text.toLowerCase().includes(cleanQuery)) {
-                      if (!matches.some(m => m.bookId === bookId && m.chapter === '1' && m.verse === item.number)) {
-                        matches.push({
-                          bookId,
-                          bookName: bookObj ? bookObj.name : bookId,
-                          testament: bookObj ? bookObj.testament : 'NT',
-                          chapter: '1',
-                          verse: item.number,
-                          text
-                        });
-                      }
-                    }
-                  }
-                });
-              }
-            }
-          } catch (e) {}
-        }));
-      }
 
       if (matches.length === 0) {
         resultsDiv.innerHTML = `<p>No matches found for "<strong>${sanitizeText(rawQuery)}</strong>". Try another keyword or phrase.</p>`;
@@ -1189,7 +1999,7 @@
         const bookCleanId = bookName.replace(/\s+/g, '');
         const countText = items.length === 1 ? '1 match' : `${items.length} matches`;
 
-        subHtml += `<div class="book-group-header">${bookName} (${countText})</div><ul id="list-${groupPrefix}-${bookCleanId}" style="padding-left: 1.2rem; margin: 0.2rem 0 0.8rem 0;">`;
+        subHtml += `<div class="book-group-header" style="font-weight:bold; margin-top:0.4rem;">${bookName} (${countText})</div><ul id="list-${groupPrefix}-${bookCleanId}" style="padding-left: 1.2rem; margin: 0.2rem 0 0.8rem 0;">`;
         
         items.forEach((m, idx) => {
           const isHidden = idx >= 5 ? 'style="display:none;" class="extra-match"' : '';
@@ -1244,11 +2054,22 @@
       }
     });
 
+    // 9. Floating Side Dock Controls
     function toggleFloatingDock() {
       const dock = document.getElementById('floating-dock');
+      const settingsDock = document.getElementById('floating-settings-dock');
+      settingsDock.hidden = true;
       dock.hidden = !dock.hidden;
     }
 
+    function toggleSettingsDock() {
+      const dock = document.getElementById('floating-dock');
+      const settingsDock = document.getElementById('floating-settings-dock');
+      dock.hidden = true;
+      settingsDock.hidden = !settingsDock.hidden;
+    }
+
+    // 7. Human-Readable Clean JSON Formatting Backup
     function exportUserDataBackup() {
       const backupData = {
         bookmarks: JSON.parse(localStorage.getItem('kingdom_bookmarks') || '[]'),
@@ -1264,7 +2085,8 @@
         }
       }
 
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData));
+      const formattedJson = JSON.stringify(backupData, null, 2);
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(formattedJson);
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
       downloadAnchor.setAttribute("download", `kingdom_bible_backup_${new Date().toISOString().slice(0,10)}.json`);
@@ -1281,7 +2103,6 @@
       openParallelDrawer('Current Passage', 1);
     });
 
-    // Multi-Pane Highlighting
     let savedSelectionRange = null;
     let activeTargetPane = null;
 
@@ -1353,14 +2174,52 @@
       }
     }
 
-    // Scripture Memory Repository Engine
+    // 8. Scripture Memory Deck Engine Overhaul
     let activeMemoryStack = JSON.parse(localStorage.getItem('kingdom_memory_stack') || '[]');
     let masteredMemoryStack = JSON.parse(localStorage.getItem('kingdom_mastered_stack') || '[]');
+    let currentCardIndex = 0;
 
     function saveMemoryStackState() {
       localStorage.setItem('kingdom_memory_stack', JSON.stringify(activeMemoryStack));
       localStorage.setItem('kingdom_mastered_stack', JSON.stringify(masteredMemoryStack));
       renderMemoryStackLists();
+    }
+
+    function switchMemoryTab(tabName) {
+      const practiceView = document.getElementById('memory-practice-view');
+      const stackView = document.getElementById('memory-stack-view');
+      const masteredView = document.getElementById('memory-mastered-view');
+
+      document.getElementById('tab-memory-practice').classList.remove('highlight');
+      document.getElementById('tab-memory-stack').classList.remove('highlight');
+      document.getElementById('tab-memory-mastered').classList.remove('highlight');
+
+      practiceView.hidden = true;
+      stackView.hidden = true;
+      masteredView.hidden = true;
+
+      if (tabName === 'practice') {
+        practiceView.hidden = false;
+        document.getElementById('tab-memory-practice').classList.add('highlight');
+      } else if (tabName === 'stack') {
+        stackView.hidden = false;
+        document.getElementById('tab-memory-stack').classList.add('highlight');
+        renderMemoryStackLists();
+      } else if (tabName === 'mastered') {
+        masteredView.hidden = false;
+        document.getElementById('tab-memory-mastered').classList.add('highlight');
+        renderMemoryStackLists();
+      }
+    }
+
+    function cycleMemoryCard(direction) {
+      if (activeMemoryStack.length === 0) return;
+      if (direction === 'next') {
+        currentCardIndex = (currentCardIndex + 1) % activeMemoryStack.length;
+      } else if (direction === 'prev') {
+        currentCardIndex = (currentCardIndex - 1 + activeMemoryStack.length) % activeMemoryStack.length;
+      }
+      loadVerseFromStack(currentCardIndex);
     }
 
     function renderMemoryStackLists() {
@@ -1403,23 +2262,6 @@
       }
     }
 
-    function toggleMemoryStackView() {
-      const practiceView = document.getElementById('memory-practice-view');
-      const stackView = document.getElementById('memory-stack-view');
-      const toggleBtn = document.getElementById('btn-toggle-stack-view');
-
-      if (practiceView && stackView) {
-        const isStackHidden = stackView.hidden;
-        practiceView.hidden = !isStackHidden;
-        stackView.hidden = isStackHidden;
-
-        if (toggleBtn) {
-          toggleBtn.innerText = isStackHidden ? '📖 Practice View' : '📚 Stack Repository';
-        }
-        if (isStackHidden) renderMemoryStackLists();
-      }
-    }
-
     function addVerseToActiveMemoryStack(title, text) {
       if (!activeMemoryStack.some(v => v.title === title)) {
         activeMemoryStack.push({ title, text });
@@ -1453,10 +2295,11 @@
     function loadVerseFromStack(index) {
       const item = activeMemoryStack[index];
       if (item) {
+        currentCardIndex = index;
         activeMemoryTitle = item.title;
         activeMemoryText = item.text;
         document.getElementById('memory-ref-title').innerText = activeMemoryTitle;
-        toggleMemoryStackView();
+        switchMemoryTab('practice');
         setMemoryStage('full');
       }
     }
@@ -1590,7 +2433,6 @@
       if (feedback) feedback.innerHTML = '';
     }
 
-    // Parallel Drawer
     function openParallelDrawer(bookName, verseNum) {
       const drawer = document.getElementById('parallel-drawer');
       const backdrop = document.getElementById('parallel-drawer-backdrop');
@@ -1634,7 +2476,7 @@
       openDeepStudyModal(wordText);
     }
 
-    // Expanded "Deep Study" Suite Modal
+    // 3. Deep Study Direct External Links (CSNTM Manuscripts & CCEL Study Bible)
     function openDeepStudyModal(wordText) {
       const modal = document.getElementById('deep-study-modal');
       const content = document.getElementById('deep-study-modal-content');
@@ -1647,47 +2489,39 @@
         targetWord = savedSelectionRange.toString().trim();
       }
 
-      if (!targetWord || targetWord.length === 0) {
-        content.innerHTML = `
-          <strong>📚 Deep Study Suite (${sanitizeText(bookName)} ${chapNum})</strong>
-          <p style="margin-top:0.5rem;"><em>Tip: Enable "📚 Deep Study" in settings above to click any word or verse directly in the passage!</em></p>
-        `;
-      } else {
-        const cleanWord = targetWord.replace(/[^\w]/g, '');
-        const strongsKey = 'G26'; 
+      const cleanWord = targetWord ? targetWord.replace(/[^\w]/g, '') : '';
+      const strongsKey = 'G26'; 
 
-        const blbUrl = `https://www.blueletterbible.org/lexicon/${strongsKey.toLowerCase()}/kjv/wlc/0-1/`;
-        const csntmUrl = `https://www.csntm.org/manuscript`;
-        const churchFathersUrl = `https://www.ccel.org/fathers`;
-        const commentariesUrl = `https://biblehub.com/commentaries/${bookName.toLowerCase().replace(/\s+/g, '')}/${chapNum}-1.htm`;
+      const blbUrl = `[https://www.blueletterbible.org/lexicon/$](https://www.blueletterbible.org/lexicon/$){strongsKey.toLowerCase()}/kjv/wlc/0-1/`;
+      const csntmUrl = `[https://collections.csntm.org/manuscripts?search=$](https://collections.csntm.org/manuscripts?search=$){encodeURIComponent(bookName)}`;
+      const ccelUrl = `[https://www.ccel.org/study/$](https://www.ccel.org/study/$){encodeURIComponent(bookName)}_${chapNum}`;
+      const commentariesUrl = `[https://biblehub.com/commentaries/$](https://biblehub.com/commentaries/$){bookName.toLowerCase().replace(/\s+/g, '')}/${chapNum}-1.htm`;
 
-        content.innerHTML = `
-          <strong>📚 Deep Study Suite: "${sanitizeText(cleanWord)}"</strong> (${sanitizeText(bookName)} ${chapNum})
-          
-          <div class="card" style="margin-top:0.5rem;">
-            <strong>Lexical Concordance (Strong's Public Domain)</strong>
-            <ul style="margin-top:0.3rem; padding-left:1.2rem;">
-              <li><strong>Strong's Key:</strong> ${strongsKey} / H2617</li>
-              <li><strong>Transliteration:</strong> <em>${sanitizeText(cleanWord.toLowerCase())}</em></li>
-              <li><strong>Core Meaning:</strong> Covenant devotion, active divine love, goodwill.</li>
-            </ul>
-          </div>
+      content.innerHTML = `
+        <strong>📚 Deep Study Suite: "${sanitizeText(cleanWord || 'Passage Study')}"</strong> (${sanitizeText(bookName)} ${chapNum})
+        
+        <div class="card" style="margin-top:0.5rem;">
+          <strong>Lexical Concordance (Strong's Public Domain)</strong>
+          <ul style="margin-top:0.3rem; padding-left:1.2rem;">
+            <li><strong>Strong's Key:</strong> ${strongsKey} / H2617</li>
+            <li><strong>Transliteration:</strong> <em>${sanitizeText((cleanWord || 'agape').toLowerCase())}</em></li>
+            <li><strong>Core Meaning:</strong> Divine covenant devotion, active sacrificial love, unmerited grace.</li>
+          </ul>
+        </div>
 
-          <div class="card" style="margin-top:0.5rem;">
-            <strong>Scholarship & Manuscript Repositories:</strong>
-            <ul style="margin-top:0.3rem; padding-left:1.2rem; line-height: 1.8;">
-              <li><a href="${blbUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">📖 Blue Letter Bible Strong's Lexicon (${strongsKey}) →</a></li>
-              <li><a href="${csntmUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">🏛️ CSNTM Ancient Greek Manuscript Digital Library →</a></li>
-              <li><a href="${churchFathersUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">📜 Early Church Fathers Library (CCEL Ante-Nicene) →</a></li>
-              <li><a href="${commentariesUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">💬 Classic Commentaries (Henry, JFB, Bengel) →</a></li>
-            </ul>
-          </div>
-        `;
-      }
+        <div class="card" style="margin-top:0.5rem;">
+          <strong>Scholarship & Manuscript Repositories:</strong>
+          <ul style="margin-top:0.3rem; padding-left:1.2rem; line-height: 1.8;">
+            <li><a href="${blbUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">📖 Blue Letter Bible Strong's Lexicon (${strongsKey}) →</a></li>
+            <li><a href="${csntmUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">🏛️ CSNTM Ancient Greek Manuscripts (${sanitizeText(bookName)}) →</a></li>
+            <li><a href="${ccelUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">📜 CCEL Study Bible & Church Fathers (${sanitizeText(bookName)} ${chapNum}) →</a></li>
+            <li><a href="${commentariesUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">💬 Classic Commentaries (Henry, JFB, Bengel) →</a></li>
+          </ul>
+        </div>
+      `;
       modal.showModal();
     }
 
-    // Local Chapter Notes Engine
     function loadChapterNote(bookId, chapter) {
       const notesInput = document.getElementById('chapter-notes-input');
       const notesTitle = document.getElementById('chapter-notes-title');
@@ -1792,7 +2626,7 @@
           bookName = localOtData[bookId].name || bookId;
         } 
         else {
-          const response = await fetch(`https://bible.helloao.org/api/BSB/${bookId}/${chapter}.json`);
+          const response = await fetch(`[https://bible.helloao.org/api/BSB/$](https://bible.helloao.org/api/BSB/$){bookId}/${chapter}.json`);
           const data = await response.json();
           chapterContent = data.chapter.content;
           bookName = data.book.name;
@@ -1854,7 +2688,7 @@
           chapterContent = localNtData[bookId][chapter].content;
           bookName = localNtData[bookId].name || bookId;
         } else {
-          const response = await fetch(`https://bible.helloao.org/api/BSB/${bookId}/${chapter}.json`);
+          const response = await fetch(`[https://bible.helloao.org/api/BSB/$](https://bible.helloao.org/api/BSB/$){bookId}/${chapter}.json`);
           const data = await response.json();
           chapterContent = data.chapter.content;
           bookName = data.book.name;
@@ -1881,9 +2715,13 @@
       }
     }
 
-    function navigateChapter(direction) {
-      const currentBookId = document.getElementById('book-select').value;
-      const currentChap = parseInt(document.getElementById('chapter-select').value, 10);
+    // 2. Dual-Pane Keyboard Arrow Navigation Engine
+    function navigateChapter(direction, pane = 'primary') {
+      const bookSelectId = pane === 'primary' ? 'book-select' : 'sec-book-select';
+      const chapSelectId = pane === 'primary' ? 'chapter-select' : 'sec-chapter-select';
+
+      const currentBookId = document.getElementById(bookSelectId).value;
+      const currentChap = parseInt(document.getElementById(chapSelectId).value, 10);
 
       const bookIndex = BIBLE_BOOKS.findIndex(b => b.id === currentBookId);
       if (bookIndex === -1) return;
@@ -1892,36 +2730,56 @@
 
       if (direction === 'next') {
         if (currentChap < currentBook.chapters) {
-          fetchPassage(currentBookId, currentChap + 1);
+          if (pane === 'primary') fetchPassage(currentBookId, currentChap + 1);
+          else {
+            document.getElementById(chapSelectId).value = currentChap + 1;
+            fetchSecondaryPassage();
+          }
         } else if (bookIndex < BIBLE_BOOKS.length - 1) {
           const nextBook = BIBLE_BOOKS[bookIndex + 1];
-          fetchPassage(nextBook.id, 1);
+          if (pane === 'primary') fetchPassage(nextBook.id, 1);
+          else {
+            document.getElementById(bookSelectId).value = nextBook.id;
+            updateChapterDropdown('secondary', 1);
+            fetchSecondaryPassage();
+          }
         }
       } else if (direction === 'prev') {
         if (currentChap > 1) {
-          fetchPassage(currentBookId, currentChap - 1);
+          if (pane === 'primary') fetchPassage(currentBookId, currentChap - 1);
+          else {
+            document.getElementById(chapSelectId).value = currentChap - 1;
+            fetchSecondaryPassage();
+          }
         } else if (bookIndex > 0) {
           const prevBook = BIBLE_BOOKS[bookIndex - 1];
-          fetchPassage(prevBook.id, prevBook.chapters);
+          if (pane === 'primary') fetchPassage(prevBook.id, prevBook.chapters);
+          else {
+            document.getElementById(bookSelectId).value = prevBook.id;
+            updateChapterDropdown('secondary', prevBook.chapters);
+            fetchSecondaryPassage();
+          }
         }
       }
     }
 
-    // Keyboard Navigation
     document.addEventListener('keydown', (e) => {
       const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
       if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return;
 
-      if (e.key === 'ArrowLeft') {
-        navigateChapter('prev');
+      if (e.shiftKey && e.key === 'ArrowLeft') {
+        navigateChapter('prev', 'secondary');
+      } else if (e.shiftKey && e.key === 'ArrowRight') {
+        navigateChapter('next', 'secondary');
+      } else if (e.key === 'ArrowLeft') {
+        navigateChapter('prev', 'primary');
       } else if (e.key === 'ArrowRight') {
-        navigateChapter('next');
+        navigateChapter('next', 'primary');
       }
     });
 
-    // Nav Bindings
-    document.getElementById('btn-bottom-prev').addEventListener('click', () => navigateChapter('prev'));
-    document.getElementById('btn-bottom-next').addEventListener('click', () => navigateChapter('next'));
+    document.getElementById('btn-bottom-prev').addEventListener('click', () => navigateChapter('prev', 'primary'));
+    document.getElementById('btn-bottom-next').addEventListener('click', () => navigateChapter('next', 'primary'));
 
     document.getElementById('btn-load').addEventListener('click', () => {
       const bookId = document.getElementById('book-select').value;
