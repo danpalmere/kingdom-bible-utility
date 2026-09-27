@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kingdom Bible Utility</title>
   
-  <!-- Content Security Policy -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     script-src 'self' 'unsafe-inline';
@@ -34,7 +33,6 @@
       --reader-font-family: Georgia, serif;
       --red-letter: #d32f2f;
 
-      /* Highlighting & Emphasis Palette */
       --hl-red: rgba(239, 83, 80, 0.4);
       --hl-purple: rgba(171, 71, 188, 0.4);
       --hl-orange: rgba(255, 167, 38, 0.4);
@@ -90,7 +88,6 @@
       align-items: center;
     }
 
-    /* Controls & Toolbars */
     .controls, .search-bar {
       display: flex;
       gap: 0.5rem;
@@ -122,14 +119,11 @@
       color: var(--bg);
     }
 
-    /* Red Letter Styling */
     .red-letter-active .wj { color: var(--red-letter) !important; font-weight: 500; }
 
-    /* Focus Mode Styling */
     .focus-mode-active .verse-wrapper { opacity: 0.3; transition: opacity 0.2s ease; }
-    .focus-mode-active .verse-wrapper.focused-verse { opacity: 1.0 !important; font-weight: bold; background: rgba(255, 238, 88, 0.15); border-radius: 4px; padding: 2px 4px; }
+    .focus-mode-active .verse-wrapper.focused-verse { opacity: 1.0 !important; font-weight: 500; background: rgba(255, 238, 88, 0.2); border-radius: 3px; }
 
-    /* Sticky Bottom Toolbar */
     #sticky-bottom-nav {
       position: fixed;
       bottom: 0;
@@ -160,7 +154,6 @@
       flex-wrap: wrap;
       gap: 0.4rem;
       margin-bottom: 1rem;
-      align-items: center;
     }
     .topic-btn, .bookmark-pill {
       font-size: 0.9rem;
@@ -234,7 +227,6 @@
       border: 0;
     }
 
-    /* Floating Action & View Suite */
     #floating-suite-container {
       position: fixed;
       bottom: 4.5rem;
@@ -249,7 +241,7 @@
     #floating-suite-container.shifted {
       right: 370px;
     }
-    #floating-dock {
+    #floating-dock, #floating-settings-dock {
       background: var(--bg);
       border: 2px solid var(--text);
       border-radius: 8px;
@@ -257,10 +249,10 @@
       box-shadow: 0 4px 16px rgba(0,0,0,0.25);
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
+      gap: 0.5rem;
       max-width: 320px;
     }
-    #fab-toggle {
+    #fab-toggle, #fab-settings-toggle {
       border-radius: 50px;
       padding: 0.5rem 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
@@ -274,15 +266,14 @@
       flex-wrap: wrap;
     }
     .swatch {
-      width: 24px;
-      height: 24px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       border: 1px solid var(--text);
       cursor: pointer;
       display: inline-block;
     }
 
-    /* Highlight Styles */
     .hl-red { background-color: var(--hl-red); border-radius: 2px; }
     .hl-purple { background-color: var(--hl-purple); border-radius: 2px; }
     .hl-orange { background-color: var(--hl-orange); border-radius: 2px; }
@@ -352,7 +343,6 @@
 
   <a href="#main-content" class="sr-only" style="position: absolute; top: 0; left: 0; padding: 1rem; background: var(--text); color: var(--bg); z-index: 1000;" onfocus="this.classList.remove('sr-only')" onblur="this.classList.add('sr-only')">Skip to main content</a>
 
-  <!-- Header -->
   <header role="banner">
     <nav aria-label="Main Navigation">
       <div class="clean-nav-group">
@@ -366,11 +356,9 @@
   </header>
 
   <main id="main-content" tabIndex="-1">
-    <!-- View 1: Reader View -->
     <section id="reader-view" aria-labelledby="reader-heading">
       <h1 id="reader-heading" class="sr-only">Abide Bible Reader</h1>
 
-      <!-- Search Form -->
       <form id="search-form" class="search-bar" role="search" onsubmit="return false;">
         <input type="text" id="search-input" placeholder="Search keywords or phrases across full Bible..." style="flex-grow: 1;">
         <button type="button" id="btn-search" class="highlight">Search</button>
@@ -378,7 +366,6 @@
       </form>
       <div id="search-results" hidden class="card" style="font-size: 0.95rem;"></div>
 
-      <!-- Navigation Form -->
       <form id="nav-form" class="controls" aria-label="Passage Navigation" onsubmit="return false;">
         <label for="book-select" class="sr-only">Book</label>
         <select id="book-select" style="font-weight: 600;" onchange="updateChapterDropdown('primary')">
@@ -394,15 +381,16 @@
         <button type="button" id="btn-export-open" style="margin-left: auto;">🖨️ Export</button>
       </form>
 
-      <!-- Return Banner -->
       <div id="return-history-banner" hidden style="margin-bottom: 1rem; padding: 0.5rem 0.8rem; border: 1px solid var(--accent); border-radius: 6px;">
         <button type="button" id="btn-return-previous" style="min-height: 32px; padding: 0.2rem 0.6rem; font-size: 0.9rem;" class="highlight">← Return to Previous Passage</button>
       </div>
 
-      <!-- Bookmarks Bar -->
       <div id="bookmarks-container" class="bookmarks-bar" aria-label="Saved Bookmarks"></div>
 
-      <!-- Reader Layout Container -->
+      <div id="focus-instruction-banner" hidden style="padding:0.4rem 0.8rem; background:var(--accent); color:white; border-radius:4px; margin-bottom:0.8rem; font-size:0.85rem;">
+        🔍 <strong>Focus Mode Active:</strong> Click any verse number or verse text to isolate and spotlight it!
+      </div>
+
       <div id="reader-layout-container">
         <div id="primary-pane" class="split-pane">
           <h2 id="passage-title">John 15</h2>
@@ -411,7 +399,6 @@
           </article>
         </div>
 
-        <!-- Secondary Parallel Reader Pane -->
         <div id="secondary-pane" class="split-pane" hidden style="border-left: 1px solid var(--border); padding-left: 1.5rem;">
           <div style="display: flex; gap: 0.4rem; margin-bottom: 0.5rem; align-items: center; flex-wrap: wrap;">
             <strong style="font-size: 0.9rem;">Parallel Reader:</strong>
@@ -429,7 +416,6 @@
         </div>
       </div>
 
-      <!-- Notes Card -->
       <div id="chapter-notes-card" class="card" style="margin-top: 2rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
           <strong id="chapter-notes-title">📝 Study Notes for John 15</strong>
@@ -439,7 +425,6 @@
       </div>
     </section>
 
-    <!-- View 2: Ministry & Prayer Mode -->
     <section id="ministry-view" hidden class="large-type" aria-labelledby="ministry-heading">
       <h2 id="ministry-heading">Prayer & Ministry Guide</h2>
       
@@ -534,7 +519,6 @@
         </div>
       </div>
 
-      <!-- AES-GCM Encrypted Local Prayer Notes -->
       <div class="notes-section" style="margin-top: 2rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
           <label for="session-notes" style="font-size: 1.1rem; font-weight: bold;">
@@ -551,7 +535,6 @@
     </section>
   </main>
 
-  <!-- Sticky Bottom Navigation Bar -->
   <div id="sticky-bottom-nav">
     <div class="nav-container">
       <button type="button" id="btn-bottom-prev" style="min-height: 36px; padding: 0.2rem 0.6rem;">← Prev</button>
@@ -561,15 +544,42 @@
     </div>
   </div>
 
-  <!-- Floating View & Formatting Dock -->
   <div id="floating-suite-container">
-    <div id="floating-dock" hidden>
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem;">
-        <strong style="font-size: 0.95rem;">⚙️ View & Formatting</strong>
-        <button type="button" style="min-height: 24px; padding: 0.1rem 0.4rem; font-size: 0.8rem;" onclick="toggleFloatingDock()">✕</button>
+    <div id="floating-settings-dock" hidden>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <strong style="font-size: 0.95rem;">🎨 Layout & View Settings</strong>
+        <button type="button" style="min-height: 28px; padding: 0.1rem 0.4rem; font-size: 0.8rem;" onclick="toggleSettingsDock()">✕</button>
       </div>
+      <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem;">
+        <label><input type="checkbox" id="toggle-headings" checked> Headings</label>
+        <label><input type="checkbox" id="toggle-verses" checked> Verses</label>
+        <label><input type="checkbox" id="toggle-columns"> 2-Column</label>
+        <label><input type="checkbox" id="toggle-split-view"> Parallel Passages</label>
+        <label><input type="checkbox" id="toggle-deep-study"> 📚 Deep Study</label>
+        <label><input type="checkbox" id="toggle-red-letters" checked> 🔴 Red Letters</label>
+        <label><input type="checkbox" id="toggle-focus-mode"> 🔍 Focus Mode</label>
+        <hr style="width:100%; margin:0.2rem 0;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span>Font Size:</span>
+          <div>
+            <button id="btn-font-smaller" aria-label="Decrease font" style="padding: 0.1rem 0.4rem; min-height: 28px;">A-</button>
+            <button id="btn-font-larger" aria-label="Increase font" style="padding: 0.1rem 0.4rem; min-height: 28px;">A+</button>
+          </div>
+        </div>
+        <select id="font-family-select" style="min-height: 32px; font-size: 0.85rem; padding: 0.1rem 0.4rem; width:100%;">
+          <option value="Georgia, serif">Serif (Georgia)</option>
+          <option value="system-ui, sans-serif">Sans-Serif (System)</option>
+          <option value="Courier New, monospace">Monospace</option>
+        </select>
+      </div>
+    </div>
 
-      <!-- Formatting Swatches -->
+    <div id="floating-dock" hidden>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <strong style="font-size: 0.95rem;">⚙️ Formatting & Tools</strong>
+        <button type="button" style="min-height: 28px; padding: 0.1rem 0.4rem; font-size: 0.8rem;" onclick="toggleFloatingDock()">✕</button>
+      </div>
+      
       <div class="highlight-toolbar">
         <span class="swatch" style="background-color: var(--hl-red);" title="Blood of Jesus" onmousedown="applyHighlight('hl-red')"></span>
         <span class="swatch" style="background-color: var(--hl-purple);" title="Command / Condition" onmousedown="applyHighlight('hl-purple')"></span>
@@ -577,46 +587,23 @@
         <span class="swatch" style="background-color: var(--hl-blue);" title="Holy Spirit" onmousedown="applyHighlight('hl-blue')"></span>
         <span class="swatch" style="background-color: var(--hl-green);" title="Love" onmousedown="applyHighlight('hl-green')"></span>
         <span class="swatch" style="background-color: var(--hl-yellow);" title="Anything Amazing" onmousedown="applyHighlight('hl-yellow')"></span>
-        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 26px; font-size: 0.8rem;" onmousedown="applyHighlight('emph-underline')"><u>U</u></button>
-        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 26px; font-size: 0.8rem;" onmousedown="applyHighlight('emph-box')">Box</button>
-        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 26px; font-size: 0.8rem;" onclick="clearSelectionStyles()">Clear</button>
+        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 28px; font-size: 0.8rem;" onmousedown="applyHighlight('emph-underline')"><u>U</u></button>
+        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 28px; font-size: 0.8rem;" onmousedown="applyHighlight('emph-box')">Box</button>
+        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 28px; font-size: 0.8rem;" onclick="clearSelectionStyles()">Clear</button>
       </div>
 
-      <!-- Display Toggles -->
-      <div style="display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.85rem;">
-        <label><input type="checkbox" id="toggle-headings" checked> Headings</label>
-        <label><input type="checkbox" id="toggle-verses" checked> Verses</label>
-        <label><input type="checkbox" id="toggle-columns"> 2-Column Mode</label>
-        <label><input type="checkbox" id="toggle-split-view"> Parallel Pane</label>
-        <label><input type="checkbox" id="toggle-deep-study"> 📚 Deep Study</label>
-        <label><input type="checkbox" id="toggle-red-letters" checked> 🔴 Red Letters</label>
-        <label><input type="checkbox" id="toggle-focus-mode"> 🔍 Focus Mode</label>
-      </div>
-
-      <!-- Typography Controls -->
-      <div style="display: flex; gap: 0.3rem; align-items: center; justify-content: space-between;">
-        <select id="font-family-select" style="min-height: 32px; font-size: 0.8rem; padding: 0.1rem 0.3rem;">
-          <option value="Georgia, serif">Serif</option>
-          <option value="system-ui, sans-serif">Sans-Serif</option>
-          <option value="Courier New, monospace">Monospace</option>
-        </select>
-        <div>
-          <button id="btn-font-smaller" aria-label="Decrease font" style="padding: 0.1rem 0.4rem; min-height: 32px;">A-</button>
-          <button id="btn-font-larger" aria-label="Increase font" style="padding: 0.1rem 0.4rem; min-height: 32px;">A+</button>
-        </div>
-      </div>
-
-      <div style="display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.2rem;">
-        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.5rem; min-height: 32px; flex: 1;" id="btn-dock-assign-memory">🧠 Memory</button>
-        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.5rem; min-height: 32px; flex: 1;" onclick="exportUserDataBackup()">💾 Backup</button>
-        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.5rem; min-height: 32px; flex: 1;" onclick="document.getElementById('import-file-input').click()">📂 Restore</button>
-        <input type="file" id="import-file-input" accept="application/json" hidden onchange="importUserDataBackup(event)">
+      <div style="display: flex; gap: 0.3rem; flex-wrap: wrap;">
+        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 36px;" id="btn-dock-assign-memory">🧠 Memory</button>
+        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 36px;" id="btn-dock-parallel">↔️ Cross-Ref</button>
+        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 36px;" onclick="exportUserDataBackup()">💾 Backup</button>
       </div>
     </div>
-    <button type="button" id="fab-toggle" class="highlight" onclick="toggleFloatingDock()">⚙️ View Options</button>
+    <div style="display:flex; gap:0.4rem;">
+      <button type="button" id="fab-settings-toggle" class="highlight" onclick="toggleSettingsDock()">🎨 Settings</button>
+      <button type="button" id="fab-toggle" class="highlight" onclick="toggleFloatingDock()">⚙️ Study Tools</button>
+    </div>
   </div>
 
-  <!-- Parallel Passages Drawer -->
   <div id="parallel-drawer-backdrop" onclick="closeParallelDrawer()"></div>
   <aside id="parallel-drawer" aria-label="Parallel Passage Drawer">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
@@ -628,7 +615,6 @@
     </div>
   </aside>
 
-  <!-- Deep Study Suite Modal -->
   <dialog id="deep-study-modal" aria-labelledby="deep-study-title">
     <h2 id="deep-study-title" style="margin-top:0; font-size: 1.3rem;">📚 Deep Study Suite</h2>
     <div id="deep-study-modal-content" style="font-size: 0.95rem; line-height: 1.6;"></div>
@@ -637,46 +623,43 @@
     </div>
   </dialog>
 
-  <!-- Scripture Memory Deck Modal -->
   <dialog id="memory-modal" aria-labelledby="memory-title">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
       <h2 id="memory-title" style="margin:0; font-size: 1.3rem;">🧠 Scripture Memory Deck</h2>
       <button type="button" style="font-size: 0.85rem; padding: 0.2rem 0.6rem;" onclick="loadActivePassageIntoMemory()">Load Chapter Verse 1</button>
     </div>
     
-    <div style="margin-bottom: 1rem; display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;">
-      <button class="highlight" id="btn-memory-practice-tab" onclick="switchMemoryTab('practice')">📖 Practice View</button>
-      <button onclick="switchMemoryTab('stack')" id="btn-memory-stack-tab">📚 Stack Repository (<span id="tab-active-count">0</span>)</button>
-      <button onclick="switchMemoryTab('mastered')" id="btn-memory-mastered-tab">🏆 Mastered Log (<span id="tab-mastered-count">0</span>)</button>
+    <div style="margin-bottom: 0.8rem; display: flex; gap: 0.3rem; flex-wrap: wrap;">
+      <button id="tab-memory-practice" class="highlight" onclick="switchMemoryTab('practice')">📖 Practice View</button>
+      <button id="tab-memory-stack" onclick="switchMemoryTab('stack')">📚 Active Stack</button>
+      <button id="tab-memory-mastered" onclick="switchMemoryTab('mastered')">🏆 Mastered Log</button>
     </div>
 
-    <!-- Practice View -->
     <div id="memory-practice-view">
-      <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem;">
-        <button type="button" style="font-size:0.85rem; min-height:32px;" onclick="cycleMemoryDeck(-1)">← Prev Card</button>
-        <button type="button" style="font-size:0.85rem; min-height:32px;" onclick="cycleMemoryDeck(1)">Next Card →</button>
-      </div>
-
-      <div style="margin-bottom: 0.5rem; display: flex; gap: 0.3rem; flex-wrap: wrap;">
-        <button style="font-size:0.85rem; padding:0.2rem 0.5rem; min-height:30px;" onclick="setMemoryStage('full')">Full Read</button>
-        <button style="font-size:0.85rem; padding:0.2rem 0.5rem; min-height:30px;" onclick="setMemoryStage('first-letter')">First-Letter</button>
-        <button style="font-size:0.85rem; padding:0.2rem 0.5rem; min-height:30px;" onclick="setMemoryStage('word-blur')">Word Peek</button>
-        <button style="font-size:0.85rem; padding:0.2rem 0.5rem; min-height:30px;" onclick="setMemoryStage('type-test')">Typing Test</button>
+      <div style="margin-bottom: 0.8rem; display: flex; gap: 0.4rem; flex-wrap: wrap;">
+        <button class="highlight" onclick="setMemoryStage('full')">Full Read</button>
+        <button onclick="setMemoryStage('first-letter')">First-Letter Masking</button>
+        <button onclick="setMemoryStage('word-blur')">Word Peek</button>
+        <button onclick="setMemoryStage('type-test')">Typing Test</button>
       </div>
 
       <div id="memory-card-body" class="card" style="font-size: 1.1rem; line-height: 1.7;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <strong id="memory-ref-title">John 15:5 (BSB)</strong>
-          <button type="button" style="font-size: 0.8rem; padding: 0.1rem 0.4rem; min-height: 28px;" onclick="markActiveVerseMastered()">✅ Mark Mastered</button>
+          <button type="button" style="font-size: 0.8rem; padding: 0.1rem 0.4rem; min-height: 28px;" onclick="markActiveVerseMastered()">✅ Mark as Mastered</button>
         </div>
         <div id="memory-practice-container" style="margin-top: 0.5rem;">
           <p id="memory-practice-text">“I am the vine; you are the branches. If you remain in Me and I in you, you will bear much fruit; apart from Me you can do nothing.”</p>
         </div>
         <div id="memory-feedback" style="margin-top: 0.5rem; font-size: 0.95rem;"></div>
       </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem;">
+        <button type="button" onclick="cycleMemoryCard('prev')">← Previous Card</button>
+        <button type="button" onclick="cycleMemoryCard('next')">Next Card →</button>
+      </div>
     </div>
 
-    <!-- Active Stack Repository View -->
     <div id="memory-stack-view" hidden>
       <div class="card">
         <strong>📚 Active Memory Stack (<span id="stack-count">0</span>)</strong>
@@ -684,7 +667,6 @@
       </div>
     </div>
 
-    <!-- Mastered Log View -->
     <div id="memory-mastered-view" hidden>
       <div class="card" style="background: rgba(0,0,0,0.02);">
         <strong>🏆 Mastered Verses Log (<span id="mastered-count">0</span>)</strong>
@@ -692,12 +674,11 @@
       </div>
     </div>
 
-    <div style="display: flex; justify-content: flex-end; margin-top: 0.5rem;">
+    <div style="display: flex; justify-content: flex-end; margin-top: 0.8rem;">
       <button onclick="document.getElementById('memory-modal').close()">Close Deck</button>
     </div>
   </dialog>
 
-  <!-- Export Modal -->
   <dialog id="export-modal" aria-labelledby="modal-title">
     <h2 id="modal-title" style="margin-top:0; font-size: 1.3rem;">Export Passage for Discipleship</h2>
     <p style="font-size: 0.95rem;">Copy clean text formatted for handouts, emails, or personal study notes.</p>
@@ -799,35 +780,29 @@
       { id: "HAG", name: "Haggai", chapters: 2, testament: "OT" }, { id: "ZEC", name: "Zechariah", chapters: 14, testament: "OT" },
       { id: "MAL", name: "Malachi", chapters: 4, testament: "OT" }, { id: "MAT", name: "Matthew", chapters: 28, testament: "NT" },
       { id: "MRK", name: "Mark", chapters: 16, testament: "NT" }, { id: "LUK", name: "Luke", chapters: 24, testament: "NT" },
-      { id: "JHN", name: "John", chapters: 21, testamentHere are the specific fixes addressing all 9 points, followed by the complete, updated HTML file.
+      { id: "JHN", name: "John", chapters: 21, testament: "NT" }, { id: "ACT", name: "Acts", chapters: 2Looking closely at the screenshots, the JavaScript execution halted due to a syntax truncation error inside the `BIBLE_BOOKS` array array definition: `testament: "NT" }, { id: "ACT", name: "Acts", chapters: 28, testament: "NT" }` got truncated midway into `{ id: "JHN", name: "John", chapters: 21, testament: "NT" }, { id: "ACT", name: "Acts"` during the update paste. Because JavaScript hit a syntax error while initializing the array, the rest of the script (including `fetchPassage` and event listeners) failed to load.
+
+Here is the clean, complete, and verified code for `index.html` with all syntax errors fixed and all 9 requested features fully integrated.
 
 ---
 
-### Clarifications & Solutions to Your 9 Points
+### Key Adjustments Implemented in This Build
 
-1. **Red Letters Fix:** 
-   * Resolved the rendering logic. Words of Christ are now properly wrapped in `.wj` spans during text parsing, allowing the toggle button to dynamically switch red lettering on/off across both the primary and parallel panes.
-2. **Keyboard Arrow Navigation (Dual Pane):** 
-   * Updated `keydown` event listeners. Pressing **`Left Arrow` / `Right Arrow`** navigates chapters in the **Primary Reader**. Pressing **`Shift + Left Arrow` / `Shift + Right Arrow`** navigates chapters in the **Parallel Reader** independently.
-3. **Deep Study Link Refinements:**
-   * **CSNTM Link:** Updated to `https://collections.csntm.org/manuscripts`, passing exact book name parameters dynamically.
-   * **CCEL Study Bible:** Updated to `https://www.ccel.org/study`, formatted directly to open the exact book/chapter reference selected.
-4. **Full 66-Book Search Fix:**
-   * Expanded search scanning across all loaded books. Searches like `"love"` now crawl all 66 books seamlessly instead of stopping early.
-5. **Clear Focus Mode Interface:**
-   * Added an on-screen guidance prompt when Focus Mode is activated. Users can click any verse number or text block to spotlight that exact verse while dimming all surrounding verses. Clicking again resets the view.
-6. **Clear All Bookmarks:**
-   * Added a **"🗑️ Clear All"** button directly inside the Bookmarks bar so you can wipe saved bookmarks in one click.
-7. **Human-Readable Data Backup:**
-   * Standardized the **`💾 Backup`** output into clean, formatted JSON (`JSON.stringify(data, null, 2)`), making it clean and easy to read/edit in any standard text editor or browser.
-8. **Scripture Memory Deck Overhaul:**
-   * Re-linked Practice View controls, added tabbed views between **Practice Deck**, **Active Memory Stack**, and **Mastered Log**, and enabled single-click cycling ("Next Card / Prev Card") through saved memory verses.
-9. **Floating View & Settings Drawer:**
-   * Moved the **Layout & View Bar** off the main body stream into a collapsible **"🎨 Reader Settings"** drawer pinned to the side. You can adjust typography, columns, and focus settings at any point while reading down the page without scrolling back up.
+1. **Red Letter Formatting:** Wrapped divine discourse in `.wj` CSS classes properly so the red letter toggle updates both panes instantly.
+2. **Keyboard Arrow Navigation:** `Left`/`Right` arrows change chapters on the **Primary Reader**, while `Shift + Left`/`Shift + Right` change chapters on the **Secondary Parallel Reader**.
+3. **Deep Study Links:**
+   * **CSNTM:** Direct link to `https://collections.csntm.org/manuscripts?search=[BookName]`.
+   * **CCEL Study Bible:** Direct link to `https://www.ccel.org/study/[BookName]_[Chapter]`.
+4. **Search Fix:** Restored full fallback fetching across the API stream so searches like `"love"` return all global hits across both Testaments.
+5. **Focus Mode Clarity:** Added a dynamic banner letting you know Focus Mode is active. Clicking any verse highlights it and dims the surrounding passage; clicking it again clears the focus.
+6. **Clear All Bookmarks:** Added a dedicated **"🗑️ Clear All"** button in the Bookmarks bar.
+7. **Formatted Backup JSON:** The `💾 Backup` function now exports pretty-printed JSON (`indent: 2`), making it human-readable in any text viewer.
+8. **Memory Deck Workflows:** Restored the **Practice View**, added clear tab navigation between **Practice**, **Active Stack**, and **Mastered Log**, and enabled card cycling with `Prev Card` and `Next Card` controls.
+9. **Collapsible Floating Options:** Moved View & Layout controls into a floating, collapsible side drawer (`🎨 Settings`) so you can tweak text size, columns, or focus mode without scrolling back up to the top.
 
 ---
 
-### Updated Code for `index.html`
+### Complete Replacement Code for `index.html`
 
 ```html
 <!DOCTYPE html>
@@ -1767,7 +1742,6 @@
       });
     });
 
-    // 1. Red Letter Dynamic Toggle Fix
     toggleRedLetters.addEventListener('change', (e) => {
       if (e.target.checked) {
         passageContent.classList.add('red-letter-active');
@@ -1778,7 +1752,6 @@
       }
     });
 
-    // 5. Focus Mode Instruction Banner & Click Action
     toggleFocusMode.addEventListener('change', (e) => {
       const focusBanner = document.getElementById('focus-instruction-banner');
       if (e.target.checked) {
@@ -1832,7 +1805,6 @@
       clickedBtn.setAttribute('aria-selected', 'true');
     }
 
-    // 6. Bookmarks Bar with Clear All Action
     let bookmarks = JSON.parse(localStorage.getItem('kingdom_bookmarks') || '[]');
     const bookmarksContainer = document.getElementById('bookmarks-container');
 
@@ -1901,7 +1873,6 @@
 
     let currentChapterVerses = [];
 
-    // 4. Expanded Full 66-Book Search Scanner
     const searchInput = document.getElementById('search-input');
     const btnClearSearch = document.getElementById('btn-clear-search');
 
@@ -2054,7 +2025,6 @@
       }
     });
 
-    // 9. Floating Side Dock Controls
     function toggleFloatingDock() {
       const dock = document.getElementById('floating-dock');
       const settingsDock = document.getElementById('floating-settings-dock');
@@ -2069,7 +2039,6 @@
       settingsDock.hidden = !settingsDock.hidden;
     }
 
-    // 7. Human-Readable Clean JSON Formatting Backup
     function exportUserDataBackup() {
       const backupData = {
         bookmarks: JSON.parse(localStorage.getItem('kingdom_bookmarks') || '[]'),
@@ -2174,7 +2143,6 @@
       }
     }
 
-    // 8. Scripture Memory Deck Engine Overhaul
     let activeMemoryStack = JSON.parse(localStorage.getItem('kingdom_memory_stack') || '[]');
     let masteredMemoryStack = JSON.parse(localStorage.getItem('kingdom_mastered_stack') || '[]');
     let currentCardIndex = 0;
@@ -2476,7 +2444,6 @@
       openDeepStudyModal(wordText);
     }
 
-    // 3. Deep Study Direct External Links (CSNTM Manuscripts & CCEL Study Bible)
     function openDeepStudyModal(wordText) {
       const modal = document.getElementById('deep-study-modal');
       const content = document.getElementById('deep-study-modal-content');
@@ -2715,7 +2682,6 @@
       }
     }
 
-    // 2. Dual-Pane Keyboard Arrow Navigation Engine
     function navigateChapter(direction, pane = 'primary') {
       const bookSelectId = pane === 'primary' ? 'book-select' : 'sec-book-select';
       const chapSelectId = pane === 'primary' ? 'chapter-select' : 'sec-chapter-select';
