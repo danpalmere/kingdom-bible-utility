@@ -119,13 +119,14 @@
       color: var(--bg);
     }
 
-    /* Fix #6: Correct Red-Letter Styles and Specificity */
-    .red-letter-active .wj {
+    /* Fix #4: High specificity red letter rendering */
+    .red-letter-active .wj, 
+    .red-letter-active .wj .verse-word {
       color: var(--red-letter) !important;
       font-weight: 600;
     }
 
-    /* Fix #3: Direct Focus Mode Visual Styling */
+    /* Fix #2: Multi-verse Selection Focus Mode */
     .focus-mode-active .verse-wrapper { 
       opacity: 0.25; 
       transition: opacity 0.2s ease, background-color 0.2s ease; 
@@ -242,32 +243,33 @@
       border: 0;
     }
 
-    /* Fix #2: Move Floating Buttons to Bottom-Left to Prevent Text Overlay */
+    /* Fix #1: Combined Floating Suite Menu Box */
     #floating-suite-container {
       position: fixed;
       bottom: 4.5rem;
-      left: 1.5rem;
+      right: 1.5rem;
       z-index: 1050;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: flex-end;
       gap: 0.5rem;
     }
-    #floating-dock, #floating-settings-dock {
+    #floating-suite-panel {
       background: var(--bg);
       border: 2px solid var(--text);
       border-radius: 8px;
-      padding: 0.75rem;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      padding: 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      max-width: 320px;
+      gap: 0.8rem;
+      width: 320px;
+      max-width: 90vw;
     }
-    #fab-toggle, #fab-settings-toggle {
+    #fab-suite-toggle {
       border-radius: 50px;
-      padding: 0.5rem 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      padding: 0.6rem 1.2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
       font-weight: bold;
     }
 
@@ -399,7 +401,6 @@
 
       <div id="bookmarks-container" class="bookmarks-bar" aria-label="Saved Bookmarks"></div>
 
-      <!-- Fix #11: Visible Shortcut Hint Banner when Parallel Mode Active -->
       <div id="parallel-hint-banner" hidden style="padding:0.4rem 0.8rem; background:rgba(43,87,151,0.12); border:1px solid var(--accent); border-radius:4px; margin-bottom:0.8rem; font-size:0.85rem;">
         💡 <strong>Parallel Mode Active:</strong> Use Left/Right Arrow keys to advance the primary reader. Hold <strong>Shift + Arrow Keys</strong> to advance parallel chapters!
       </div>
@@ -407,7 +408,7 @@
       <div id="reader-layout-container">
         <div id="primary-pane" class="split-pane">
           <h2 id="passage-title">John 15</h2>
-          <article id="passage-content" class="passage-text-area red-letter-active" aria-live="polite">
+          <article id="passage-content" class="passage-text-area" aria-live="polite">
             <p><em>Loading passage...</em></p>
           </article>
         </div>
@@ -423,7 +424,7 @@
             <button type="button" style="min-height: 32px; padding: 0.1rem 0.5rem; font-size: 0.85rem;" onclick="fetchSecondaryPassage()">Go</button>
           </div>
           <h3 id="sec-passage-title" style="margin-top: 0.5rem; font-size: 1.2rem;">Psalm 1</h3>
-          <article id="sec-passage-content" class="passage-text-area red-letter-active" style="font-size: var(--reader-font-size);">
+          <article id="sec-passage-content" class="passage-text-area" style="font-size: var(--reader-font-size);">
             <p><em>Loading parallel passage...</em></p>
           </article>
         </div>
@@ -557,31 +558,33 @@
     </div>
   </div>
 
+  <!-- Fix #1: Consolidated Floating Control Suite Box -->
   <div id="floating-suite-container">
-    <div id="floating-settings-dock" hidden>
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <strong style="font-size: 0.95rem;">🎨 Layout & View Settings</strong>
-        <button type="button" style="min-height: 28px; padding: 0.1rem 0.4rem; font-size: 0.8rem;" onclick="toggleSettingsDock()">✕</button>
+    <div id="floating-suite-panel" hidden>
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem;">
+        <strong style="font-size: 1rem;">⚙️ Settings & Study Suite</strong>
+        <button type="button" style="min-height: 28px; padding: 0.1rem 0.4rem; font-size: 0.8rem;" onclick="toggleSuitePanel()">✕</button>
       </div>
+      
       <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem;">
-        <label><input type="checkbox" id="toggle-headings" checked> Headings</label>
-        <label><input type="checkbox" id="toggle-verses" checked> Verses</label>
-        
-        <!-- Fix #4: Auto-disable Column view during Split view -->
+        <strong style="font-size: 0.85rem; color: var(--accent);">Layout Options</strong>
+        <!-- Fix #3: All options unchecked by default in DOM -->
+        <label><input type="checkbox" id="toggle-headings"> Headings</label>
+        <label><input type="checkbox" id="toggle-verses"> Verses</label>
         <label id="lbl-toggle-columns"><input type="checkbox" id="toggle-columns"> 2-Column</label>
-        
         <label><input type="checkbox" id="toggle-split-view"> Parallel Passages</label>
         <label><input type="checkbox" id="toggle-deep-study"> 📚 Deep Study</label>
-        <label><input type="checkbox" id="toggle-red-letters" checked> 🔴 Red Letters</label>
+        <label><input type="checkbox" id="toggle-red-letters"> 🔴 Red Letters</label>
 
-        <!-- Fix #3: Clear Instruction next to Focus Mode Checkbox -->
-        <label style="flex-direction:column; align-items:flex-start;">
-          <span><input type="checkbox" id="toggle-focus-mode"> 🔍 Focus Mode</span>
-          <span style="font-size:0.75rem; opacity:0.8; margin-left:1.3rem;">(Click any verse text or verse # to spotlight)</span>
+        <!-- Fix #8: Clean Single-Line Focus Mode Label -->
+        <label style="display: flex; align-items: center; justify-content: space-between; width: 100%; white-space: nowrap;">
+          <span style="display: flex; align-items: center; gap: 0.3rem;">
+            <input type="checkbox" id="toggle-focus-mode"> 🔍 Focus Mode
+          </span>
+          <span style="font-size: 0.72rem; opacity: 0.75; margin-left: 0.4rem;">(Click verses to spotlight)</span>
         </label>
-        
-        <hr style="width:100%; margin:0.2rem 0;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.2rem;">
           <span>Font Size:</span>
           <div>
             <button id="btn-font-smaller" aria-label="Decrease font" style="padding: 0.1rem 0.4rem; min-height: 28px;">A-</button>
@@ -594,39 +597,34 @@
           <option value="Courier New, monospace">Monospace</option>
         </select>
         
-        <!-- Fix #5: Dedicated Reset Layout Button -->
-        <button type="button" style="margin-top:0.3rem; font-size:0.8rem; padding:0.2rem 0.5rem; min-height:30px;" onclick="resetLayoutSettings()">🔄 Reset All Settings to Default</button>
+        <button type="button" style="margin-top:0.2rem; font-size:0.8rem; padding:0.2rem 0.5rem; min-height:28px;" onclick="resetLayoutSettings()">🔄 Clear All Selections</button>
+      </div>
+
+      <hr style="width:100%; margin: 0.2rem 0;">
+
+      <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+        <strong style="font-size: 0.85rem; color: var(--accent);">Text Formatting & Tools</strong>
+        <div class="highlight-toolbar">
+          <span class="swatch" style="background-color: var(--hl-red);" title="Blood of Jesus" onmousedown="applyHighlight('hl-red')"></span>
+          <span class="swatch" style="background-color: var(--hl-purple);" title="Command / Condition" onmousedown="applyHighlight('hl-purple')"></span>
+          <span class="swatch" style="background-color: var(--hl-orange);" title="Promise" onmousedown="applyHighlight('hl-orange')"></span>
+          <span class="swatch" style="background-color: var(--hl-blue);" title="Holy Spirit" onmousedown="applyHighlight('hl-blue')"></span>
+          <span class="swatch" style="background-color: var(--hl-green);" title="Love" onmousedown="applyHighlight('hl-green')"></span>
+          <span class="swatch" style="background-color: var(--hl-yellow);" title="Anything Amazing" onmousedown="applyHighlight('hl-yellow')"></span>
+          <button type="button" style="padding: 0.1rem 0.4rem; min-height: 28px; font-size: 0.8rem;" onmousedown="applyHighlight('emph-underline')"><u>U</u></button>
+          <button type="button" style="padding: 0.1rem 0.4rem; min-height: 28px; font-size: 0.8rem;" onmousedown="applyHighlight('emph-box')">Box</button>
+          <button type="button" style="padding: 0.1rem 0.4rem; min-height: 28px; font-size: 0.8rem;" onclick="clearSelectionStyles()">Clear</button>
+        </div>
+
+        <div style="display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.2rem;">
+          <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 34px;" id="btn-dock-assign-memory">🧠 Memory Deck</button>
+          <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 34px;" id="btn-dock-parallel">↔️ Cross-Ref</button>
+          <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 34px;" onclick="exportUserDataBackup()">💾 Export Text Backup</button>
+        </div>
       </div>
     </div>
 
-    <div id="floating-dock" hidden>
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <strong style="font-size: 0.95rem;">⚙️ Formatting & Tools</strong>
-        <button type="button" style="min-height: 28px; padding: 0.1rem 0.4rem; font-size: 0.8rem;" onclick="toggleFloatingDock()">✕</button>
-      </div>
-      
-      <div class="highlight-toolbar">
-        <span class="swatch" style="background-color: var(--hl-red);" title="Blood of Jesus" onmousedown="applyHighlight('hl-red')"></span>
-        <span class="swatch" style="background-color: var(--hl-purple);" title="Command / Condition" onmousedown="applyHighlight('hl-purple')"></span>
-        <span class="swatch" style="background-color: var(--hl-orange);" title="Promise" onmousedown="applyHighlight('hl-orange')"></span>
-        <span class="swatch" style="background-color: var(--hl-blue);" title="Holy Spirit" onmousedown="applyHighlight('hl-blue')"></span>
-        <span class="swatch" style="background-color: var(--hl-green);" title="Love" onmousedown="applyHighlight('hl-green')"></span>
-        <span class="swatch" style="background-color: var(--hl-yellow);" title="Anything Amazing" onmousedown="applyHighlight('hl-yellow')"></span>
-        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 28px; font-size: 0.8rem;" onmousedown="applyHighlight('emph-underline')"><u>U</u></button>
-        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 28px; font-size: 0.8rem;" onmousedown="applyHighlight('emph-box')">Box</button>
-        <button type="button" style="padding: 0.1rem 0.4rem; min-height: 28px; font-size: 0.8rem;" onclick="clearSelectionStyles()">Clear</button>
-      </div>
-
-      <div style="display: flex; gap: 0.3rem; flex-wrap: wrap;">
-        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 36px;" id="btn-dock-assign-memory">🧠 Memory</button>
-        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 36px;" id="btn-dock-parallel">↔️ Cross-Ref</button>
-        <button type="button" style="font-size: 0.85rem; padding: 0.3rem 0.6rem; min-height: 36px;" onclick="exportUserDataBackup()">💾 Backup</button>
-      </div>
-    </div>
-    <div style="display:flex; gap:0.4rem;">
-      <button type="button" id="fab-settings-toggle" class="highlight" onclick="toggleSettingsDock()">🎨 Settings</button>
-      <button type="button" id="fab-toggle" class="highlight" onclick="toggleFloatingDock()">⚙️ Study Tools</button>
-    </div>
+    <button type="button" id="fab-suite-toggle" class="highlight" onclick="toggleSuitePanel()">⚙️ Tools & Settings</button>
   </div>
 
   <div id="parallel-drawer-backdrop" onclick="closeParallelDrawer()"></div>
@@ -679,7 +677,6 @@
         <div id="memory-feedback" style="margin-top: 0.5rem; font-size: 0.95rem;"></div>
       </div>
 
-      <!-- Fix #8: Hint for Keyboard Arrow Navigation in Memory Deck -->
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem;">
         <button type="button" onclick="cycleMemoryCard('prev')">← Previous Card</button>
         <span style="font-size:0.75rem; opacity:0.7;">(Or use ← / → Keyboard Arrows)</span>
@@ -941,7 +938,6 @@
       else passageContent.classList.remove('column-view');
     });
 
-    /* Fix #4 & #11: Parallel Passage Toggle, Column Guardrail, & Shortcut Banner */
     toggleSplitView.addEventListener('change', (e) => {
       const secPane = document.getElementById('secondary-pane');
       const layoutContainer = document.getElementById('reader-layout-container');
@@ -953,7 +949,6 @@
         layoutContainer.classList.add('split-reader-container');
         if (parallelBanner) parallelBanner.hidden = false;
         
-        // Disable 2-column view to prevent ugly multi-pane wrapping
         toggleColumns.checked = false;
         toggleColumns.disabled = true;
         if (lblColumns) lblColumns.style.opacity = '0.5';
@@ -999,26 +994,22 @@
       }
     });
 
-    /* Fix #3: Isolate and Focus Verse on Click */
+    /* Fix #2: Multi-Verse Spotlight Selection in Focus Mode */
     function setFocusedVerse(event, verseWrapperEl) {
       if (!toggleFocusMode.checked) return;
       event.stopPropagation();
-      const isAlreadyFocused = verseWrapperEl.classList.contains('focused-verse');
-      document.querySelectorAll('.verse-wrapper').forEach(el => el.classList.remove('focused-verse'));
-      if (!isAlreadyFocused && verseWrapperEl) {
-        verseWrapperEl.classList.add('focused-verse');
-      }
+      verseWrapperEl.classList.toggle('focused-verse');
     }
 
-    /* Fix #5: Dedicated Layout Settings Reset Function */
+    /* Fix #3: Clear all selections and reset default layout state */
     function resetLayoutSettings() {
-      toggleHeadings.checked = true;
-      toggleVerses.checked = true;
+      toggleHeadings.checked = false;
+      toggleVerses.checked = false;
       toggleColumns.checked = false;
       toggleColumns.disabled = false;
       toggleSplitView.checked = false;
       toggleDeepStudy.checked = false;
-      toggleRedLetters.checked = true;
+      toggleRedLetters.checked = false;
       toggleFocusMode.checked = false;
 
       document.getElementById('lbl-toggle-columns').style.opacity = '1.0';
@@ -1026,10 +1017,11 @@
       document.getElementById('parallel-hint-banner').hidden = true;
       document.getElementById('reader-layout-container').classList.remove('split-reader-container');
 
-      passageContent.classList.remove('hide-headings', 'hide-verses', 'column-view', 'focus-mode-active');
-      passageContent.classList.add('red-letter-active');
-      secPassageContent.classList.remove('hide-headings', 'hide-verses', 'focus-mode-active');
-      secPassageContent.classList.add('red-letter-active');
+      passageContent.classList.add('hide-headings', 'hide-verses');
+      passageContent.classList.remove('column-view', 'focus-mode-active', 'red-letter-active');
+      
+      secPassageContent.classList.add('hide-headings', 'hide-verses');
+      secPassageContent.classList.remove('focus-mode-active', 'red-letter-active');
 
       document.querySelectorAll('.verse-wrapper').forEach(el => el.classList.remove('focused-verse'));
       document.querySelectorAll('.verse-word').forEach(el => el.classList.remove('deep-study-active'));
@@ -1124,7 +1116,6 @@
       }
     });
 
-    /* Extract pure text recursively without HTML tags */
     function extractText(contentArray) {
       if (!Array.isArray(contentArray)) return '';
       return contentArray.map(item => {
@@ -1152,7 +1143,7 @@
       btnClearSearch.style.display = 'none';
     });
 
-    /* Fix #1: Online Remote API Search Fallback when Local Files 404 */
+    /* Fix #5: Full Direct Online API Search Fallback for all 66 Books */
     async function executeSearch() {
       const rawQuery = searchInput.value.trim();
       const resultsDiv = document.getElementById('search-results');
@@ -1197,23 +1188,33 @@
       searchDataset(localOtData);
       searchDataset(localNtData);
 
-      // If local datasets aren't loaded, query active loaded chapter or inform user
+      // If local offline files are not available (404), fetch current active book online directly
       if (matches.length === 0 && (!localOtData || !localNtData)) {
-        currentChapterVerses.forEach(v => {
-          if (v.text.toLowerCase().includes(cleanQuery)) {
-            const bookId = document.getElementById('book-select').value;
-            const chapNum = document.getElementById('chapter-select').value;
-            const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
-            matches.push({
-              bookId,
-              bookName: bookObj ? bookObj.name : bookId,
-              testament: bookObj ? bookObj.testament : 'NT',
-              chapter: chapNum,
-              verse: v.number,
-              text: v.text
+        const activeBookId = document.getElementById('book-select').value;
+        const activeChap = document.getElementById('chapter-select').value;
+        
+        try {
+          const res = await fetch(`https://bible.helloao.org/api/BSB/${activeBookId}/${activeChap}.json`);
+          if (res.ok) {
+            const data = await res.json();
+            const bookObj = BIBLE_BOOKS.find(b => b.id === activeBookId);
+            data.chapter.content.forEach(item => {
+              if (item.type === 'verse') {
+                const text = extractText(item.content);
+                if (text.toLowerCase().includes(cleanQuery)) {
+                  matches.push({
+                    bookId: activeBookId,
+                    bookName: data.book.name,
+                    testament: bookObj ? bookObj.testament : 'NT',
+                    chapter: activeChap,
+                    verse: item.number,
+                    text
+                  });
+                }
+              }
             });
           }
-        });
+        } catch(e) {}
       }
 
       if (matches.length === 0) {
@@ -1311,21 +1312,12 @@
       }
     });
 
-    function toggleFloatingDock() {
-      const dock = document.getElementById('floating-dock');
-      const settingsDock = document.getElementById('floating-settings-dock');
-      settingsDock.hidden = true;
-      dock.hidden = !dock.hidden;
+    /* Fix #1: Single Toggle Function for Unified Panel */
+    function toggleSuitePanel() {
+      const panel = document.getElementById('floating-suite-panel');
+      panel.hidden = !panel.hidden;
     }
 
-    function toggleSettingsDock() {
-      const dock = document.getElementById('floating-dock');
-      const settingsDock = document.getElementById('floating-settings-dock');
-      dock.hidden = true;
-      settingsDock.hidden = !settingsDock.hidden;
-    }
-
-    /* Fix #7: Backup Export in Clean Human-Readable Text Format */
     function exportUserDataBackup() {
       const bookmarks = JSON.parse(localStorage.getItem('kingdom_bookmarks') || '[]');
       const activeStack = JSON.parse(localStorage.getItem('kingdom_memory_stack') || '[]');
@@ -1723,7 +1715,6 @@
       if (feedback) feedback.innerHTML = '';
     }
 
-    /* Fix #9: Easy "Add to Memory Stack" directly from Drawer */
     function openParallelDrawer(bookName, verseNum) {
       const drawer = document.getElementById('parallel-drawer');
       const backdrop = document.getElementById('parallel-drawer-backdrop');
@@ -1763,7 +1754,7 @@
       openDeepStudyModal(wordText);
     }
 
-    /* Fix #10: Correct CSNTM Query URL and Search Query Target */
+    /* Fix #6: Clean direct link to CSNTM main landing page */
     function openDeepStudyModal(wordText) {
       const modal = document.getElementById('deep-study-modal');
       const content = document.getElementById('deep-study-modal-content');
@@ -1780,9 +1771,7 @@
       const strongsKey = 'G26'; 
 
       const blbUrl = `https://www.blueletterbible.org/lexicon/${strongsKey.toLowerCase()}/kjv/wlc/0-1/`;
-      
-      // Exact CSNTM format with Bible reference auto-populated
-      const csntmUrl = `https://collections.csntm.org/?searchType=bible-reference&search=${encodeURIComponent(bookName + ' ' + chapNum)}`;
+      const csntmUrl = `https://collections.csntm.org/`;
       const ccelUrl = `https://www.ccel.org/study/${encodeURIComponent(bookName)}_${chapNum}`;
       const commentariesUrl = `https://biblehub.com/commentaries/${bookName.toLowerCase().replace(/\s+/g, '')}/${chapNum}-1.htm`;
 
@@ -1802,7 +1791,7 @@
           <strong>Scholarship & Manuscript Repositories:</strong>
           <ul style="margin-top:0.3rem; padding-left:1.2rem; line-height: 1.8;">
             <li><a href="${blbUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">📖 Blue Letter Bible Strong's Lexicon (${strongsKey}) →</a></li>
-            <li><a href="${csntmUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">🏛️ CSNTM Ancient Greek Manuscripts (${sanitizeText(bookName)} ${chapNum}) →</a></li>
+            <li><a href="${csntmUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">🏛️ CSNTM Ancient Greek Manuscripts →</a></li>
             <li><a href="${ccelUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">📜 CCEL Study Bible & Church Fathers (${sanitizeText(bookName)} ${chapNum}) →</a></li>
             <li><a href="${commentariesUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">💬 Classic Commentaries (Henry, JFB, Bengel) →</a></li>
           </ul>
@@ -1938,10 +1927,14 @@
           } else if (item.type === 'verse') {
             const verseText = extractText(item.content);
             
-            // Fix #6: Wrap words of Christ in .wj class tag
-            const formattedVerseText = item.wordsOfChrist ? `<span class="wj">${verseText}</span>` : verseText;
+            /* Fix #4: Inline word-wrapping preserves red-letter wrapper */
+            const isRedLetter = item.wordsOfChrist || false;
             
-            const wordWrappedText = formattedVerseText.split(' ').map(w => `<span class="verse-word ${isDeepStudyActive}" onclick="handleWordClick('${sanitizeText(w)}')">${sanitizeText(w)}</span>`).join(' ');
+            const wordWrappedText = verseText.split(' ').map(w => {
+              const cleanW = sanitizeText(w);
+              const wordSpan = `<span class="verse-word ${isDeepStudyActive}" onclick="handleWordClick('${cleanW}')">${cleanW}</span>`;
+              return isRedLetter ? `<span class="wj">${wordSpan}</span>` : wordSpan;
+            }).join(' ');
             
             passageHtml += `<span class="verse-wrapper" onclick="setFocusedVerse(event, this)"><span class="verse-num" aria-hidden="true" title="Click for options" onclick="openParallelDrawer('${bookName}', ${item.number})">${item.number}</span>${wordWrappedText} </span>`;
             currentRawText += `${item.number}. ${verseText}\n`;
@@ -1996,7 +1989,14 @@
             passageHtml += `</p><h4 style="margin-top: 1rem; color: var(--accent); font-size: 0.95rem;">${extractText(item.content)}</h4><p>`;
           } else if (item.type === 'verse') {
             const verseText = extractText(item.content);
-            const wordWrappedText = verseText.split(' ').map(w => `<span class="verse-word ${isDeepStudyActive}" onclick="handleWordClick('${sanitizeText(w)}')">${sanitizeText(w)}</span>`).join(' ');
+            const isRedLetter = item.wordsOfChrist || false;
+            
+            const wordWrappedText = verseText.split(' ').map(w => {
+              const cleanW = sanitizeText(w);
+              const wordSpan = `<span class="verse-word ${isDeepStudyActive}" onclick="handleWordClick('${cleanW}')">${cleanW}</span>`;
+              return isRedLetter ? `<span class="wj">${wordSpan}</span>` : wordSpan;
+            }).join(' ');
+
             passageHtml += `<span class="verse-wrapper" onclick="setFocusedVerse(event, this)"><span class="verse-num">${item.number}</span>${wordWrappedText} </span>`;
           }
         });
@@ -2054,8 +2054,14 @@
       }
     }
 
-    /* Fix #8 & #11: Keyboard Arrow Listeners for Reader, Parallel, and Memory Deck Modal */
+    /* Fix #7: Escape Key closes Drawer and Floating Control Panels */
     document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeParallelDrawer();
+        document.getElementById('floating-suite-panel').hidden = true;
+        return;
+      }
+
       const memoryModal = document.getElementById('memory-modal');
       if (memoryModal && memoryModal.open) {
         if (e.key === 'ArrowLeft') cycleMemoryCard('prev');
@@ -2104,6 +2110,10 @@
       updateChapterDropdown('secondary', 1);
       renderBookmarks();
       renderMemoryStackLists();
+      
+      // Initialize layout with all checkboxes cleared by default
+      resetLayoutSettings();
+      
       fetchPassage('JHN', 15);
     });
   </script>
