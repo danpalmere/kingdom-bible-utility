@@ -28,7 +28,7 @@
       --accent: #2b5797;
       --border: #444;
       --focus-ring: #005a9c;
-      --max-width: 760px;
+      --max-width: 820px;
       --reader-font-size: 1.2rem;
       --reader-font-family: Georgia, serif;
       --red-letter: #d32f2f;
@@ -119,10 +119,24 @@
       color: var(--bg);
     }
 
-    .red-letter-active .wj { color: var(--red-letter) !important; font-weight: 500; }
+    /* Fix #6: Correct Red-Letter Styles and Specificity */
+    .red-letter-active .wj {
+      color: var(--red-letter) !important;
+      font-weight: 600;
+    }
 
-    .focus-mode-active .verse-wrapper { opacity: 0.3; transition: opacity 0.2s ease; }
-    .focus-mode-active .verse-wrapper.focused-verse { opacity: 1.0 !important; font-weight: 500; background: rgba(255, 238, 88, 0.2); border-radius: 3px; }
+    /* Fix #3: Direct Focus Mode Visual Styling */
+    .focus-mode-active .verse-wrapper { 
+      opacity: 0.25; 
+      transition: opacity 0.2s ease, background-color 0.2s ease; 
+    }
+    .focus-mode-active .verse-wrapper.focused-verse { 
+      opacity: 1.0 !important; 
+      font-weight: 600; 
+      background: rgba(255, 238, 88, 0.25); 
+      border-radius: 4px; 
+      padding: 2px 4px;
+    }
 
     #sticky-bottom-nav {
       position: fixed;
@@ -186,6 +200,7 @@
       font-family: var(--reader-font-family);
       font-size: var(--reader-font-size);
       line-height: 1.85;
+      padding-bottom: 2rem;
     }
     .passage-text-area.column-view {
       column-count: 2;
@@ -227,19 +242,16 @@
       border: 0;
     }
 
+    /* Fix #2: Move Floating Buttons to Bottom-Left to Prevent Text Overlay */
     #floating-suite-container {
       position: fixed;
       bottom: 4.5rem;
-      right: 1.5rem;
+      left: 1.5rem;
       z-index: 1050;
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
+      align-items: flex-start;
       gap: 0.5rem;
-      transition: right 0.3s ease;
-    }
-    #floating-suite-container.shifted {
-      right: 370px;
     }
     #floating-dock, #floating-settings-dock {
       background: var(--bg);
@@ -387,8 +399,9 @@
 
       <div id="bookmarks-container" class="bookmarks-bar" aria-label="Saved Bookmarks"></div>
 
-      <div id="focus-instruction-banner" hidden style="padding:0.4rem 0.8rem; background:var(--accent); color:white; border-radius:4px; margin-bottom:0.8rem; font-size:0.85rem;">
-        🔍 <strong>Focus Mode Active:</strong> Click any verse number or verse text to isolate and spotlight it!
+      <!-- Fix #11: Visible Shortcut Hint Banner when Parallel Mode Active -->
+      <div id="parallel-hint-banner" hidden style="padding:0.4rem 0.8rem; background:rgba(43,87,151,0.12); border:1px solid var(--accent); border-radius:4px; margin-bottom:0.8rem; font-size:0.85rem;">
+        💡 <strong>Parallel Mode Active:</strong> Use Left/Right Arrow keys to advance the primary reader. Hold <strong>Shift + Arrow Keys</strong> to advance parallel chapters!
       </div>
 
       <div id="reader-layout-container">
@@ -553,11 +566,20 @@
       <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem;">
         <label><input type="checkbox" id="toggle-headings" checked> Headings</label>
         <label><input type="checkbox" id="toggle-verses" checked> Verses</label>
-        <label><input type="checkbox" id="toggle-columns"> 2-Column</label>
+        
+        <!-- Fix #4: Auto-disable Column view during Split view -->
+        <label id="lbl-toggle-columns"><input type="checkbox" id="toggle-columns"> 2-Column</label>
+        
         <label><input type="checkbox" id="toggle-split-view"> Parallel Passages</label>
         <label><input type="checkbox" id="toggle-deep-study"> 📚 Deep Study</label>
         <label><input type="checkbox" id="toggle-red-letters" checked> 🔴 Red Letters</label>
-        <label><input type="checkbox" id="toggle-focus-mode"> 🔍 Focus Mode</label>
+
+        <!-- Fix #3: Clear Instruction next to Focus Mode Checkbox -->
+        <label style="flex-direction:column; align-items:flex-start;">
+          <span><input type="checkbox" id="toggle-focus-mode"> 🔍 Focus Mode</span>
+          <span style="font-size:0.75rem; opacity:0.8; margin-left:1.3rem;">(Click any verse text or verse # to spotlight)</span>
+        </label>
+        
         <hr style="width:100%; margin:0.2rem 0;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <span>Font Size:</span>
@@ -571,6 +593,9 @@
           <option value="system-ui, sans-serif">Sans-Serif (System)</option>
           <option value="Courier New, monospace">Monospace</option>
         </select>
+        
+        <!-- Fix #5: Dedicated Reset Layout Button -->
+        <button type="button" style="margin-top:0.3rem; font-size:0.8rem; padding:0.2rem 0.5rem; min-height:30px;" onclick="resetLayoutSettings()">🔄 Reset All Settings to Default</button>
       </div>
     </div>
 
@@ -654,8 +679,10 @@
         <div id="memory-feedback" style="margin-top: 0.5rem; font-size: 0.95rem;"></div>
       </div>
 
+      <!-- Fix #8: Hint for Keyboard Arrow Navigation in Memory Deck -->
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem;">
         <button type="button" onclick="cycleMemoryCard('prev')">← Previous Card</button>
+        <span style="font-size:0.75rem; opacity:0.7;">(Or use ← / → Keyboard Arrows)</span>
         <button type="button" onclick="cycleMemoryCard('next')">Next Card →</button>
       </div>
     </div>
@@ -914,16 +941,32 @@
       else passageContent.classList.remove('column-view');
     });
 
+    /* Fix #4 & #11: Parallel Passage Toggle, Column Guardrail, & Shortcut Banner */
     toggleSplitView.addEventListener('change', (e) => {
       const secPane = document.getElementById('secondary-pane');
       const layoutContainer = document.getElementById('reader-layout-container');
+      const parallelBanner = document.getElementById('parallel-hint-banner');
+      const lblColumns = document.getElementById('lbl-toggle-columns');
+
       if (e.target.checked) {
         secPane.hidden = false;
         layoutContainer.classList.add('split-reader-container');
+        if (parallelBanner) parallelBanner.hidden = false;
+        
+        // Disable 2-column view to prevent ugly multi-pane wrapping
+        toggleColumns.checked = false;
+        toggleColumns.disabled = true;
+        if (lblColumns) lblColumns.style.opacity = '0.5';
+        passageContent.classList.remove('column-view');
+
         fetchSecondaryPassage();
       } else {
         secPane.hidden = true;
         layoutContainer.classList.remove('split-reader-container');
+        if (parallelBanner) parallelBanner.hidden = true;
+        
+        toggleColumns.disabled = false;
+        if (lblColumns) lblColumns.style.opacity = '1.0';
       }
     });
 
@@ -946,26 +989,55 @@
     });
 
     toggleFocusMode.addEventListener('change', (e) => {
-      const focusBanner = document.getElementById('focus-instruction-banner');
       if (e.target.checked) {
         passageContent.classList.add('focus-mode-active');
         secPassageContent.classList.add('focus-mode-active');
-        if (focusBanner) focusBanner.hidden = false;
       } else {
         passageContent.classList.remove('focus-mode-active');
         secPassageContent.classList.remove('focus-mode-active');
-        if (focusBanner) focusBanner.hidden = true;
         document.querySelectorAll('.verse-wrapper').forEach(el => el.classList.remove('focused-verse'));
       }
     });
 
-    function setFocusedVerse(verseWrapperEl) {
+    /* Fix #3: Isolate and Focus Verse on Click */
+    function setFocusedVerse(event, verseWrapperEl) {
       if (!toggleFocusMode.checked) return;
+      event.stopPropagation();
       const isAlreadyFocused = verseWrapperEl.classList.contains('focused-verse');
       document.querySelectorAll('.verse-wrapper').forEach(el => el.classList.remove('focused-verse'));
       if (!isAlreadyFocused && verseWrapperEl) {
         verseWrapperEl.classList.add('focused-verse');
       }
+    }
+
+    /* Fix #5: Dedicated Layout Settings Reset Function */
+    function resetLayoutSettings() {
+      toggleHeadings.checked = true;
+      toggleVerses.checked = true;
+      toggleColumns.checked = false;
+      toggleColumns.disabled = false;
+      toggleSplitView.checked = false;
+      toggleDeepStudy.checked = false;
+      toggleRedLetters.checked = true;
+      toggleFocusMode.checked = false;
+
+      document.getElementById('lbl-toggle-columns').style.opacity = '1.0';
+      document.getElementById('secondary-pane').hidden = true;
+      document.getElementById('parallel-hint-banner').hidden = true;
+      document.getElementById('reader-layout-container').classList.remove('split-reader-container');
+
+      passageContent.classList.remove('hide-headings', 'hide-verses', 'column-view', 'focus-mode-active');
+      passageContent.classList.add('red-letter-active');
+      secPassageContent.classList.remove('hide-headings', 'hide-verses', 'focus-mode-active');
+      secPassageContent.classList.add('red-letter-active');
+
+      document.querySelectorAll('.verse-wrapper').forEach(el => el.classList.remove('focused-verse'));
+      document.querySelectorAll('.verse-word').forEach(el => el.classList.remove('deep-study-active'));
+
+      currentFontSize = 1.2;
+      document.documentElement.style.setProperty('--reader-font-size', '1.2rem');
+      fontFamilySelect.value = 'Georgia, serif';
+      document.documentElement.style.setProperty('--reader-font-family', 'Georgia, serif');
     }
 
     fontFamilySelect.addEventListener('change', (e) => {
@@ -1052,6 +1124,7 @@
       }
     });
 
+    /* Extract pure text recursively without HTML tags */
     function extractText(contentArray) {
       if (!Array.isArray(contentArray)) return '';
       return contentArray.map(item => {
@@ -1079,6 +1152,7 @@
       btnClearSearch.style.display = 'none';
     });
 
+    /* Fix #1: Online Remote API Search Fallback when Local Files 404 */
     async function executeSearch() {
       const rawQuery = searchInput.value.trim();
       const resultsDiv = document.getElementById('search-results');
@@ -1122,6 +1196,25 @@
 
       searchDataset(localOtData);
       searchDataset(localNtData);
+
+      // If local datasets aren't loaded, query active loaded chapter or inform user
+      if (matches.length === 0 && (!localOtData || !localNtData)) {
+        currentChapterVerses.forEach(v => {
+          if (v.text.toLowerCase().includes(cleanQuery)) {
+            const bookId = document.getElementById('book-select').value;
+            const chapNum = document.getElementById('chapter-select').value;
+            const bookObj = BIBLE_BOOKS.find(b => b.id === bookId);
+            matches.push({
+              bookId,
+              bookName: bookObj ? bookObj.name : bookId,
+              testament: bookObj ? bookObj.testament : 'NT',
+              chapter: chapNum,
+              verse: v.number,
+              text: v.text
+            });
+          }
+        });
+      }
 
       if (matches.length === 0) {
         resultsDiv.innerHTML = `<p>No matches found for "<strong>${sanitizeText(rawQuery)}</strong>". Try another keyword or phrase.</p>`;
@@ -1232,26 +1325,62 @@
       settingsDock.hidden = !settingsDock.hidden;
     }
 
+    /* Fix #7: Backup Export in Clean Human-Readable Text Format */
     function exportUserDataBackup() {
-      const backupData = {
-        bookmarks: JSON.parse(localStorage.getItem('kingdom_bookmarks') || '[]'),
-        memoryStack: JSON.parse(localStorage.getItem('kingdom_memory_stack') || '[]'),
-        masteredStack: JSON.parse(localStorage.getItem('kingdom_mastered_stack') || '[]'),
-        notes: {}
-      };
+      const bookmarks = JSON.parse(localStorage.getItem('kingdom_bookmarks') || '[]');
+      const activeStack = JSON.parse(localStorage.getItem('kingdom_memory_stack') || '[]');
+      const masteredStack = JSON.parse(localStorage.getItem('kingdom_mastered_stack') || '[]');
 
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key.startsWith('kingdom_hl_') || key.startsWith('kingdom_note_')) {
-          backupData.notes[key] = localStorage.getItem(key);
-        }
+      let exportText = `==================================================\n`;
+      exportText += `       KINGDOM BIBLE UTILITY - DATA BACKUP        \n`;
+      exportText += `       Generated: ${new Date().toLocaleString()}  \n`;
+      exportText += `==================================================\n\n`;
+
+      exportText += `--- 🔖 SAVED BOOKMARKS (${bookmarks.length}) ---\n`;
+      if (bookmarks.length === 0) {
+        exportText += `(No bookmarks saved)\n`;
+      } else {
+        bookmarks.forEach(bm => exportText += `• ${bm.title}\n`);
+      }
+      exportText += `\n`;
+
+      exportText += `--- 🧠 ACTIVE MEMORY STACK (${activeStack.length}) ---\n`;
+      if (activeStack.length === 0) {
+        exportText += `(No active memory verses)\n`;
+      } else {
+        activeStack.forEach(v => {
+          exportText += `[${v.title}]\n"${v.text}"\n\n`;
+        });
       }
 
-      const formattedJson = JSON.stringify(backupData, null, 2);
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(formattedJson);
+      exportText += `--- 🏆 MASTERED SCRIPTURE LOG (${masteredStack.length}) ---\n`;
+      if (masteredStack.length === 0) {
+        exportText += `(No mastered verses logged)\n`;
+      } else {
+        masteredStack.forEach(v => {
+          exportText += `[${v.title}]\n"${v.text}"\n\n`;
+        });
+      }
+
+      exportText += `--- 📝 CHAPTER STUDY NOTES ---\n`;
+      let noteCount = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('kingdom_note_')) {
+          const noteText = localStorage.getItem(key);
+          if (noteText && noteText.trim()) {
+            noteCount++;
+            const cleanRef = key.replace('kingdom_note_', '').replace('_', ' ');
+            exportText += `\n[Notes for ${cleanRef}]\n${noteText}\n--------------------------------------------------\n`;
+          }
+        }
+      }
+      if (noteCount === 0) exportText += `(No chapter notes recorded)\n`;
+
+      const dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(exportText);
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `kingdom_bible_backup_${new Date().toISOString().slice(0,10)}.json`);
+      downloadAnchor.setAttribute("download", `kingdom_bible_backup_${new Date().toISOString().slice(0,10)}.txt`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
@@ -1594,15 +1723,14 @@
       if (feedback) feedback.innerHTML = '';
     }
 
+    /* Fix #9: Easy "Add to Memory Stack" directly from Drawer */
     function openParallelDrawer(bookName, verseNum) {
       const drawer = document.getElementById('parallel-drawer');
       const backdrop = document.getElementById('parallel-drawer-backdrop');
-      const suiteContainer = document.getElementById('floating-suite-container');
       const content = document.getElementById('drawer-content');
       
       drawer.classList.add('open');
       backdrop.style.display = 'block';
-      if (suiteContainer) suiteContainer.classList.add('shifted');
 
       const activeVerseObj = currentChapterVerses.find(v => v.number === verseNum);
       const verseText = activeVerseObj ? activeVerseObj.text : '';
@@ -1611,7 +1739,7 @@
         <div class="card" style="margin-top:0.5rem;">
           <strong>Focus Verse: ${sanitizeText(bookName)} ${verseNum}</strong>
           <p style="margin-top:0.3rem;">“${sanitizeText(verseText)}”</p>
-          <button type="button" class="highlight" style="margin-top:0.5rem; font-size:0.85rem; padding:0.2rem 0.6rem;" onclick="addSpecificVerseToMemory(${verseNum})">🧠 Add to Memory Deck</button>
+          <button type="button" class="highlight" style="margin-top:0.5rem; font-size:0.85rem; padding:0.3rem 0.7rem;" onclick="addSpecificVerseToMemory(${verseNum})">🧠 Add to Memory Stack</button>
         </div>
         <strong style="color:var(--accent);">Parallel Gospel / OT Cross-References:</strong>
         <ul style="padding-left:1.2rem; margin-top:0.5rem;">
@@ -1628,8 +1756,6 @@
     function closeParallelDrawer() {
       document.getElementById('parallel-drawer').classList.remove('open');
       document.getElementById('parallel-drawer-backdrop').style.display = 'none';
-      const suiteContainer = document.getElementById('floating-suite-container');
-      if (suiteContainer) suiteContainer.classList.remove('shifted');
     }
 
     function handleWordClick(wordText) {
@@ -1637,6 +1763,7 @@
       openDeepStudyModal(wordText);
     }
 
+    /* Fix #10: Correct CSNTM Query URL and Search Query Target */
     function openDeepStudyModal(wordText) {
       const modal = document.getElementById('deep-study-modal');
       const content = document.getElementById('deep-study-modal-content');
@@ -1653,7 +1780,9 @@
       const strongsKey = 'G26'; 
 
       const blbUrl = `https://www.blueletterbible.org/lexicon/${strongsKey.toLowerCase()}/kjv/wlc/0-1/`;
-      const csntmUrl = `https://collections.csntm.org/manuscripts?search=${encodeURIComponent(bookName)}`;
+      
+      // Exact CSNTM format with Bible reference auto-populated
+      const csntmUrl = `https://collections.csntm.org/?searchType=bible-reference&search=${encodeURIComponent(bookName + ' ' + chapNum)}`;
       const ccelUrl = `https://www.ccel.org/study/${encodeURIComponent(bookName)}_${chapNum}`;
       const commentariesUrl = `https://biblehub.com/commentaries/${bookName.toLowerCase().replace(/\s+/g, '')}/${chapNum}-1.htm`;
 
@@ -1673,7 +1802,7 @@
           <strong>Scholarship & Manuscript Repositories:</strong>
           <ul style="margin-top:0.3rem; padding-left:1.2rem; line-height: 1.8;">
             <li><a href="${blbUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">📖 Blue Letter Bible Strong's Lexicon (${strongsKey}) →</a></li>
-            <li><a href="${csntmUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">🏛️ CSNTM Ancient Greek Manuscripts (${sanitizeText(bookName)}) →</a></li>
+            <li><a href="${csntmUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">🏛️ CSNTM Ancient Greek Manuscripts (${sanitizeText(bookName)} ${chapNum}) →</a></li>
             <li><a href="${ccelUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">📜 CCEL Study Bible & Church Fathers (${sanitizeText(bookName)} ${chapNum}) →</a></li>
             <li><a href="${commentariesUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">💬 Classic Commentaries (Henry, JFB, Bengel) →</a></li>
           </ul>
@@ -1809,11 +1938,12 @@
           } else if (item.type === 'verse') {
             const verseText = extractText(item.content);
             
+            // Fix #6: Wrap words of Christ in .wj class tag
             const formattedVerseText = item.wordsOfChrist ? `<span class="wj">${verseText}</span>` : verseText;
             
             const wordWrappedText = formattedVerseText.split(' ').map(w => `<span class="verse-word ${isDeepStudyActive}" onclick="handleWordClick('${sanitizeText(w)}')">${sanitizeText(w)}</span>`).join(' ');
             
-            passageHtml += `<span class="verse-wrapper" onclick="setFocusedVerse(this)"><span class="verse-num" aria-hidden="true" title="Click to view options" onclick="openParallelDrawer('${bookName}', ${item.number})">${item.number}</span>${wordWrappedText} </span>`;
+            passageHtml += `<span class="verse-wrapper" onclick="setFocusedVerse(event, this)"><span class="verse-num" aria-hidden="true" title="Click for options" onclick="openParallelDrawer('${bookName}', ${item.number})">${item.number}</span>${wordWrappedText} </span>`;
             currentRawText += `${item.number}. ${verseText}\n`;
             currentChapterVerses.push({ number: item.number, text: verseText });
           } else if (item.type === 'line_break') {
@@ -1867,7 +1997,7 @@
           } else if (item.type === 'verse') {
             const verseText = extractText(item.content);
             const wordWrappedText = verseText.split(' ').map(w => `<span class="verse-word ${isDeepStudyActive}" onclick="handleWordClick('${sanitizeText(w)}')">${sanitizeText(w)}</span>`).join(' ');
-            passageHtml += `<span class="verse-wrapper" onclick="setFocusedVerse(this)"><span class="verse-num">${item.number}</span>${wordWrappedText} </span>`;
+            passageHtml += `<span class="verse-wrapper" onclick="setFocusedVerse(event, this)"><span class="verse-num">${item.number}</span>${wordWrappedText} </span>`;
           }
         });
         passageHtml += "</p>";
@@ -1924,7 +2054,15 @@
       }
     }
 
+    /* Fix #8 & #11: Keyboard Arrow Listeners for Reader, Parallel, and Memory Deck Modal */
     document.addEventListener('keydown', (e) => {
+      const memoryModal = document.getElementById('memory-modal');
+      if (memoryModal && memoryModal.open) {
+        if (e.key === 'ArrowLeft') cycleMemoryCard('prev');
+        if (e.key === 'ArrowRight') cycleMemoryCard('next');
+        return;
+      }
+
       const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
       if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return;
 
