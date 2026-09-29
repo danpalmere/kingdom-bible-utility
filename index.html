@@ -982,12 +982,14 @@
       }
     });
 
-    toggleDeepStudy.addEventListener('change', (e) => {
-      const isModeOn = e.target.checked;
-      document.querySelectorAll('.verse-word').forEach(el => {
-        if (isModeOn) el.classList.add('deep-study-active');
-        else el.classList.remove('deep-study-active');
-      });
+    toggleDeepStudy.addEventListener('change', () => {
+      const bookId = document.getElementById('book-select').value;
+      const chapter = document.getElementById('chapter-select').value;
+      fetchPassage(bookId, chapter);
+
+      if (toggleSplitView.checked) {
+        fetchSecondaryPassage();
+      }
     });
 
     /* Issue #3 Fix: Toggle Red Letters with class re-render */
@@ -1779,6 +1781,12 @@
       if (fabBtn) fabBtn.style.display = 'block';
     }
 
+    // Deep Study only activates words that have a verified verse-specific lexical mapping.
+    // This lookup currently returns null until a trusted Strong's/lemma dataset is connected.
+    function getLexicalEntry(bookId, chapter, verseNumber, wordIndex) {
+      return null;
+    }
+
     function handleWordClick(wordText) {
       if (!toggleDeepStudy.checked) return;
       openDeepStudyModal(wordText);
@@ -1946,8 +1954,6 @@
         let passageHtml = "<p>";
         currentRawText = `${bookName} ${chapter} (BSB)\n\n`;
 
-        const isDeepStudyActive = toggleDeepStudy.checked ? 'deep-study-active' : '';
-
         chapterContent.forEach(item => {
           if (item.type === 'heading') {
             const headingText = extractText(item.content);
@@ -1956,10 +1962,15 @@
             const verseText = extractText(item.content);
             const isChristWords = (item.wordsOfChrist || ['MAT', 'MRK', 'LUK', 'JHN', 'REV'].includes(bookId));
             
-            const wordWrappedText = verseText.split(' ').map(w => {
+            const wordWrappedText = verseText.split(' ').map((w, wordIndex) => {
               const cleanW = sanitizeText(w);
               const redClass = (isRedLetterEnabled && isChristWords) ? 'red-letter-word' : '';
-              return `<span class="verse-word ${isDeepStudyActive} ${redClass}" onclick="handleWordClick('${cleanW}')">${cleanW}</span>`;
+              const lexicalEntry = getLexicalEntry(bookId, chapter, item.number, wordIndex);
+              const deepStudyClass = (toggleDeepStudy.checked && lexicalEntry) ? 'deep-study-active' : '';
+              const deepStudyClick = (toggleDeepStudy.checked && lexicalEntry)
+                ? ` onclick="handleWordClick('${cleanW}')"`
+                : '';
+              return `<span class="verse-word ${deepStudyClass} ${redClass}"${deepStudyClick}>${cleanW}</span>`;
             }).join(' ');
             
             passageHtml += `<span class="verse-wrapper" onclick="setFocusedVerse(event, this)"><span class="verse-num" aria-hidden="true" title="Click for options" onclick="openParallelDrawer('${bookName}', ${item.number})">${item.number}</span>${wordWrappedText} </span>`;
@@ -2008,8 +2019,6 @@
 
         secTitle.innerText = `${sanitizeText(bookName)} ${sanitizeText(String(chapter))}`;
 
-        const isDeepStudyActive = toggleDeepStudy.checked ? 'deep-study-active' : '';
-
         let passageHtml = "<p>";
         chapterContent.forEach(item => {
           if (item.type === 'heading') {
@@ -2018,10 +2027,15 @@
             const verseText = extractText(item.content);
             const isChristWords = (item.wordsOfChrist || ['MAT', 'MRK', 'LUK', 'JHN', 'REV'].includes(bookId));
             
-            const wordWrappedText = verseText.split(' ').map(w => {
+            const wordWrappedText = verseText.split(' ').map((w, wordIndex) => {
               const cleanW = sanitizeText(w);
               const redClass = (isRedLetterEnabled && isChristWords) ? 'red-letter-word' : '';
-              return `<span class="verse-word ${isDeepStudyActive} ${redClass}" onclick="handleWordClick('${cleanW}')">${cleanW}</span>`;
+              const lexicalEntry = getLexicalEntry(bookId, chapter, item.number, wordIndex);
+              const deepStudyClass = (toggleDeepStudy.checked && lexicalEntry) ? 'deep-study-active' : '';
+              const deepStudyClick = (toggleDeepStudy.checked && lexicalEntry)
+                ? ` onclick="handleWordClick('${cleanW}')"`
+                : '';
+              return `<span class="verse-word ${deepStudyClass} ${redClass}"${deepStudyClick}>${cleanW}</span>`;
             }).join(' ');
 
             passageHtml += `<span class="verse-wrapper" onclick="setFocusedVerse(event, this)"><span class="verse-num">${item.number}</span>${wordWrappedText} </span>`;
