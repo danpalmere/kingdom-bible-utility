@@ -1981,6 +1981,7 @@
 
     let localNtData = null;
     let localOtData = null;
+    let localLexiconData = null;
     let currentRawText = "";
 
     async function loadLocalDatasets() {
@@ -1991,6 +1992,11 @@
         ]);
         if (ntRes && ntRes.ok) localNtData = await ntRes.json();
         if (otRes && otRes.ok) localOtData = await otRes.json();
+
+        const lexiconRes = await fetch('./data/deep-study/lexicon.json').catch(() => null);
+if (lexiconRes && lexiconRes.ok) {
+  localLexiconData = await lexiconRes.json();
+}
       } catch (err) {
         console.log('Local JSON data missing or unreachable. Fetching online API directly.');
       }
