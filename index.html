@@ -1781,34 +1781,40 @@
       if (fabBtn) fabBtn.style.display = 'block';
     }
 
-    // Deep Study uses local, verified BSB phrase-to-Strong's mappings.
-    // This proof-of-concept currently includes John 1:1-5 only.
-    const deepStudyChapterCache = new Map();
+    // Deep Study loads verified BSB Strong's mappings from local per-book data files.
+    // Each book file contains only the chapters currently packaged for Deep Study.
+    const deepStudyBookCache = new Map();
 
     async function loadDeepStudyChapterData(bookId, chapter) {
-      const cacheKey = `${bookId}:${chapter}`;
-      if (deepStudyChapterCache.has(cacheKey)) {
-        return deepStudyChapterCache.get(cacheKey);
-      }
-
-      // Keep unsupported chapters non-interactive until verified local data is added.
-      if (bookId !== 'JHN' || Number(chapter) !== 1) {
-        deepStudyChapterCache.set(cacheKey, null);
-        return null;
-      }
+      const chapterKey = String(chapter);
 
       try {
-        const response = await fetch('./data/deep_study_jhn1.json');
-        if (!response.ok) {
-          throw new Error(`Local Deep Study data unavailable (${response.status})`);
+        let bookData = deepStudyBookCache.get(bookId);
+
+        if (bookData === undefined) {
+          const response = await fetch(`./data/deep-study/${bookId}.json`);
+
+          if (response.status === 404) {
+            deepStudyBookCache.set(bookId, null);
+            return null;
+          }
+
+          if (!response.ok) {
+            throw new Error(`Local Deep Study data unavailable (${response.status})`);
+          }
+
+          bookData = await response.json();
+          deepStudyBookCache.set(bookId, bookData);
         }
 
-        const result = await response.json();
-        deepStudyChapterCache.set(cacheKey, result);
-        return result;
+        if (!bookData || !bookData.chapters || !bookData.chapters[chapterKey]) {
+          return null;
+        }
+
+        return bookData.chapters[chapterKey];
       } catch (err) {
         console.warn('Deep Study annotations could not be loaded:', err);
-        deepStudyChapterCache.set(cacheKey, null);
+        deepStudyBookCache.set(bookId, null);
         return null;
       }
     }
