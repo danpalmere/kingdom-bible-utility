@@ -1781,8 +1781,8 @@
       if (fabBtn) fabBtn.style.display = 'block';
     }
 
-    // Deep Study uses HelloAO's verse-level BSB annotations as the authoritative
-    // English-text-to-Strong's mapping. Data is loaded only when Deep Study is enabled.
+    // Deep Study uses local, verified BSB phrase-to-Strong's mappings.
+    // This proof-of-concept currently includes John 1:1-5 only.
     const deepStudyChapterCache = new Map();
 
     async function loadDeepStudyChapterData(bookId, chapter) {
@@ -1791,30 +1791,19 @@
         return deepStudyChapterCache.get(cacheKey);
       }
 
-      try {
-        const [chapterResponse, wordsResponse] = await Promise.all([
-          fetch(`https://bible.helloao.org/api/BSB/${bookId}/${chapter}.simple.json`),
-          fetch(`https://bible.helloao.org/api/BSB/${bookId}/${chapter}.words.simple.json`)
-        ]);
+      // Keep unsupported chapters non-interactive until verified local data is added.
+      if (bookId !== 'JHN' || Number(chapter) !== 1) {
+        deepStudyChapterCache.set(cacheKey, null);
+        return null;
+      }
 
-        if (!chapterResponse.ok || !wordsResponse.ok) {
-          throw new Error(`Deep Study data unavailable (${chapterResponse.status}/${wordsResponse.status})`);
+      try {
+        const response = await fetch('./data/deep_study_jhn1.json');
+        if (!response.ok) {
+          throw new Error(`Local Deep Study data unavailable (${response.status})`);
         }
 
-        const simpleChapter = await chapterResponse.json();
-        const wordData = await wordsResponse.json();
-        const verseTexts = {};
-
-        (simpleChapter.chapter?.content || []).forEach(item => {
-          if (item.type === 'verse') {
-            verseTexts[item.number] = item.text;
-          }
-        });
-
-        const result = {
-          verseTexts,
-          annotations: wordData.verses || {}
-        };
+        const result = await response.json();
         deepStudyChapterCache.set(cacheKey, result);
         return result;
       } catch (err) {
