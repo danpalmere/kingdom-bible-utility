@@ -1781,18 +1781,103 @@
       if (fabBtn) fabBtn.style.display = 'block';
     }
 
-    // Deep Study only activates words that have a verified verse-specific lexical mapping.
-    // This lookup currently returns null until a trusted Strong's/lemma dataset is connected.
-    function getLexicalEntry(bookId, chapter, verseNumber, wordIndex) {
-      return null;
+    // Deep Study uses HelloAO's verse-level BSB annotations as the authoritative
+    // English-text-to-Strong's mapping. Data is loaded only when Deep Study is enabled.
+    const deepStudyChapterCache = new Map();
+
+    async function loadDeepStudyChapterData(bookId, chapter) {
+      const cacheKey = `${bookId}:${chapter}`;
+      if (deepStudyChapterCache.has(cacheKey)) {
+        return deepStudyChapterCache.get(cacheKey);
+      }
+
+      try {
+        const [chapterResponse, wordsResponse] = await Promise.all([
+          fetch(`https://bible.helloao.org/api/BSB/${bookId}/${chapter}.simple.json`),
+          fetch(`https://bible.helloao.org/api/BSB/${bookId}/${chapter}.words.simple.json`)
+        ]);
+
+        if (!chapterResponse.ok || !wordsResponse.ok) {
+          throw new Error(`Deep Study data unavailable (${chapterResponse.status}/${wordsResponse.status})`);
+        }
+
+        const simpleChapter = await chapterResponse.json();
+        const wordData = await wordsResponse.json();
+        const verseTexts = {};
+
+        (simpleChapter.chapter?.content || []).forEach(item => {
+          if (item.type === 'verse') {
+            verseTexts[item.number] = item.text;
+          }
+        });
+
+        const result = {
+          verseTexts,
+          annotations: wordData.verses || {}
+        };
+        deepStudyChapterCache.set(cacheKey, result);
+        return result;
+      } catch (err) {
+        console.warn('Deep Study annotations could not be loaded:', err);
+        deepStudyChapterCache.set(cacheKey, null);
+        return null;
+      }
     }
 
-    function handleWordClick(wordText) {
-      if (!toggleDeepStudy.checked) return;
-      openDeepStudyModal(wordText);
+    function renderDeepStudyVerse(verseText, annotations, redClass = '') {
+      if (!verseText) return '';
+
+      const usableAnnotations = (Array.isArray(annotations) ? annotations : [])
+        .filter(entry =>
+          Number.isInteger(entry.start) &&
+          Number.isInteger(entry.end) &&
+          entry.end > entry.start &&
+          Array.isArray(entry.strongs) &&
+          entry.strongs.length > 0
+        )
+        .sort((a, b) => a.start - b.start || a.end - b.end);
+
+      const renderPlain = (text) => {
+        if (!text) return '';
+        const safeText = sanitizeText(text).replace(/\n/g, '<br>');
+        return redClass ? `<span class="${redClass}">${safeText}</span>` : safeText;
+      };
+
+      let html = '';
+      let cursor = 0;
+
+      usableAnnotations.forEach(entry => {
+        if (entry.start < cursor || entry.start > verseText.length || entry.end > verseText.length) return;
+
+        html += renderPlain(verseText.slice(cursor, entry.start));
+
+        const selectedText = verseText.slice(entry.start, entry.end);
+        const strongsValue = entry.strongs.map(value => String(value).trim()).filter(Boolean).join(',');
+        const safeSelectedText = sanitizeText(selectedText).replace(/\n/g, '<br>');
+        const className = `verse-word deep-study-active${redClass ? ` ${redClass}` : ''}`;
+
+        html += `<span class="${className}" data-strongs="${sanitizeText(strongsValue)}" onclick="handleLexicalClick(event, this)">${safeSelectedText}</span>`;
+        cursor = entry.end;
+      });
+
+      html += renderPlain(verseText.slice(cursor));
+      return html;
     }
 
-    function openDeepStudyModal(wordText) {
+    function handleLexicalClick(event, element) {
+      if (!toggleDeepStudy.checked || !element) return;
+      event.stopPropagation();
+
+      const strongs = (element.dataset.strongs || '')
+        .split(',')
+        .map(value => value.trim())
+        .filter(Boolean);
+
+      if (strongs.length === 0) return;
+      openDeepStudyModal(element.textContent.trim(), strongs);
+    }
+
+    function openDeepStudyModal(wordText, strongs = []) {
       const modal = document.getElementById('deep-study-modal');
       const content = document.getElementById('deep-study-modal-content');
       const bookSelect = document.getElementById('book-select');
@@ -1804,7 +1889,10 @@
         targetWord = savedSelectionRange.toString().trim();
       }
 
-      const cleanWord = targetWord ? targetWord.replace(/[^\w]/g, '') : '';
+      const cleanWord = targetWord ? targetWord.trim() : '';
+      const strongsLabel = strongs.length > 0
+        ? strongs.map(value => sanitizeText(value)).join(' / ')
+        : 'Unavailable';
 
       const csntmUrl = `https://collections.csntm.org/`;
       const ccelUrl = `https://www.ccel.org/study/${encodeURIComponent(bookName)}_${chapNum}`;
@@ -1815,10 +1903,11 @@
         
         <div class="card" style="margin-top:0.5rem;">
           <strong>Lexical Concordance</strong>
+          <p style="margin:0.4rem 0 0;"><strong>Strong's Key:</strong> ${strongsLabel}</p>
           <p style="margin-bottom:0;">
-            A verified Strong's number and original-language lexical entry are not available for this word yet.
-            The app will not guess or display a placeholder entry. A future Deep Study update can connect the
-            selected English word to the underlying Greek or Hebrew data before showing lexical information.
+            This Strong's mapping comes from the BSB word-level annotation data. Lemma,
+            transliteration, gloss, and definition data are not loaded in this build yet;
+            those will come from the local lexical dataset rather than being guessed.
           </p>
         </div>
 
@@ -1951,6 +2040,10 @@
         titleDiv.innerText = formattedTitle;
         if (bottomIndicator) bottomIndicator.innerText = formattedTitle;
 
+        const deepStudyData = toggleDeepStudy.checked
+          ? await loadDeepStudyChapterData(bookId, chapter)
+          : null;
+
         let passageHtml = "<p>";
         currentRawText = `${bookName} ${chapter} (BSB)\n\n`;
 
@@ -1959,19 +2052,25 @@
             const headingText = extractText(item.content);
             passageHtml += `</p><h4 style="margin-top: 1.5rem; color: var(--accent); font-family: system-ui, sans-serif;">${headingText}</h4><p>`;
           } else if (item.type === 'verse') {
-            const verseText = extractText(item.content);
+            const fallbackVerseText = extractText(item.content);
+            const annotatedVerseText = deepStudyData?.verseTexts?.[item.number] || null;
+            const verseText = annotatedVerseText || fallbackVerseText;
             const isChristWords = (item.wordsOfChrist || ['MAT', 'MRK', 'LUK', 'JHN', 'REV'].includes(bookId));
-            
-            const wordWrappedText = verseText.split(' ').map((w, wordIndex) => {
-              const cleanW = sanitizeText(w);
-              const redClass = (isRedLetterEnabled && isChristWords) ? 'red-letter-word' : '';
-              const lexicalEntry = getLexicalEntry(bookId, chapter, item.number, wordIndex);
-              const deepStudyClass = (toggleDeepStudy.checked && lexicalEntry) ? 'deep-study-active' : '';
-              const deepStudyClick = (toggleDeepStudy.checked && lexicalEntry)
-                ? ` onclick="handleWordClick('${cleanW}')"`
-                : '';
-              return `<span class="verse-word ${deepStudyClass} ${redClass}"${deepStudyClick}>${cleanW}</span>`;
-            }).join(' ');
+            const redClass = (isRedLetterEnabled && isChristWords) ? 'red-letter-word' : '';
+
+            let wordWrappedText;
+            if (toggleDeepStudy.checked && annotatedVerseText) {
+              wordWrappedText = renderDeepStudyVerse(
+                annotatedVerseText,
+                deepStudyData?.annotations?.[item.number] || [],
+                redClass
+              );
+            } else {
+              wordWrappedText = fallbackVerseText.split(' ').map(w => {
+                const cleanW = sanitizeText(w);
+                return `<span class="verse-word ${redClass}">${cleanW}</span>`;
+              }).join(' ');
+            }
             
             passageHtml += `<span class="verse-wrapper" onclick="setFocusedVerse(event, this)"><span class="verse-num" aria-hidden="true" title="Click for options" onclick="openParallelDrawer('${bookName}', ${item.number})">${item.number}</span>${wordWrappedText} </span>`;
             currentRawText += `${item.number}. ${verseText}\n`;
@@ -2019,24 +2118,33 @@
 
         secTitle.innerText = `${sanitizeText(bookName)} ${sanitizeText(String(chapter))}`;
 
+        const deepStudyData = toggleDeepStudy.checked
+          ? await loadDeepStudyChapterData(bookId, chapter)
+          : null;
+
         let passageHtml = "<p>";
         chapterContent.forEach(item => {
           if (item.type === 'heading') {
             passageHtml += `</p><h4 style="margin-top: 1rem; color: var(--accent); font-size: 0.95rem;">${extractText(item.content)}</h4><p>`;
           } else if (item.type === 'verse') {
-            const verseText = extractText(item.content);
+            const fallbackVerseText = extractText(item.content);
+            const annotatedVerseText = deepStudyData?.verseTexts?.[item.number] || null;
             const isChristWords = (item.wordsOfChrist || ['MAT', 'MRK', 'LUK', 'JHN', 'REV'].includes(bookId));
-            
-            const wordWrappedText = verseText.split(' ').map((w, wordIndex) => {
-              const cleanW = sanitizeText(w);
-              const redClass = (isRedLetterEnabled && isChristWords) ? 'red-letter-word' : '';
-              const lexicalEntry = getLexicalEntry(bookId, chapter, item.number, wordIndex);
-              const deepStudyClass = (toggleDeepStudy.checked && lexicalEntry) ? 'deep-study-active' : '';
-              const deepStudyClick = (toggleDeepStudy.checked && lexicalEntry)
-                ? ` onclick="handleWordClick('${cleanW}')"`
-                : '';
-              return `<span class="verse-word ${deepStudyClass} ${redClass}"${deepStudyClick}>${cleanW}</span>`;
-            }).join(' ');
+            const redClass = (isRedLetterEnabled && isChristWords) ? 'red-letter-word' : '';
+
+            let wordWrappedText;
+            if (toggleDeepStudy.checked && annotatedVerseText) {
+              wordWrappedText = renderDeepStudyVerse(
+                annotatedVerseText,
+                deepStudyData?.annotations?.[item.number] || [],
+                redClass
+              );
+            } else {
+              wordWrappedText = fallbackVerseText.split(' ').map(w => {
+                const cleanW = sanitizeText(w);
+                return `<span class="verse-word ${redClass}">${cleanW}</span>`;
+              }).join(' ');
+            }
 
             passageHtml += `<span class="verse-wrapper" onclick="setFocusedVerse(event, this)"><span class="verse-num">${item.number}</span>${wordWrappedText} </span>`;
           }
