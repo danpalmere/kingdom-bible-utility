@@ -1797,9 +1797,7 @@
       }
 
       const cleanWord = targetWord ? targetWord.replace(/[^\w]/g, '') : '';
-      const strongsKey = 'G26'; 
 
-      const blbUrl = `https://www.blueletterbible.org/lexicon/${strongsKey.toLowerCase()}/kjv/wlc/0-1/`;
       const csntmUrl = `https://collections.csntm.org/`;
       const ccelUrl = `https://www.ccel.org/study/${encodeURIComponent(bookName)}_${chapNum}`;
       const commentariesUrl = `https://biblehub.com/commentaries/${bookName.toLowerCase().replace(/\s+/g, '')}/${chapNum}-1.htm`;
@@ -1808,18 +1806,17 @@
         <strong>📚 Deep Study Suite: "${sanitizeText(cleanWord || 'Passage Study')}"</strong> (${sanitizeText(bookName)} ${chapNum})
         
         <div class="card" style="margin-top:0.5rem;">
-          <strong>Lexical Concordance (Strong's Public Domain)</strong>
-          <ul style="margin-top:0.3rem; padding-left:1.2rem;">
-            <li><strong>Strong's Key:</strong> ${strongsKey} / H2617</li>
-            <li><strong>Transliteration:</strong> <em>${sanitizeText((cleanWord || 'agape').toLowerCase())}</em></li>
-            <li><strong>Core Meaning:</strong> Divine covenant devotion, active sacrificial love, unmerited grace.</li>
-          </ul>
+          <strong>Lexical Concordance</strong>
+          <p style="margin-bottom:0;">
+            A verified Strong's number and original-language lexical entry are not available for this word yet.
+            The app will not guess or display a placeholder entry. A future Deep Study update can connect the
+            selected English word to the underlying Greek or Hebrew data before showing lexical information.
+          </p>
         </div>
 
         <div class="card" style="margin-top:0.5rem;">
           <strong>Scholarship & Manuscript Repositories:</strong>
           <ul style="margin-top:0.3rem; padding-left:1.2rem; line-height: 1.8;">
-            <li><a href="${blbUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">📖 Blue Letter Bible Strong's Lexicon (${strongsKey}) →</a></li>
             <li><a href="${csntmUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">🏛️ CSNTM Ancient Greek Manuscripts →</a></li>
             <li><a href="${ccelUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">📜 CCEL Study Bible & Church Fathers (${sanitizeText(bookName)} ${chapNum}) →</a></li>
             <li><a href="${commentariesUrl}" target="_blank" rel="noopener" style="color:var(--accent); font-weight:bold;">💬 Classic Commentaries (Henry, JFB, Bengel) →</a></li>
