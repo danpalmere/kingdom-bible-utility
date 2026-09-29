@@ -1,0 +1,20 @@
+{
+  "source": "BSB-publishing/bsb-data-output base/lexicon/greek.json",
+  "license": "CC BY 4.0 attribution retained for the BSB/STEPBible extended lexicon layer",
+  "attribution": "Extended Strong's lexicon data from STEPBible Data Repository. Credit: Tyndale House, Cambridge (www.STEPBible.org).",
+  "scope": "Lexicon loader pilot: G3056 and G2424 only",
+  "entries": {
+    "G3056": {
+      "lemma": "λόγος",
+      "transliteration": "logos",
+      "gloss": "word",
+      "definition": "A word or expression of thought; also a saying, statement, speech, message, subject matter, or account. In John 1, the term is used of the Divine Word (Logos)."
+    },
+    "G2424": {
+      "lemma": "Ἰησοῦς",
+      "transliteration": "Iēsous",
+      "gloss": "Jesus",
+      "definition": "Jesus. The same Greek name can also refer to Joshua or to other people named Jesus, depending on context."
+    }
+  }
+}
