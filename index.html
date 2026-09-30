@@ -1894,7 +1894,21 @@
         ? localLexiconData[primaryStrongs]
         : null;
 
-      console.log('Local lexicon lookup:', primaryStrongs, lexiconEntry);
+      const lemma = lexiconEntry?.lemma
+        ? sanitizeText(lexiconEntry.lemma)
+        : 'Unavailable';
+
+      const transliteration = lexiconEntry?.transliteration
+        ? sanitizeText(lexiconEntry.transliteration)
+        : 'Unavailable';
+
+      const gloss = lexiconEntry?.gloss
+        ? sanitizeText(lexiconEntry.gloss)
+        : 'Unavailable';
+
+      const definition = lexiconEntry?.definition
+        ? sanitizeText(lexiconEntry.definition)
+        : 'Unavailable';
 
       const csntmUrl = `https://collections.csntm.org/`;
       const ccelUrl = `https://www.ccel.org/study/${encodeURIComponent(bookName)}_${chapNum}`;
@@ -1906,11 +1920,10 @@
         <div class="card" style="margin-top:0.5rem;">
           <strong>Lexical Concordance</strong>
           <p style="margin:0.4rem 0 0;"><strong>Strong's Key:</strong> ${strongsLabel}</p>
-          <p style="margin-bottom:0;">
-            This Strong's mapping comes from the BSB word-level annotation data. Lemma,
-            transliteration, gloss, and definition data are not loaded in this build yet;
-            those will come from the local lexical dataset rather than being guessed.
-          </p>
+          <p style="margin:0.4rem 0 0;"><strong>Lemma:</strong> ${lemma}</p>
+          <p style="margin:0.2rem 0 0;"><strong>Transliteration:</strong> ${transliteration}</p>
+          <p style="margin:0.2rem 0 0;"><strong>Gloss:</strong> ${gloss}</p>
+          <p style="margin:0.2rem 0 0;"><strong>Definition:</strong> ${definition}</p>
         </div>
 
         <div class="card" style="margin-top:0.5rem;">
