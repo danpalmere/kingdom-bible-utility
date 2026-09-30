@@ -371,6 +371,51 @@
     #deep-study-modal-content p {
       margin-bottom: 0.65rem;
 }
+
+    .lexical-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem 1rem;
+      margin-top: 0.75rem;
+}
+
+    .lexical-summary > div,
+    .lexical-definition {
+      min-width: 0;
+}
+
+    .lexical-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      opacity: 0.72;
+      margin-bottom: 0.15rem;
+}
+
+    .lexical-value {
+      display: block;
+      font-size: 1rem;
+      overflow-wrap: anywhere;
+}
+
+    .lexical-lemma {
+      font-size: 1.15rem;
+      font-weight: 700;
+}
+
+    .lexical-definition {
+      margin-top: 1rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--border);
+}
+
+    @media (max-width: 520px) {
+      .lexical-summary {
+        grid-template-columns: 1fr;
+  }
+} 
     [hidden] { display: none !important; }
 
     @media print {
@@ -1941,15 +1986,37 @@
       content.innerHTML = `
         <strong>📚 Deep Study Suite: "${sanitizeText(cleanWord || 'Passage Study')}"</strong> (${sanitizeText(bookName)} ${chapNum})
         
-        <div class="card" style="margin-top:0.5rem;">
+        <div class="card lexical-card" style="margin-top:0.5rem;">
           <strong>Lexical Concordance</strong>
-          <p style="margin:0.4rem 0 0;"><strong>Strong's Key:</strong> ${strongsLabel}</p>
-          <p style="margin:0.4rem 0 0;"><strong>Lemma:</strong> ${lemma}</p>
-          <p style="margin:0.2rem 0 0;"><strong>Transliteration:</strong> ${transliteration}</p>
-          <p style="margin:0.2rem 0 0;"><strong>Gloss:</strong> ${gloss}</p>
-          <p style="margin:0.2rem 0 0;"><strong>Definition:</strong> ${definition}</p>
+
+          <div class="lexical-summary">
+            <div>
+              <span class="lexical-label">Strong's</span>
+              <span class="lexical-value">${strongsLabel}</span>
+            </div>
+
+          <div>
+            <span class="lexical-label">Lemma</span>
+            <span class="lexical-value lexical-lemma">${lemma}</span>
+          </div>
+
+          <div>
+            <span class="lexical-label">Transliteration</span>
+            <span class="lexical-value">${transliteration}</span>
+          </div>
+
+          <div>
+            <span class="lexical-label">Gloss</span>
+            <span class="lexical-value">${gloss}</span>
+          </div>
         </div>
 
+        <div class="lexical-definition">
+          <span class="lexical-label">Definition</span>
+          <div>${definition}</div>
+        </div>
+      </div>
+        
         <div class="card" style="margin-top:0.5rem;">
           <strong>Scholarship & Manuscript Repositories:</strong>
           <ul style="margin-top:0.3rem; padding-left:1.2rem; line-height: 1.8;">
