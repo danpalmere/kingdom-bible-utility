@@ -2073,11 +2073,11 @@ if (lexiconRes && lexiconRes.ok) {
               }).join(' ');
             }
             
-            passageHtml += `<div class="verse-wrapper" onclick="setFocusedVerse(event, this)"><span class="verse-num" aria-hidden="true" title="Click for options" onclick="openParallelDrawer('${bookName}', ${item.number})">${item.number}</span>${wordWrappedText}</div>`;
+            passageHtml += `<span class="verse-wrapper" onclick="setFocusedVerse(event, this)"><span class="verse-num" aria-hidden="true" title="Click for options" onclick="openParallelDrawer('${bookName}', ${item.number})">${item.number}</span>${wordWrappedText} </span>`;
             currentRawText += `${item.number}. ${verseText}\n`;
             currentChapterVerses.push({ number: item.number, text: verseText });
           } else if (item.type === 'line_break') {
-            passageHtml += `<div class="passage-break" aria-hidden="true"></div>`;
+            passageHtml += `<br><br>`;
           }
         });
         passageHtml += "</p>";
