@@ -2051,7 +2051,7 @@ if (lexiconRes && lexiconRes.ok) {
         chapterContent.forEach(item => {
           if (item.type === 'heading') {
             const headingText = extractText(item.content);
-            passageHtml += `</p><h4 style="margin-top: 1.5rem; color: var(--accent); font-family: system-ui, sans-serif;">${headingText}</h4><p>`;
+            passageHtml += `<h4 style="margin-top: 1.5rem; color: var(--accent); font-family: system-ui, sans-serif;">${headingText}</h4>`;
           } else if (item.type === 'verse') {
             const fallbackVerseText = extractText(item.content);
             const annotatedVerseText = deepStudyData?.verseTexts?.[item.number] || null;
@@ -2073,11 +2073,11 @@ if (lexiconRes && lexiconRes.ok) {
               }).join(' ');
             }
             
-            passageHtml += `<span class="verse-wrapper" onclick="setFocusedVerse(event, this)"><span class="verse-num" aria-hidden="true" title="Click for options" onclick="openParallelDrawer('${bookName}', ${item.number})">${item.number}</span>${wordWrappedText} </span>`;
+            passageHtml += `<div class="verse-wrapper" onclick="setFocusedVerse(event, this)"><span class="verse-num" aria-hidden="true" title="Click for options" onclick="openParallelDrawer('${bookName}', ${item.number})">${item.number}</span>${wordWrappedText}</div>`;
             currentRawText += `${item.number}. ${verseText}\n`;
             currentChapterVerses.push({ number: item.number, text: verseText });
           } else if (item.type === 'line_break') {
-            passageHtml += `<br>`;
+            passageHtml += `<div class="passage-break" aria-hidden="true"></div>`;
           }
         });
         passageHtml += "</p>";
@@ -2123,7 +2123,7 @@ if (lexiconRes && lexiconRes.ok) {
           ? await loadDeepStudyChapterData(bookId, chapter)
           : null;
 
-        let passageHtml = "<p>";
+        let passageHtml = `<div class="passage-text">`;
         chapterContent.forEach(item => {
           if (item.type === 'heading') {
             passageHtml += `</p><h4 style="margin-top: 1rem; color: var(--accent); font-size: 0.95rem;">${extractText(item.content)}</h4><p>`;
@@ -2150,7 +2150,7 @@ if (lexiconRes && lexiconRes.ok) {
             passageHtml += `<span class="verse-wrapper" onclick="setFocusedVerse(event, this)"><span class="verse-num">${item.number}</span>${wordWrappedText} </span>`;
           }
         });
-        passageHtml += "</p>";
+        passageHtml += "</div>";
         secContent.innerHTML = passageHtml;
       } catch (err) {
         secContent.innerHTML = "<p><em>Parallel passage unavailable.</em></p>";
