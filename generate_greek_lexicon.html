@@ -82,17 +82,18 @@
 
         const columns = line.split('\t');
 
-        if (columns.length < 6) {
+        if (columns.length < 8) {
           skippedCount++;
           continue;
         }
 
         const strongsRaw = columns[0]?.trim() || '';
-        const lemma = columns[1]?.trim() || '';
-        const transliteration = columns[2]?.trim() || '';
-        const morphology = columns[3]?.trim() || '';
-        const gloss = columns[4]?.trim() || '';
-        const definition = columns.slice(5).join('\t').trim();
+        const extendedStrongs = columns[2]?.trim() || '';
+        const lemma = columns[3]?.trim() || '';
+        const transliteration = columns[4]?.trim() || '';
+        const morphology = columns[5]?.trim() || '';
+        const gloss = columns[6]?.trim() || '';
+        const definition = columns.slice(7).join('\t').trim();
 
         const strongsMatch = strongsRaw.match(/G0*(\d+)/i);
 
