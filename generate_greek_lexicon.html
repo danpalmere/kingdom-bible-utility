@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kingdom Bible Utility - Greek Lexicon Generator</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      line-height: 1.5;
+    }
+
+    button,
+    input {
+      font: inherit;
+      margin-top: 0.75rem;
+    }
+
+    #status {
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Greek Lexicon Generator</h1>
+
+  <p>
+    Select the STEP Bible TBESG tab-separated text file.
+    This utility converts it into the simplified lexicon.json
+    format used by Kingdom Bible Utility.
+  </p>
+
+  <input id="source-file" type="file" accept=".txt,text/plain">
+
+  <br>
+
+  <button id="generate-button" type="button">
+    Generate lexicon.json
+  </button>
+
+  <div id="status">Waiting for TBESG source file...</div>
+
+  <script>
+    const fileInput = document.getElementById('source-file');
+    const generateButton = document.getElementById('generate-button');
+    const status = document.getElementById('status');
+
+    generateButton.addEventListener('click', async () => {
+      const file = fileInput.files[0];
+
+      if (!file) {
+        status.textContent = 'Please select the TBESG source file first.';
+        return;
+      }
+
+      status.textContent = 'Reading TBESG source...';
+
+      const text = await file.text();
+      const lines = text.split(/\r?\n/);
+
+      const lexicon = {};
+      let importedCount = 0;
+      let skippedCount = 0;
+
+      for (const line of lines) {
+        const trimmedLine = line.trim();
+
+        if (
+          !trimmedLine ||
+          trimmedLine.startsWith('#') ||
+          trimmedLine.startsWith('$')
+        ) {
+          continue;
+        }
+
+        const columns = line.split('\t');
+
+        if (columns.length < 6) {
+          skippedCount++;
+          continue;
+        }
+
+        const strongsRaw = columns[0]?.trim() || '';
+        const lemma = columns[1]?.trim() || '';
+        const transliteration = columns[2]?.trim() || '';
+        const morphology = columns[3]?.trim() || '';
+        const gloss = columns[4]?.trim() || '';
+        const definition = columns.slice(5).join('\t').trim();
+
+        const strongsMatch = strongsRaw.match(/G0*(\d+)/i);
+
+        if (!strongsMatch) {
+          skippedCount++;
+          continue;
+        }
+
+        const strongsKey = `G${Number(strongsMatch[1])}`;
+
+        if (!lexicon[strongsKey]) {
+          lexicon[strongsKey] = {
+            lemma,
+            transliteration,
+            gloss,
+            definition
+          };
+
+          importedCount++;
+        }
+      }
+
+      const json = JSON.stringify(lexicon, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      const downloadLink = document.createElement('a');
+      downloadLink.href = url;
+      downloadLink.download = 'lexicon.json';
+      downloadLink.click();
+
+      URL.revokeObjectURL(url);
+
+      const testKeys = ['G26', 'G1223', 'G2316', 'G3056'];
+
+      const testResults = testKeys.map(key => {
+        const entry = lexicon[key];
+
+        return entry
+          ? `${key}: FOUND — ${entry.lemma} — ${entry.gloss}`
+          : `${key}: NOT FOUND`;
+      });
+
+      status.textContent =
+        `Imported entries: ${importedCount}\n` +
+        `Skipped lines: ${skippedCount}\n\n` +
+        `Validation:\n${testResults.join('\n')}`;
+    });
+  </script>
+</body>
+</html>
