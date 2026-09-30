@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Generate 1 John Deep Study Data</title>
+
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+    line-height: 1.5;
+  }
+
+  button {
+    font: inherit;
+    padding: 10px 16px;
+    cursor: pointer;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    background: #f4f4f4;
+    padding: 14px;
+    border-radius: 8px;
+  }
+
+  .ok {
+    color: #0a6b2b;
+  }
+
+  .err {
+    color: #a11;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Generate 1 John Deep Study Data</h1>
+
+<p>
+  This utility downloads the BSB display data for 1 John 1–5,
+  converts it into the Kingdom Bible Utility Deep Study format,
+  validates it, and downloads <code>1JN.json</code>.
+</p>
+
+<button id="generate">Generate 1JN.json</button>
+
+<pre id="status">Ready.</pre>
+
+<script>
+const statusEl = document.getElementById('status');
+const button = document.getElementById('generate');
+
+const BOOK_ID = '1JN';
+const BOOK_NAME = '1 John';
+const CHAPTER_COUNT = 5;
+
+const expectedLastVerse = {
+  1: 10,
+  2: 29,
+  3: 24,
+  4: 21,
+  5: 21
+};
+
+function expectedVersesForChapter(chapter) {
+  const verses = [];
+
+  for (
+    let verse = 1;
+    verse <= expectedLastVerse[chapter];
+    verse++
+  ) {
+    verses.push(String(verse));
+  }
+
+  return verses;
+}
+
+function log(message, className = '') {
+  statusEl.className = className;
+  statusEl.textContent = message;
+}
+
+function convertChapter(eng) {
+  const verseTexts = {};
+  const annotations = {};
+
+  for (const [verse, segments] of Object.entries(eng)) {
+    let verseText = '';
+    let cursor = 0;
+    const verseAnnotations = [];
+
+    for (const segment of segments) {
+      const text = String(segment?.[0] ?? '');
+      const strongs = segment?.[1];
+      const start = cursor;
+
+      verseText += text;
+      cursor += text.length;
+
+      if (text && strongs) {
+        verseAnnotations.push({
+          start,
+          end: cursor,
+          strongs: [String(strongs)]
+        });
+      }
+    }
+
+    verseTexts[verse] = verseText;
+    annotations[verse] = verseAnnotations;
+  }
+
+  return {
+    verseTexts,
+    annotations
+  };
+}
+
+function validateBook(book) {
+  const errors = [];
+  let verseCount = 0;
+  let annotationCount = 0;
+
+  if (!book?.chapters) {
+    return {
+      errors: ['Missing chapters object.'],
+      verseCount,
+      annotationCount
+    };
+  }
+
+  const chapterKeys = Object.keys(book.chapters)
+    .map(Number)
+    .sort((a, b) => a - b);
+
+  if (
+    chapterKeys.length !== CHAPTER_COUNT ||
+    chapterKeys.some((number, index) => number !== index + 1)
+  ) {
+    errors.push(
+      `Expected chapters 1–${CHAPTER_COUNT}; found: ${chapterKeys.join(', ')}`
+    );
+  }
+
+  for (let chapter = 1; chapter <= CHAPTER_COUNT; chapter++) {
+    const data = book.chapters[String(chapter)];
+
+    if (!data) {
+      errors.push(`Missing ${BOOK_NAME} ${chapter}.`);
+      continue;
+    }
+
+    const actualVerses = Object.keys(data.verseTexts || {})
+      .sort((a, b) => Number(a) - Number(b));
+
+    const expectedVerses = expectedVersesForChapter(chapter);
+
+    if (
+      JSON.stringify(actualVerses) !==
+      JSON.stringify(expectedVerses)
+    ) {
+      const missing = expectedVerses.filter(
+        verse => !actualVerses.includes(verse)
+      );
+
+      const unexpected = actualVerses.filter(
+        verse => !expectedVerses.includes(verse)
+      );
+
+      errors.push(
+        `${BOOK_NAME} ${chapter}: verse-number mismatch.` +
+        (missing.length
+          ? ` Missing: ${missing.join(', ')}.`
+          : '') +
+        (unexpected.length
+          ? ` Unexpected: ${unexpected.join(', ')}.`
+          : '')
+      );
+    }
+
+    for (
+      const [verse, text]
+      of Object.entries(data.verseTexts || {})
+    ) {
+      verseCount++;
+
+      const list = data.annotations?.[verse] || [];
+
+      for (const entry of list) {
+        annotationCount++;
+
+        if (
+          !Number.isInteger(entry.start) ||
+          !Number.isInteger(entry.end)
+        ) {
+          errors.push(
+            `${BOOK_NAME} ${chapter}:${verse}: non-integer range.`
+          );
+
+          continue;
+        }
+
+        if (
+          entry.start < 0 ||
+          entry.end <= entry.start ||
+          entry.end > text.length
+        ) {
+          errors.push(
+            `${BOOK_NAME} ${chapter}:${verse}: invalid range ` +
+            `${entry.start}-${entry.end} for text length ${text.length}.`
+          );
+        }
+
+        if (
+          !Array.isArray(entry.strongs) ||
+          !entry.strongs.length ||
+          entry.strongs.some(
+            value => !/^G\d+$/.test(String(value))
+          )
+        ) {
+          errors.push(
+            `${BOOK_NAME} ${chapter}:${verse}: invalid Strong's mapping.`
+          );
+        }
+      }
+    }
+  }
+
+  if (verseCount !== 105) {
+    errors.push(
+      `Expected 105 rendered BSB verses; found ${verseCount}.`
+    );
+  }
+
+  return {
+    errors,
+    verseCount,
+    annotationCount
+  };
+}
+
+async function generate() {
+  button.disabled = true;
+
+  try {
+    const chapters = {};
+
+    for (
+      let chapter = 1;
+      chapter <= CHAPTER_COUNT;
+      chapter++
+    ) {
+      log(
+        `Downloading and converting ${BOOK_NAME} ` +
+        `${chapter} of ${CHAPTER_COUNT}...`
+      );
+
+      const url =
+        `https://raw.githubusercontent.com/` +
+        `BSB-publishing/bsb-data-output/main/` +
+        `base/display/${BOOK_ID}/${BOOK_ID}${chapter}.json`;
+
+      const response = await fetch(url, {
+        cache: 'no-store'
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `${BOOK_NAME} ${chapter}: source returned ` +
+          `HTTP ${response.status}.`
+        );
+      }
+
+      const source = await response.json();
+
+      if (!source?.eng) {
+        throw new Error(
+          `${BOOK_NAME} ${chapter}: source does not ` +
+          `contain an "eng" object.`
+        );
+      }
+
+      chapters[String(chapter)] =
+        convertChapter(source.eng);
+    }
+
+    const book = {
+      source:
+        "BSB-publishing/bsb-data-output base/display/1JN",
+      license: "CC0",
+      scope:
+        "Complete 1 John Deep Study Strong's occurrence mapping",
+      chapters
+    };
+
+    const validation = validateBook(book);
+
+    if (validation.errors.length) {
+      throw new Error(
+        `Validation failed with ` +
+        `${validation.errors.length} error(s):\n\n` +
+        validation.errors.slice(0, 20).join('\n')
+      );
+    }
+
+    const json =
+      JSON.stringify(book, null, 2);
+
+    const blob =
+      new Blob(
+        [json],
+        {
+          type: 'application/json;charset=utf-8'
+        }
+      );
+
+    const downloadUrl =
+      URL.createObjectURL(blob);
+
+    const link =
+      document.createElement('a');
+
+    link.href = downloadUrl;
+    link.download = '1JN.json';
+
+    document.body.appendChild(link);
+
+    link.click();
+    link.remove();
+
+    URL.revokeObjectURL(downloadUrl);
+
+    log(
+      `PASS\n\n` +
+      `Generated all ${CHAPTER_COUNT} chapters.\n` +
+      `Rendered BSB verses: ${validation.verseCount}\n` +
+      `Strong's occurrence annotations: ` +
+      `${validation.annotationCount}\n\n` +
+      `1JN.json should now be in your Downloads folder.`,
+      'ok'
+    );
+
+  } catch (error) {
+    console.error(error);
+
+    log(
+      `FAILED\n\n${error.message}\n\n` +
+      `No replacement file was generated.`,
+      'err'
+    );
+
+  } finally {
+    button.disabled = false;
+  }
+}
+
+button.addEventListener('click', generate);
+</script>
+
+</body>
+</html>
