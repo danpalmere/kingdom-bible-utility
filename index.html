@@ -1889,6 +1889,13 @@
         ? strongs.map(value => sanitizeText(value)).join(' / ')
         : 'Unavailable';
 
+      const primaryStrongs = strongs.length > 0 ? strongs[0] : null;
+      const lexiconEntry = primaryStrongs && localLexiconData
+        ? localLexiconData[primaryStrongs]
+        : null;
+
+      console.log('Local lexicon lookup:', primaryStrongs, lexiconEntry);
+
       const csntmUrl = `https://collections.csntm.org/`;
       const ccelUrl = `https://www.ccel.org/study/${encodeURIComponent(bookName)}_${chapNum}`;
       const commentariesUrl = `https://biblehub.com/commentaries/${bookName.toLowerCase().replace(/\s+/g, '')}/${chapNum}-1.htm`;
