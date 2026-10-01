@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Generate NT Deep Study Data</title>
+
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+    line-height: 1.5;
+  }
+
+  .controls {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 1rem 0;
+  }
+
+  select,
+  button {
+    font: inherit;
+    padding: 10px 12px;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    background: #f4f4f4;
+    padding: 14px;
+    border-radius: 8px;
+  }
+
+  .ok {
+    color: #0a6b2b;
+  }
+
+  .err {
+    color: #a11;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Generate New Testament Deep Study Data</h1>
+
+<p>
+  Select a New Testament book. This utility downloads the BSB
+  display data, converts the English text and Strong's mappings
+  into the Kingdom Bible Utility Deep Study format, validates the
+  conversion, and downloads the finished book JSON file.
+</p>
+
+<div class="controls">
+  <label for="book-select">
+    <strong>Book:</strong>
+  </label>
+
+  <select id="book-select"></select>
+
+  <button id="generate">
+    Generate
+  </button>
+</div>
+
+<pre id="status">Ready.</pre>
+
+<script>
+const NT_BOOKS = [
+  { id: 'MAT', name: 'Matthew', chapters: 28 },
+  { id: 'MRK', name: 'Mark', chapters: 16 },
+  { id: 'LUK', name: 'Luke', chapters: 24 },
+  { id: 'JHN', name: 'John', chapters: 21 },
+  { id: 'ACT', name: 'Acts', chapters: 28 },
+  { id: 'ROM', name: 'Romans', chapters: 16 },
+  { id: '1CO', name: '1 Corinthians', chapters: 16 },
+  { id: '2CO', name: '2 Corinthians', chapters: 13 },
+  { id: 'GAL', name: 'Galatians', chapters: 6 },
+  { id: 'EPH', name: 'Ephesians', chapters: 6 },
+  { id: 'PHP', name: 'Philippians', chapters: 4 },
+  { id: 'COL', name: 'Colossians', chapters: 4 },
+  { id: '1TH', name: '1 Thessalonians', chapters: 5 },
+  { id: '2TH', name: '2 Thessalonians', chapters: 3 },
+  { id: '1TI', name: '1 Timothy', chapters: 6 },
+  { id: '2TI', name: '2 Timothy', chapters: 4 },
+  { id: 'TIT', name: 'Titus', chapters: 3 },
+  { id: 'PHM', name: 'Philemon', chapters: 1 },
+  { id: 'HEB', name: 'Hebrews', chapters: 13 },
+  { id: 'JAS', name: 'James', chapters: 5 },
+  { id: '1PE', name: '1 Peter', chapters: 5 },
+  { id: '2PE', name: '2 Peter', chapters: 3 },
+  { id: '1JN', name: '1 John', chapters: 5 },
+  { id: '2JN', name: '2 John', chapters: 1 },
+  { id: '3JN', name: '3 John', chapters: 1 },
+  { id: 'JUD', name: 'Jude', chapters: 1 },
+  { id: 'REV', name: 'Revelation', chapters: 22 }
+];
+
+const bookSelect = document.getElementById('book-select');
+const generateButton = document.getElementById('generate');
+const statusEl = document.getElementById('status');
+
+NT_BOOKS.forEach(book => {
+  const option = document.createElement('option');
+
+  option.value = book.id;
+  option.textContent =
+    `${book.name} (${book.id}) — ${book.chapters} chapter` +
+    `${book.chapters === 1 ? '' : 's'}`;
+
+  if (book.id === '1JN') {
+    option.selected = true;
+  }
+
+  bookSelect.appendChild(option);
+});
+
+function getSelectedBook() {
+  return NT_BOOKS.find(
+    book => book.id === bookSelect.value
+  );
+}
+
+function updateButtonLabel() {
+  const book = getSelectedBook();
+
+  generateButton.textContent =
+    book
+      ? `Generate ${book.id}.json`
+      : 'Generate';
+}
+
+bookSelect.addEventListener(
+  'change',
+  updateButtonLabel
+);
+
+updateButtonLabel();
+
+function log(message, className = '') {
+  statusEl.className = className;
+  statusEl.textContent = message;
+}
+
+function convertChapter(eng) {
+  const verseTexts = {};
+  const annotations = {};
+
+  for (
+    const [verse, segments]
+    of Object.entries(eng)
+  ) {
+    let verseText = '';
+    let cursor = 0;
+
+    const verseAnnotations = [];
+
+    for (const segment of segments) {
+      const text =
+        String(segment?.[0] ?? '');
+
+      const strongs =
+        segment?.[1];
+
+      const start = cursor;
+
+      verseText += text;
+      cursor += text.length;
+
+      if (text && strongs) {
+        verseAnnotations.push({
+          start,
+          end: cursor,
+          strongs: [String(strongs)]
+        });
+      }
+    }
+
+    verseTexts[verse] = verseText;
+    annotations[verse] = verseAnnotations;
+  }
+
+  return {
+    verseTexts,
+    annotations
+  };
+}
+
+function validateChapter(
+  book,
+  chapter,
+  sourceEng,
+  converted
+) {
+  const errors = [];
+  let annotationCount = 0;
+
+  const sourceVerses =
+    Object.keys(sourceEng)
+      .sort(
+        (a, b) =>
+          Number(a) - Number(b)
+      );
+
+  const generatedVerses =
+    Object.keys(
+      converted.verseTexts || {}
+    ).sort(
+      (a, b) =>
+        Number(a) - Number(b)
+    );
+
+  if (sourceVerses.length === 0) {
+    errors.push(
+      `${book.name} ${chapter}: source contains no verses.`
+    );
+  }
+
+  if (
+    JSON.stringify(sourceVerses) !==
+    JSON.stringify(generatedVerses)
+  ) {
+    errors.push(
+      `${book.name} ${chapter}: generated verse numbers ` +
+      `do not match the BSB source.`
+    );
+  }
+
+  for (const verse of sourceVerses) {
+    const segments =
+      sourceEng[verse] || [];
+
+    const expectedText =
+      segments
+        .map(
+          segment =>
+            String(segment?.[0] ?? '')
+        )
+        .join('');
+
+    const generatedText =
+      converted.verseTexts?.[verse];
+
+    if (generatedText !== expectedText) {
+      errors.push(
+        `${book.name} ${chapter}:${verse}: ` +
+        `generated text does not match source text.`
+      );
+    }
+
+    const annotations =
+      converted.annotations?.[verse] || [];
+
+    for (const entry of annotations) {
+      annotationCount++;
+
+      if (
+        !Number.isInteger(entry.start) ||
+        !Number.isInteger(entry.end)
+      ) {
+        errors.push(
+          `${book.name} ${chapter}:${verse}: ` +
+          `non-integer annotation range.`
+        );
+
+        continue;
+      }
+
+      if (
+        entry.start < 0 ||
+        entry.end <= entry.start ||
+        entry.end > generatedText.length
+      ) {
+        errors.push(
+          `${book.name} ${chapter}:${verse}: ` +
+          `invalid annotation range ` +
+          `${entry.start}-${entry.end}.`
+        );
+      }
+
+      if (
+        !Array.isArray(entry.strongs) ||
+        !entry.strongs.length ||
+        entry.strongs.some(
+          value =>
+            !/^G\d+$/.test(
+              String(value)
+            )
+        )
+      ) {
+        errors.push(
+          `${book.name} ${chapter}:${verse}: ` +
+          `invalid Strong's mapping.`
+        );
+      }
+    }
+  }
+
+  return {
+    errors,
+    verseCount: sourceVerses.length,
+    annotationCount
+  };
+}
+
+async function generate() {
+  const book = getSelectedBook();
+
+  if (!book) {
+    log(
+      'FAILED\n\nNo New Testament book selected.',
+      'err'
+    );
+
+    return;
+  }
+
+  generateButton.disabled = true;
+  bookSelect.disabled = true;
+
+  try {
+    const chapters = {};
+
+    let totalVerseCount = 0;
+    let totalAnnotationCount = 0;
+
+    const validationErrors = [];
+
+    for (
+      let chapter = 1;
+      chapter <= book.chapters;
+      chapter++
+    ) {
+      log(
+        `Downloading and converting ${book.name} ` +
+        `${chapter} of ${book.chapters}...`
+      );
+
+      const url =
+        `https://raw.githubusercontent.com/` +
+        `BSB-publishing/bsb-data-output/main/` +
+        `base/display/${book.id}/` +
+        `${book.id}${chapter}.json`;
+
+      const response =
+        await fetch(
+          url,
+          {
+            cache: 'no-store'
+          }
+        );
+
+      if (!response.ok) {
+        throw new Error(
+          `${book.name} ${chapter}: source returned ` +
+          `HTTP ${response.status}.`
+        );
+      }
+
+      const source =
+        await response.json();
+
+      if (
+        !source?.eng ||
+        typeof source.eng !== 'object'
+      ) {
+        throw new Error(
+          `${book.name} ${chapter}: source does not ` +
+          `contain a valid "eng" object.`
+        );
+      }
+
+      const converted =
+        convertChapter(source.eng);
+
+      const validation =
+        validateChapter(
+          book,
+          chapter,
+          source.eng,
+          converted
+        );
+
+      validationErrors.push(
+        ...validation.errors
+      );
+
+      totalVerseCount +=
+        validation.verseCount;
+
+      totalAnnotationCount +=
+        validation.annotationCount;
+
+      chapters[String(chapter)] =
+        converted;
+    }
+
+    if (validationErrors.length) {
+      throw new Error(
+        `Validation failed with ` +
+        `${validationErrors.length} error(s):\n\n` +
+        validationErrors
+          .slice(0, 20)
+          .join('\n')
+      );
+    }
+
+    if (totalAnnotationCount === 0) {
+      throw new Error(
+        `Validation failed: no Strong's annotations ` +
+        `were generated for ${book.name}.`
+      );
+    }
+
+    const output = {
+      source:
+        `BSB-publishing/bsb-data-output ` +
+        `base/display/${book.id}`,
+
+      license:
+        'CC0',
+
+      scope:
+        `Complete ${book.name} Deep Study ` +
+        `Strong's occurrence mapping`,
+
+      chapters
+    };
+
+    const json =
+      JSON.stringify(
+        output,
+        null,
+        2
+      );
+
+    const blob =
+      new Blob(
+        [json],
+        {
+          type:
+            'application/json;charset=utf-8'
+        }
+      );
+
+    const downloadUrl =
+      URL.createObjectURL(blob);
+
+    const link =
+      document.createElement('a');
+
+    link.href =
+      downloadUrl;
+
+    link.download =
+      `${book.id}.json`;
+
+    document.body.appendChild(link);
+
+    link.click();
+    link.remove();
+
+    URL.revokeObjectURL(
+      downloadUrl
+    );
+
+    log(
+      `PASS\n\n` +
+      `Book: ${book.name} (${book.id})\n` +
+      `Generated chapters: ${book.chapters}\n` +
+      `Rendered BSB verses: ${totalVerseCount}\n` +
+      `Strong's occurrence annotations: ` +
+      `${totalAnnotationCount}\n\n` +
+      `${book.id}.json should now be in your ` +
+      `Downloads folder.`,
+      'ok'
+    );
+
+  } catch (error) {
+    console.error(error);
+
+    log(
+      `FAILED\n\n` +
+      `${error.message}\n\n` +
+      `No replacement file was generated.`,
+      'err'
+    );
+
+  } finally {
+    generateButton.disabled = false;
+    bookSelect.disabled = false;
+    updateButtonLabel();
+  }
+}
+
+generateButton.addEventListener(
+  'click',
+  generate
+);
+</script>
+
+</body>
+</html>
