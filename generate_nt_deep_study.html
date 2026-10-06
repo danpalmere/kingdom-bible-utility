@@ -71,9 +71,13 @@
   <button id="generate">
     Generate
   </button>
+  <button id="validate-all">Validate All New Testament Books</button>
 </div>
 
-<pre id="status">Ready.</pre>
+<p>Batch validation checks all 27 books in memory. It does not download
+  JSON files or change the application or its Deep Study datasets.</p>
+
+<pre id="status" role="status" aria-live="polite">Ready.</pre>
 
 <script>
 const NT_BOOKS = [
@@ -108,6 +112,8 @@ const NT_BOOKS = [
 
 const bookSelect = document.getElementById('book-select');
 const generateButton = document.getElementById('generate');
+const validateAllButton = document.getElementById('validate-all');
+let busy = false;
 const statusEl = document.getElementById('status');
 
 NT_BOOKS.forEach(book => {
@@ -313,7 +319,105 @@ function validateChapter(
   };
 }
 
+function setBusy(value) {
+  busy = value;
+  generateButton.disabled = value;
+  validateAllButton.disabled = value;
+  bookSelect.disabled = value;
+}
+
+async function processBook(book, onProgress, retainChapters = false) {
+  const chapters = {};
+  let totalVerseCount = 0;
+  let totalAnnotationCount = 0;
+  const validationErrors = [];
+
+  for (let chapter = 1; chapter <= book.chapters; chapter++) {
+    onProgress(`Downloading and converting ${book.name} ${chapter} of ${book.chapters}...`);
+    const url = 'https://raw.githubusercontent.com/' +
+      'BSB-publishing/bsb-data-output/main/base/display/' +
+      `${book.id}/${book.id}${chapter}.json`;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+    let source;
+    try {
+      const response = await fetch(url, {
+        cache: 'no-store',
+        signal: controller.signal
+      });
+      if (!response.ok) {
+        throw new Error(`source returned HTTP ${response.status}.`);
+      }
+      source = await response.json();
+    } catch (error) {
+      throw new Error(`${book.name} ${chapter}: ${error.name === 'AbortError'
+        ? 'source request timed out.' : error.message}`);
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    if (!source?.eng || typeof source.eng !== 'object' ||
+        Array.isArray(source.eng)) {
+      throw new Error(`${book.name} ${chapter}: source does not contain a valid "eng" object.`);
+    }
+    for (const [verse, segments] of Object.entries(source.eng)) {
+      if (!/^[1-9]\d*$/.test(verse) || !Array.isArray(segments) ||
+          !segments.length || segments.some(segment =>
+            !Array.isArray(segment) || typeof segment[0] !== 'string') ||
+          !segments.map(segment => segment[0]).join('').trim()) {
+        throw new Error(`${book.name} ${chapter}:${verse}: invalid English verse data.`);
+      }
+    }
+
+    const converted = convertChapter(source.eng);
+    const validation = validateChapter(book, chapter, source.eng, converted);
+    validationErrors.push(...validation.errors);
+    totalVerseCount += validation.verseCount;
+    totalAnnotationCount += validation.annotationCount;
+    if (retainChapters) chapters[String(chapter)] = converted;
+  }
+
+  if (validationErrors.length) {
+    throw new Error(`Validation failed with ${validationErrors.length} error(s):\n\n` +
+      validationErrors.slice(0, 20).join('\n'));
+  }
+  if (totalAnnotationCount === 0) {
+    throw new Error(`Validation failed: no Strong's annotations were generated for ${book.name}.`);
+  }
+  return { chapters, totalVerseCount, totalAnnotationCount };
+}
+
+async function validateAll() {
+  if (busy) return;
+  setBusy(true);
+  const lines = ['NEW TESTAMENT BATCH VALIDATION', ''];
+  let passed = 0;
+  let failed = 0;
+  try {
+    for (const book of NT_BOOKS) {
+      try {
+        const result = await processBook(book, message => {
+          log([...lines, '', message].join('\n'));
+        });
+        passed++;
+        lines.push(`${book.name} (${book.id}): PASS — ${book.chapters} chapters, ${result.totalVerseCount} verses, ${result.totalAnnotationCount} annotations`);
+      } catch (error) {
+        failed++;
+        lines.push(`${book.name} (${book.id}): FAIL\n${error.message}`);
+      }
+      log(lines.join('\n'));
+    }
+    lines.push('', `${passed} of ${NT_BOOKS.length} books passed. ${failed} failed.`,
+      'No files were downloaded or changed.');
+    log(lines.join('\n'), failed ? 'err' : 'ok');
+  } finally {
+    setBusy(false);
+    updateButtonLabel();
+  }
+}
+
 async function generate() {
+  if (busy) return;
   const book = getSelectedBook();
 
   if (!book) {
@@ -325,102 +429,11 @@ async function generate() {
     return;
   }
 
-  generateButton.disabled = true;
-  bookSelect.disabled = true;
+  setBusy(true);
 
   try {
-    const chapters = {};
-
-    let totalVerseCount = 0;
-    let totalAnnotationCount = 0;
-
-    const validationErrors = [];
-
-    for (
-      let chapter = 1;
-      chapter <= book.chapters;
-      chapter++
-    ) {
-      log(
-        `Downloading and converting ${book.name} ` +
-        `${chapter} of ${book.chapters}...`
-      );
-
-      const url =
-        `https://raw.githubusercontent.com/` +
-        `BSB-publishing/bsb-data-output/main/` +
-        `base/display/${book.id}/` +
-        `${book.id}${chapter}.json`;
-
-      const response =
-        await fetch(
-          url,
-          {
-            cache: 'no-store'
-          }
-        );
-
-      if (!response.ok) {
-        throw new Error(
-          `${book.name} ${chapter}: source returned ` +
-          `HTTP ${response.status}.`
-        );
-      }
-
-      const source =
-        await response.json();
-
-      if (
-        !source?.eng ||
-        typeof source.eng !== 'object'
-      ) {
-        throw new Error(
-          `${book.name} ${chapter}: source does not ` +
-          `contain a valid "eng" object.`
-        );
-      }
-
-      const converted =
-        convertChapter(source.eng);
-
-      const validation =
-        validateChapter(
-          book,
-          chapter,
-          source.eng,
-          converted
-        );
-
-      validationErrors.push(
-        ...validation.errors
-      );
-
-      totalVerseCount +=
-        validation.verseCount;
-
-      totalAnnotationCount +=
-        validation.annotationCount;
-
-      chapters[String(chapter)] =
-        converted;
-    }
-
-    if (validationErrors.length) {
-      throw new Error(
-        `Validation failed with ` +
-        `${validationErrors.length} error(s):\n\n` +
-        validationErrors
-          .slice(0, 20)
-          .join('\n')
-      );
-    }
-
-    if (totalAnnotationCount === 0) {
-      throw new Error(
-        `Validation failed: no Strong's annotations ` +
-        `were generated for ${book.name}.`
-      );
-    }
+    const { chapters, totalVerseCount, totalAnnotationCount } =
+      await processBook(book, log, true);
 
     const output = {
       source:
@@ -497,11 +510,12 @@ async function generate() {
     );
 
   } finally {
-    generateButton.disabled = false;
-    bookSelect.disabled = false;
+    setBusy(false);
     updateButtonLabel();
   }
 }
+
+validateAllButton.addEventListener('click', validateAll);
 
 generateButton.addEventListener(
   'click',
