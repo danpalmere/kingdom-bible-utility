@@ -66,9 +66,11 @@
   <select id="book-select"></select>
   <button id="generate">Generate</button>
   <button id="validate">Validate Selected Book</button>
+  <button id="validate-all">Validate All Old Testament Books</button>
   <button id="cancel" hidden>Cancel Current Operation</button>
 </div>
 <p>Choose <strong>Validate Selected Book</strong> to check source data without downloading, or <strong>Generate</strong> to validate and download one book JSON file. Each chapter is fetched sequentially. No partial file is downloaded when a chapter fails or you cancel.</p>
+<p>Batch validation checks all 39 Old Testament books (929 chapters), shows progress, continues after a book fails, and supports cancellation. It never downloads files or changes Bible datasets. Keep the page open while it runs.</p>
 <p>Jonah uses the BSB source ID <code>JON</code>, but downloads as <code>JNH.json</code> to match this application. Do not upload generated datasets to the live repository yet. No Hebrew or Aramaic lexicon is installed yet, so lexical definitions will be a later step.</p>
 <pre id="status" role="status" aria-live="polite">Ready.</pre>
 
@@ -118,6 +120,7 @@ const OT_BOOKS = [
 const bookSelect = document.getElementById('book-select');
 const generateButton = document.getElementById('generate');
 const validateButton = document.getElementById('validate');
+const validateAllButton = document.getElementById('validate-all');
 const cancelButton = document.getElementById('cancel');
 const statusEl = document.getElementById('status');
 let busy = false;
@@ -342,6 +345,7 @@ function setBusy(value) {
   busy = value;
   generateButton.disabled = value;
   validateButton.disabled = value;
+  validateAllButton.disabled = value;
   bookSelect.disabled = value;
   cancelButton.hidden = !value;
   cancelButton.disabled = !value;
@@ -527,7 +531,83 @@ async function validateSelected() {
   }
 }
 
+
+async function validateAll() {
+  if (busy) return;
+  activeController = new AbortController();
+  const signal = activeController.signal;
+  setBusy(true);
+
+  const totalBooks = OT_BOOKS.length;
+  const totalChapters = OT_BOOKS.reduce((sum, book) => sum + book.chapters, 0);
+  const lines = ['OLD TESTAMENT BATCH VALIDATION', ''];
+  let passed = 0;
+  let failed = 0;
+  let passingChapters = 0;
+  let totalVerses = 0;
+  let totalAnnotations = 0;
+  let cancelled = false;
+
+  try {
+    for (const [index, book] of OT_BOOKS.entries()) {
+      if (signal.aborted) { cancelled = true; break; }
+      let currentChapter = 0;
+
+      try {
+        const result = await processBook(book, message => {
+          currentChapter++;
+          log([...lines, '',
+            `Book ${index + 1} of ${totalBooks}: ${book.name} (${book.id})`,
+            `Chapter ${currentChapter} of ${book.chapters}`,
+            `Completed books: ${passed + failed} of ${totalBooks}; passing chapters: ${passingChapters} of ${totalChapters}`,
+            message
+          ].join('\n'));
+        }, false, signal);
+
+        if (signal.aborted) { cancelled = true; break; }
+        passed++;
+        passingChapters += book.chapters;
+        totalVerses += result.totalVerseCount;
+        totalAnnotations += result.totalAnnotationCount;
+        lines.push(`${book.name} (${book.id}): PASS — ${book.chapters} chapters, ${result.totalVerseCount} verses, ${result.totalAnnotationCount} annotations`);
+      } catch (error) {
+        if (signal.aborted) { cancelled = true; break; }
+        failed++;
+        lines.push(`${book.name} (${book.id}): FAIL — ${error.message}`);
+      }
+
+      log([...lines, '',
+        `Completed books: ${passed + failed} of ${totalBooks}; passing chapters: ${passingChapters} of ${totalChapters}`
+      ].join('\n'));
+      // Yield for the browser to repaint or accept cancellation.
+      await new Promise(resolve => setTimeout(resolve, 0));
+    }
+
+    if (cancelled || signal.aborted) {
+      log([...lines, '', 'CANCELLED',
+        `${passed} passed, ${failed} failed before cancellation.`,
+        'No files were downloaded or changed.'
+      ].join('\n'));
+    } else {
+      log([...lines, '',
+        `${passed} of ${totalBooks} books passed. ${failed} failed.`,
+        `${passingChapters} of ${totalChapters} chapters validated in passing books.`,
+        `Verses in passing books: ${totalVerses}; Strong's annotations: ${totalAnnotations}.`,
+        'No files were downloaded or changed.'
+      ].join('\n'), failed ? 'err' : 'ok');
+    }
+  } catch (error) {
+    log([...lines, '', signal.aborted ? 'CANCELLED' : 'FAILED', error.message,
+      'No files were downloaded or changed.'].join('\n'), signal.aborted ? '' : 'err');
+  } finally {
+    activeController = null;
+    setBusy(false);
+    updateButtonLabel();
+  }
+}
+
 generateButton.addEventListener('click', generate);
+validateAllButton.addEventListener('click', validateAll);
 validateButton.addEventListener('click', validateSelected);
 cancelButton.addEventListener('click', () => {
   cancelButton.disabled = true;
