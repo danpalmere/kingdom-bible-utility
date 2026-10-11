@@ -67,10 +67,22 @@
   <button id="generate">Generate</button>
   <button id="validate">Validate Selected Book</button>
   <button id="validate-all">Validate All Old Testament Books</button>
+  <label for="zip-scope"><strong>ZIP selection:</strong></label>
+  <select id="zip-scope"></select>
+  <button id="generate-zip">Generate OT ZIP</button>
   <button id="cancel" hidden>Cancel Current Operation</button>
 </div>
 <p>Choose <strong>Validate Selected Book</strong> to check source data without downloading, or <strong>Generate</strong> to validate and download one book JSON file. Each chapter is fetched sequentially. No partial file is downloaded when a chapter fails or you cancel.</p>
 <p>Batch validation checks all 39 Old Testament books (929 chapters), shows progress, continues after a book fails, and supports cancellation. It never downloads files or changes Bible datasets. Keep the page open while it runs.</p>
+<p><strong>Bulk export:</strong> Choose all 39 books, or a smaller book group.
+The generator checks every selected chapter sequentially and prepares one
+uncompressed ZIP containing one JSON file per book and a validation report.
+It does not download anything until you click the finished download link.
+The export stops without a partial ZIP if any book fails or you cancel.
+The JSON payload is limited to 64 MiB. Keep this page open during processing.</p>
+<p><a id="zip-link" hidden>Download validated OT ZIP</a></p>
+<p>Extract downloaded ZIPs into a separate review folder. Do not upload
+the generated data to the live application yet.</p>
 <p>Jonah uses the BSB source ID <code>JON</code>, but downloads as <code>JNH.json</code> to match this application. Do not upload generated datasets to the live repository yet. No Hebrew or Aramaic lexicon is installed yet, so lexical definitions will be a later step.</p>
 <pre id="status" role="status" aria-live="polite">Ready.</pre>
 
@@ -121,6 +133,18 @@ const bookSelect = document.getElementById('book-select');
 const generateButton = document.getElementById('generate');
 const validateButton = document.getElementById('validate');
 const validateAllButton = document.getElementById('validate-all');
+const zipScopeSelect = document.getElementById('zip-scope');
+const generateZipButton = document.getElementById('generate-zip');
+const zipLink = document.getElementById('zip-link');
+let zipUrl = null;
+
+function clearZip() {
+  zipLink.hidden = true;
+  zipLink.removeAttribute('href');
+  if (zipUrl) URL.revokeObjectURL(zipUrl);
+  zipUrl = null;
+}
+window.addEventListener('pagehide', clearZip);
 const cancelButton = document.getElementById('cancel');
 const statusEl = document.getElementById('status');
 let busy = false;
@@ -139,6 +163,38 @@ OT_BOOKS.forEach(book => {
 
   bookSelect.appendChild(option);
 });
+
+
+const ZIP_SCOPES = [
+  {id: 'all', label: 'All 39 OT books', filename: 'ot-deep-study-all.zip', ids: null},
+  {id: 'law', label: 'Pentateuch', filename: 'ot-deep-study-pentateuch.zip',
+   ids: ['GEN','EXO','LEV','NUM','DEU']},
+  {id: 'history', label: 'Historical Books', filename: 'ot-deep-study-history.zip',
+   ids: ['JOS','JDG','RUT','1SA','2SA','1KI','2KI','1CH','2CH','EZR','NEH','EST']},
+  {id: 'wisdom', label: 'Poetry and Wisdom', filename: 'ot-deep-study-wisdom.zip',
+   ids: ['JOB','PSA','PRO','ECC','SNG']},
+  {id: 'prophets', label: 'Prophets', filename: 'ot-deep-study-prophets.zip',
+   ids: ['ISA','JER','LAM','EZK','DAN','HOS','JOL','AMO','OBA','JNH',
+         'MIC','NAM','HAB','ZEP','HAG','ZEC','MAL']}
+];
+ZIP_SCOPES.forEach(scope => {
+  const option = document.createElement('option');
+  option.value = scope.id;
+  const members = scope.ids ? OT_BOOKS.filter(book => scope.ids.includes(book.id)) : OT_BOOKS;
+  const chapters = members.reduce((sum, book) => sum + book.chapters, 0);
+  option.textContent = `${scope.label} (${members.length} books, ${chapters} chapters)`;
+  zipScopeSelect.appendChild(option);
+});
+
+function selectedZipScope() {
+  const scope = ZIP_SCOPES.find(s => s.id === zipScopeSelect.value);
+  if (!scope) throw new Error('Select an Old Testament ZIP group.');
+  const books = scope.ids ? OT_BOOKS.filter(book => scope.ids.includes(book.id)) : OT_BOOKS;
+  if (!books.length || (scope.ids && books.length !== scope.ids.length)) {
+    throw new Error('The selected ZIP group is incomplete.');
+  }
+  return {scope, books};
+}
 
 function getSelectedBook() {
   return OT_BOOKS.find(
@@ -342,10 +398,13 @@ function validateChapter(
 }
 
 function setBusy(value) {
+  if (value) clearZip();
   busy = value;
   generateButton.disabled = value;
   validateButton.disabled = value;
   validateAllButton.disabled = value;
+  generateZipButton.disabled = value;
+  zipScopeSelect.disabled = value;
   bookSelect.disabled = value;
   cancelButton.hidden = !value;
   cancelButton.disabled = !value;
@@ -606,7 +665,185 @@ async function validateAll() {
   }
 }
 
+// PKWARE APPNOTE: method 0 (stored), UTF-8 flag, CRC-32, local headers,
+// central directory and EOCD. No ZIP64, compression or third-party code.
+const MAX_ZIP_BYTES = 64 * 1024 * 1024;
+const crcTable = Uint32Array.from({ length: 256 }, (_, value) => {
+  for (let bit = 0; bit < 8; bit++) {
+    value = (value >>> 1) ^ ((value & 1) ? 0xedb88320 : 0);
+  }
+  return value >>> 0;
+});
+
+function crc32(bytes) {
+  let crc = 0xffffffff;
+  for (const byte of bytes) crc = (crc >>> 8) ^ crcTable[(crc ^ byte) & 255];
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+function createStoredZip() {
+  const encoder = new TextEncoder();
+  const parts = [];
+  const directory = [];
+  const names = new Set();
+  let offset = 0;
+  let payloadBytes = 0;
+  return {
+    add(name, text) {
+      if (!/^(?:[1-3]?[A-Z]{2,3}\.json|validation-report\.txt)$/.test(name) || names.has(name)) {
+        throw new Error('Invalid or duplicate ZIP filename.');
+      }
+      // UTF-8 takes at least one byte per JS code unit for these serialized files.
+      if (payloadBytes + text.length > MAX_ZIP_BYTES) throw new Error('ZIP exceeds the 64 MiB safety limit.');
+      const bytes = encoder.encode(text);
+      if (payloadBytes + bytes.length > MAX_ZIP_BYTES) throw new Error('ZIP exceeds the 64 MiB safety limit.');
+      const filename = encoder.encode(name);
+      const checksum = crc32(bytes);
+      const local = new Uint8Array(30 + filename.length);
+      const l = new DataView(local.buffer);
+      l.setUint32(0, 0x04034b50, true);
+      l.setUint16(4, 20, true);
+      l.setUint16(6, 0x0800, true);
+      l.setUint16(12, 33, true); // DOS date: 1980-01-01; time: midnight.
+      l.setUint32(14, checksum, true);
+      l.setUint32(18, bytes.length, true);
+      l.setUint32(22, bytes.length, true);
+      l.setUint16(26, filename.length, true);
+      local.set(filename, 30);
+      const central = new Uint8Array(46 + filename.length);
+      const c = new DataView(central.buffer);
+      c.setUint32(0, 0x02014b50, true);
+      c.setUint16(4, 20, true);
+      c.setUint16(6, 20, true);
+      c.setUint16(8, 0x0800, true);
+      c.setUint16(14, 33, true);
+      c.setUint32(16, checksum, true);
+      c.setUint32(20, bytes.length, true);
+      c.setUint32(24, bytes.length, true);
+      c.setUint16(28, filename.length, true);
+      c.setUint32(42, offset, true);
+      central.set(filename, 46);
+      // Blob parts keep serialized books, not every book's object tree.
+      parts.push(local, new Blob([bytes]));
+      directory.push(central);
+      names.add(name);
+      offset += local.length + bytes.length;
+      payloadBytes += bytes.length;
+    },
+    finish() {
+      const directorySize = directory.reduce((sum, entry) => sum + entry.length, 0);
+      const end = new Uint8Array(22);
+      const e = new DataView(end.buffer);
+      e.setUint32(0, 0x06054b50, true);
+      e.setUint16(8, directory.length, true);
+      e.setUint16(10, directory.length, true);
+      e.setUint32(12, directorySize, true);
+      e.setUint32(16, offset, true);
+      return new Blob([...parts, ...directory, end], { type: 'application/zip' });
+    }
+  };
+}
+
+
+
+async function generateOtZip() {
+  if (busy) return;
+
+  let selection;
+  try {
+    selection = selectedZipScope();
+  } catch (error) {
+    log('FAILED\n\n' + error.message, 'err');
+    return;
+  }
+
+  const {scope, books} = selection;
+  const totalChapters = books.reduce((sum, book) => sum + book.chapters, 0);
+  activeController = new AbortController();
+  const signal = activeController.signal;
+  setBusy(true);
+
+  const lines = [
+    'OLD TESTAMENT BULK ZIP GENERATION',
+    'Scope: ' + scope.label,
+    'Started: ' + new Date().toISOString(),
+    ''
+  ];
+  let booksDone = 0;
+  let chaptersDone = 0;
+  let versesDone = 0;
+  let annotationsDone = 0;
+
+  try {
+    const zip = createStoredZip();
+    for (const [index, book] of books.entries()) {
+      if (signal.aborted) throw new Error('Operation cancelled.');
+
+      // Scope book objects to allow memory reclamation after each ZIP entry.
+      await (async () => {
+        let chapterNumber = 0;
+        const bookResult = await processBook(book, message => {
+          chapterNumber++;
+          log([...lines, '',
+            `Book ${index + 1} of ${books.length}: ${book.name} (${book.id})`,
+            `Chapter ${chapterNumber} of ${book.chapters}`,
+            `Completed chapters: ${chaptersDone} of ${totalChapters}`,
+            message
+          ].join('\n'));
+        }, true, signal);
+        if (signal.aborted) throw new Error('Operation cancelled.');
+        zip.add(`${book.id}.json`, serializeBook(book, bookResult.chapters));
+        booksDone++;
+        chaptersDone += book.chapters;
+        versesDone += bookResult.totalVerseCount;
+        annotationsDone += bookResult.totalAnnotationCount;
+        lines.push(`${book.id}.json: PASS — ${book.chapters} chapters, ${bookResult.totalVerseCount} verses, ${bookResult.totalAnnotationCount} annotations`);
+      })();
+
+      // Permit screen updates, garbage collection and cancellation between books.
+      await new Promise(resolve => setTimeout(resolve, 0));
+      if (signal.aborted) throw new Error('Operation cancelled.');
+    }
+    if (booksDone !== books.length || chaptersDone !== totalChapters) {
+      throw new Error('Incomplete book or chapter count.');
+    }
+    lines.push('',
+      `${booksDone} of ${books.length} books passed. 0 failed.`,
+      `${chaptersDone} of ${totalChapters} chapters validated.`,
+      `Verses: ${versesDone}; Strong's annotations: ${annotationsDone}.`,
+      'ZIP integrity: CRC-32 checksums on every entry.',
+      'Source: BSB-publishing/bsb-data-output main/base/display (CC0).',
+      'No application or live dataset files were changed.');
+    if (signal.aborted) throw new Error('Operation cancelled.');
+
+    zip.add('validation-report.txt', lines.join('\n'));
+    const blob = zip.finish();
+    if (signal.aborted) throw new Error('Operation cancelled.');
+    zipUrl = URL.createObjectURL(blob);
+    zipLink.href = zipUrl;
+    zipLink.download = scope.filename;
+    zipLink.textContent = 'Download ' + scope.filename;
+    zipLink.hidden = false;
+    log([...lines, '',
+      `Ready: ${(blob.size / (1024 * 1024)).toFixed(1)} MiB.`,
+      'Click the download link above once. No download starts automatically.'
+    ].join('\n'), 'ok');
+  } catch (error) {
+    clearZip();
+    log([...lines, '',
+      signal.aborted ? 'CANCELLED' : 'FAILED',
+      error.message,
+      'No ZIP was offered or downloaded. If the 64 MiB limit was exceeded, choose a smaller group.'
+    ].join('\n'), signal.aborted ? '' : 'err');
+  } finally {
+    activeController = null;
+    setBusy(false);
+    updateButtonLabel();
+  }
+}
+
 generateButton.addEventListener('click', generate);
+generateZipButton.addEventListener('click', generateOtZip);
 validateAllButton.addEventListener('click', validateAll);
 validateButton.addEventListener('click', validateSelected);
 cancelButton.addEventListener('click', () => {
