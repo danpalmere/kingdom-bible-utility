@@ -53,6 +53,7 @@
 <body>
 
 <h1>Generate Old Testament Deep Study Data</h1>
+<p><strong>Scripture text and lexical coverage are separate.</strong> Every numbered verse is checked against HelloAO BSB. Verified publisher mappings recover 117 absent first verses. When source wording or punctuation differs, the reader text is retained with no guessed mappings. Chapter coverage records list text-only verses and withheld annotation counts. PASS establishes complete numbered Scripture text and valid retained mappings, not exhaustive Hebrew lexical coverage.</p>
 
 <p>
   Select an Old Testament book. This utility downloads the BSB
@@ -221,6 +222,91 @@ updateButtonLabel();
 function log(message, className = '') {
   statusEl.className = className;
   statusEl.textContent = message;
+}
+
+
+// Step 3G.5A: publisher release v5.16, BSB_strongs_usfm.zip.
+// ZIP SHA-256: 2842f610302987d66afeff376d03a9d85edba82f4dadd88464d966e09f8247da.
+// Psalm d blocks are superscriptions; ZEC 12:1 d text is numbered Scripture.
+// Only the 117 absent verse-1 records are recovered. Never infer Hebrew IDs.
+const VERSE_ONE_REPAIRS = {"PSA":{"3":[["O LORD","H3068"],[", ",null],["how","H4100"],[" ",null],["my foes","H6862"],[" ",null],["have increased","H7231"],["! ",null],["How many","H7227"],[" ",null],["rise up","H6965"],[" ",null],["against me","H5921"],["!",null]],"4":[["Answer me","H6030"],[" ",null],["when I call","H7121"],[", ",null],["O God","H430"],[" ",null],["of my righteousness","H6664"],["! ",null],["You have relieved","H7337"],[" my ",null],["distress","H6862"],["; ",null],["show me grace","H2603"],[" ",null],["and hear","H8085"],[" ",null],["my prayer","H8605"],[".",null]],"5":[["Give ear","H238"],[" ",null],["to my words","H561"],[", ",null],["O LORD","H3068"],["; ",null],["consider","H995"],[" ",null],["my groaning","H1901"],[".",null]],"6":[["O LORD","H3068"],[", ",null],["do not","H408"],[" ",null],["rebuke me","H3198"],[" ",null],["in Your anger","H639"],[" ",null],["or","H408"],[" ",null],["discipline me","H3256"],[" ",null],["in Your wrath","H2534"],[".",null]],"7":[["O LORD","H3068"],[" ",null],["my God","H430"],[", ",null],["I take refuge","H2620"],[" in You; ",null],["save me","H3467"],[" ",null],["and deliver me","H5337"],[" ",null],["from all","H3605"],[" ",null],["my pursuers","H7291"],[",",null]],"8":[["O LORD","H3068"],[", ",null],["our Lord","H113"],[", ",null],["how","H4100"],[" ",null],["majestic","H117"],[" ",null],["is Your name","H8034"],[" ",null],["in all","H3605"],[" ",null],["the earth","H776"],["! ",null],["You","H834"],[" ",null],["have set","H5414"],[" ",null],["Your glory","H1935"],[" ",null],["above","H5921"],[" ",null],["the heavens","H8064"],[".",null]],"9":[["I will give thanks","H3034"],[" ",null],["to the LORD","H3068"],[" ",null],["with all","H3605"],[" ",null],["my heart","H3820"],["; ",null],["I will recount","H5608"],[" ",null],["all","H3605"],[" ",null],["Your wonders","H6381"],[".",null]],"11":[["In the LORD","H3068"],[" ",null],["I take refuge","H2620"],[". ",null],["How then","H349"],[" ",null],["can you say","H559"],[" ",null],["to me","H5315"],[": “",null],["Flee","H5110"],[" ",null],["like a bird","H6833"],[" ",null],["to your mountain","H2022"],["!",null]],"12":[["Help","H3467"],[", ",null],["O LORD","H3068"],[", ",null],["for","H3588"],[" ",null],["the godly","H2623"],[" ",null],["are no more","H1584"],["; ",null],["the faithful","H529"],[" ",null],["have vanished","H6461"],[" ",null],["from among","H1121"],[" ",null],["men","H120"],[".",null]],"13":[["How long","H5704"],[", ",null],["O LORD","H3068"],["? ",null],["Will You forget","H7911"],[" ",null],["me","H575"],[" ",null],["forever","H5331"],["? ",null],["How long","H5704"],[" ",null],["will You hide","H5641"],[" ",null],["Your face","H6440"],[" ",null],["from me","H4480"],["?",null]],"14":[["The fool","H5036"],[" ",null],["says","H559"],[" ",null],["in his heart","H3820"],[", “There is ",null],["no","H369"],[" ",null],["God","H430"],[".” ",null],["They are corrupt","H7843"],["; ",null],["their acts","H5949"],[" ",null],["are vile","H8581"],[". ",null],["There is no","H369"],[" ",null],["one who does","H6213"],[" ",null],["good","H2896"],[".",null]],"15":[["O LORD","H3068"],[", ",null],["who","H4310"],[" ",null],["may abide","H1481"],[" ",null],["in Your tent","H168"],["? ",null],["Who","H4310"],[" ",null],["may dwell","H7931"],[" ",null],["on Your holy","H6944"],[" ",null],["mountain","H2022"],["?",null]],"16":[["Preserve me","H8104"],[", ",null],["O God","H410"],[", ",null],["for","H3588"],[" in You ",null],["I take refuge","H2620"],[".",null]],"17":[["Hear","H8085"],[", ",null],["O LORD","H3068"],[", ",null],["my righteous plea","H6664"],["; ",null],["listen","H7181"],[" ",null],["to my cry","H7440"],[". ",null],["Give ear","H238"],[" ",null],["to my prayer","H8605"],["— it comes ",null],["from lips","H8193"],[" ",null],["free of","H3808"],[" ",null],["deceit","H4820"],[".",null]],"18":[["I love You","H7355"],[", ",null],["O LORD","H3068"],[", ",null],["my strength","H2391"],[".",null]],"19":[["The heavens","H8064"],[" ",null],["declare","H5608"],[" ",null],["the glory","H3519"],[" ",null],["of God","H410"],["; ",null],["the skies","H7549"],[" ",null],["proclaim","H5046"],[" ",null],["the work","H4639"],[" ",null],["of His hands","H3027"],[".",null]],"20":[["May the LORD","H3068"],[" ",null],["answer you","H6030"],[" ",null],["in the day","H3117"],[" ",null],["of trouble","H6869"],["; ",null],["may the name","H8034"],[" ",null],["of the God","H430"],[" ",null],["of Jacob","H3290"],[" ",null],["protect you","H7682"],[".",null]],"21":[["O LORD","H3068"],[", ",null],["the king","H4428"],[" ",null],["rejoices","H8055"],[" ",null],["in Your strength","H5797"],[". ",null],["How","H4100"],[" ",null],["greatly","H1523"],[" ",null],["he exults","H3966"],[" ",null],["in Your salvation","H3444"],["!",null]],"22":[["My God","H410"],[", ",null],["my God","H410"],[", ",null],["why","H4100"],[" ",null],["have You forsaken me","H5800"],["? ",null],["Why are You so far","H7350"],[" ",null],["from saving me","H3444"],[", so far ",null],["from my words","H1697"],[" ",null],["of groaning","H7581"],["?",null]],"23":[["The LORD","H3068"],[" ",null],["is my shepherd","H7462"],["; ",null],["I shall not","H3808"],[" ",null],["want","H2637"],[".",null]],"24":[["The earth","H776"],[" is ",null],["the LORD’s","H3068"],[", ",null],["and the fullness thereof","H4393"],[", ",null],["the world","H8398"],[" ",null],["and all who dwell","H3427"],[" therein.",null]],"25":[["To You","H413"],[", ",null],["O LORD","H3068"],[", ",null],["I lift","H5375"],[" ",null],["up my soul","H5315"],[";",null]],"26":[["Vindicate me","H8199"],[", ",null],["O LORD","H3068"],["! ",null],["For","H3588"],[" ",null],["I","H589"],[" ",null],["have walked","H1980"],[" ",null],["with integrity","H8537"],["; ",null],["I have trusted","H982"],[" ",null],["in the LORD","H3068"],[" ",null],["without","H3808"],[" ",null],["wavering","H4571"],[".",null]],"27":[["The LORD","H3068"],[" ",null],["is my light","H216"],[" ",null],["and my salvation","H3468"],["— ",null],["whom","H4310"],[" ",null],["shall I fear","H3372"],["? ",null],["The LORD","H3068"],[" ",null],["is the stronghold","H4581"],[" ",null],["of my life","H2416"],["— ",null],["whom","H4310"],[" ",null],["shall I dread","H6342"],["?",null]],"28":[["To You","H413"],[", ",null],["O LORD","H3068"],[", ",null],["I call","H7121"],["; ",null],["be not","H408"],[" ",null],["deaf","H2790"],[" ",null],["to me","H4480"],[", ",null],["O my Rock","H6697"],[". ",null],["For if","H6435"],[" ",null],["You remain silent","H2814"],[", ",null],["I will be","H4911"],[" ",null],["like","H5973"],[" ",null],["those descending","H3381"],[" ",null],["to the Pit","H953"],[".",null]],"29":[["Ascribe","H3051"],[" ",null],["to the LORD","H3068"],[", ",null],["O heavenly beings","H1121"],[", ",null],["ascribe","H3051"],[" ",null],["to the LORD","H3068"],[" ",null],["glory","H3519"],[" ",null],["and strength","H5797"],[".",null]],"30":[["I will exalt You","H7311"],[", ",null],["O LORD","H3068"],[", ",null],["for","H3588"],[" ",null],["You have lifted me up","H1802"],[" ",null],["and have not","H3808"],[" ",null],["allowed my foes","H341"],[" ",null],["to rejoice","H8055"],[" over me.",null]],"31":[["In You, ",null],["O LORD","H3068"],[", ",null],["I have taken refuge","H2620"],["; ",null],["let me never","H408"],[" ",null],["be put to shame","H954"],["; ",null],["save me","H6403"],[" ",null],["by Your righteousness","H6666"],[".",null]],"32":[["Blessed is he","H835"],[" ",null],["whose transgressions","H6588"],[" ",null],["are forgiven","H5375"],[", ",null],["whose sins","H2401"],[" ",null],["are covered","H3680"],[".",null]],"34":[["I will bless","H1288"],[" ",null],["the LORD","H3068"],[" ",null],["at all","H3605"],[" ",null],["times","H6256"],["; ",null],["His praise","H8416"],[" ",null],["will always","H8548"],[" ",null],["be on my lips","H6310"],[".",null]],"35":[["Contend","H7378"],[" ",null],["with my opponents","H3401"],[", ",null],["O LORD","H3068"],["; ",null],["fight against those","H3898"],[" ",null],["who fight against me","H3898"],[".",null]],"36":[["An oracle","H5002"],[" ",null],["is in","H7130"],[" ",null],["my heart","H3820"],[" ",null],["regarding the transgression","H6588"],[" ",null],["of the wicked man","H7563"],[": ",null],["There is no","H369"],[" ",null],["fear","H6343"],[" ",null],["of God","H430"],[" ",null],["before","H5048"],[" ",null],["his eyes","H5869"],[".",null]],"37":[["Do not","H408"],[" ",null],["fret over","H2734"],[" ",null],["those who do evil","H7489"],["; ",null],["do not","H408"],[" ",null],["envy","H7065"],[" ",null],["those who do","H6213"],[" ",null],["wrong","H5766"],[".",null]],"38":[["O LORD","H3068"],[", ",null],["do not","H408"],[" ",null],["rebuke me","H3198"],[" ",null],["in Your anger","H7110"],[" ",null],["or discipline me","H3256"],[" ",null],["in Your wrath","H2534"],[".",null]],"39":[["I said","H559"],[", “",null],["I will watch","H8104"],[" ",null],["my ways","H1870"],[" ",null],["so that I will not sin","H2398"],[" ",null],["with my tongue","H3956"],["; ",null],["I will guard","H8104"],[" ",null],["my mouth","H6310"],[" ",null],["with a muzzle","H4269"],[" ",null],["as long as","H5750"],[" ",null],["the wicked","H7563"],[" ",null],["are present","H5048"],[".”",null]],"40":[["I waited patiently for","H6960"],[" ",null],["the LORD","H3068"],["; ",null],["He inclined","H5186"],[" ",null],["to me","H413"],[" ",null],["and heard","H8085"],[" ",null],["my cry","H7775"],[".",null]],"41":[["Blessed","H835"],[" is ",null],["the one who cares","H7919"],[" ",null],["for","H413"],[" ",null],["the poor","H1800"],["; ",null],["the LORD","H3068"],[" ",null],["will deliver him","H4422"],[" ",null],["in the day","H3117"],[" ",null],["of trouble","H7451"],[".",null]],"42":[["As the deer","H354"],[" ",null],["pants","H6165"],[" ",null],["for","H5921"],[" ",null],["streams","H650"],[" ",null],["of water","H4325"],[", ",null],["so","H3651"],[" ",null],["my soul","H5315"],[" ",null],["longs","H6165"],[" ",null],["after You","H413"],[", ",null],["O God","H430"],[".",null]],"44":[["We have heard","H8085"],[" ",null],["with our ears","H241"],[", ",null],["O God","H430"],["; ",null],["our fathers","H1"],[" ",null],["have told","H5608"],[" us ",null],["the work","H6467"],[" ",null],["You did","H6466"],[" ",null],["in their days","H3117"],[", ",null],["in the days","H3117"],[" ",null],["of old","H6924"],[".",null]],"45":[["My heart","H3820"],[" ",null],["is stirred","H7370"],[" ",null],["by a noble","H2896"],[" ",null],["theme","H1697"],[" ",null],["as I","H589"],[" ",null],["recite","H559"],[" ",null],["my verses","H4639"],[" ",null],["to the king","H4428"],["; ",null],["my tongue","H3956"],[" ",null],["is the pen","H5842"],[" ",null],["of a skillful","H4106"],[" ",null],["writer","H5608"],[".",null]],"46":[["God","H430"],[" is our ",null],["refuge","H4268"],[" ",null],["and strength","H5797"],[", ",null],["an ever-present","H4672"],[" ",null],["help","H5833"],[" ",null],["in times of trouble","H6869"],[".",null]],"47":[["Clap","H8628"],[" ",null],["your hands","H3709"],[", ",null],["all you peoples","H3605"],["; ",null],["shout","H7321"],[" ",null],["unto God","H430"],[" ",null],["with a voice","H6963"],[" ",null],["of triumph","H7440"],[".",null]],"48":[["Great is","H1419"],[" ",null],["the LORD","H3068"],[", ",null],["and greatly","H3966"],[" ",null],["to be praised","H1984"],[" ",null],["in the city","H5892"],[" ",null],["of our God","H430"],[", ",null],["His holy","H6944"],[" ",null],["mountain","H2022"],[".",null]],"49":[["Hear","H8085"],[" ",null],["this","H2063"],[", ",null],["all you peoples","H3605"],["; ",null],["listen","H238"],[", ",null],["all","H3605"],[" ",null],["inhabitants","H3427"],[" ",null],["of the world","H2465"],[",",null]],"50":[["The Mighty One","H410"],[", ",null],["God","H430"],[" ",null],["the LORD","H3068"],[", ",null],["speaks","H1696"],[" ",null],["and summons","H7121"],[" ",null],["the earth","H776"],[" ",null],["from where the sun rises","H4217"],[" ",null],["to","H5704"],[" ",null],["where it sets","H3996"],[".",null]],"51":[["Have mercy on me","H2603"],[", ",null],["O God","H430"],[", ",null],["according to Your loving devotion","H2617"],["; ",null],["according to Your great","H7230"],[" ",null],["compassion","H7356"],[", ",null],["blot out","H4229"],[" ",null],["my transgressions","H6588"],[".",null]],"52":[["Why","H4100"],[" ",null],["do you boast","H1984"],[" ",null],["of evil","H7451"],[", ",null],["O mighty man","H1368"],["? ",null],["The loving devotion","H2617"],[" ",null],["of God","H410"],[" endures ",null],["all","H3605"],[" ",null],["day long","H3117"],[".",null]],"53":[["The fool","H5036"],[" ",null],["says","H559"],[" ",null],["in his heart","H3820"],[", “There is ",null],["no","H369"],[" ",null],["God","H430"],[".” ",null],["They are corrupt","H7843"],["; ",null],["their ways","H8581"],[" ",null],["are vile","H5766"],[". ",null],["There is no","H369"],[" ",null],["one who does","H6213"],[" ",null],["good","H2896"],[".",null]],"54":[["Save me","H3467"],[", ",null],["O God","H430"],[", ",null],["by Your name","H8034"],[", ",null],["and vindicate me","H1777"],[" ",null],["by Your might","H1369"],["!",null]],"55":[["Listen","H238"],[" ",null],["to my prayer","H8605"],[", ",null],["O God","H430"],[", ",null],["and do not","H408"],[" ",null],["ignore","H5956"],[" ",null],["my plea","H8467"],[".",null]],"56":[["Be merciful to me","H2603"],[", ",null],["O God","H430"],[", ",null],["for","H3588"],[" ",null],["men","H582"],[" ",null],["are hounding me","H7602"],["; ",null],["all","H3605"],[" ",null],["day","H3117"],[" ",null],["they press","H3905"],[" ",null],["their attack","H3898"],[".",null]],"57":[["Have mercy on me","H2603"],[", ",null],["O God","H430"],[", ",null],["have mercy","H2603"],[", ",null],["for","H3588"],[" in You ",null],["my soul","H5315"],[" ",null],["takes refuge","H2620"],[". ",null],["In the shadow","H6738"],[" ",null],["of Your wings","H3671"],[" ",null],["I will take shelter","H2620"],[" ",null],["until","H5704"],[" ",null],["the danger","H1942"],[" ",null],["has passed","H5674"],[".",null]],"58":[["Do you indeed","H552"],[" ",null],["speak","H1696"],[" ",null],["justly","H6664"],[", ",null],["O rulers","H482"],["? ",null],["Do you judge","H8199"],[" ",null],["uprightly","H4339"],[", ",null],["O sons","H1121"],[" ",null],["of men","H120"],["?",null]],"59":[["Deliver me","H5337"],[" ",null],["from my enemies","H341"],[", ",null],["O my God","H430"],["; ",null],["protect me","H7682"],[" ",null],["from those who rise against me","H6965"],[".",null]],"60":[["You have rejected us","H2186"],[", ",null],["O God","H430"],["; ",null],["You have broken us","H6555"],["; ",null],["You have been angry","H599"],["; ",null],["restore","H7725"],[" us!",null]],"61":[["Hear","H8085"],[" ",null],["my cry","H7440"],[", ",null],["O God","H430"],["; ",null],["attend","H7181"],[" ",null],["to my prayer","H8605"],[".",null]],"62":[["In","H413"],[" ",null],["God","H430"],[" ",null],["alone","H389"],[" ",null],["my soul","H5315"],[" ",null],["finds rest","H1747"],["; ",null],["my salvation","H3444"],[" ",null],["comes from Him","H4480"],[".",null]],"63":[["O God","H430"],[", ",null],["You are my God","H410"],[". ",null],["Earnestly I seek","H7836"],[" ",null],["You","H859"],["; my ",null],["soul","H5315"],[" ",null],["thirsts for You","H6770"],[". My ",null],["body","H1320"],[" ",null],["yearns for You","H3642"],[" ",null],["in a dry","H6723"],[" ",null],["and weary","H5889"],[" ",null],["land","H776"],[" ",null],["without","H1097"],[" ",null],["water","H4325"],[".",null]],"64":[["Hear","H8085"],[", ",null],["O God","H430"],[", ",null],["my voice","H6963"],[" ",null],["of complaint","H7879"],["; ",null],["preserve","H5341"],[" ",null],["my life","H2416"],[" ",null],["from dread","H6343"],[" ",null],["of the enemy","H341"],[".",null]],"65":[["Praise","H8416"],[" ",null],["awaits","H1747"],[" You, ",null],["O God","H430"],[", ",null],["in Zion","H6726"],["; to You ",null],["our vows","H5088"],[" ",null],["will be fulfilled","H7999"],[".",null]],"66":[["Make a joyful noise","H7321"],[" ",null],["to God","H430"],[", ",null],["all","H3605"],[" ",null],["the earth","H776"],["!",null]],"67":[["May God","H430"],[" ",null],["be gracious to us","H2603"],[" ",null],["and bless us","H1288"],[", and ",null],["cause His face","H6440"],[" ",null],["to shine upon","H215"],[" ",null],["us","H854"],[", ",null],["Selah","H5542"]],"68":[["God","H430"],[" ",null],["arises","H6965"],[". ",null],["His enemies","H341"],[" ",null],["are scattered","H6327"],[", ",null],["and those who hate Him","H8130"],[" ",null],["flee","H5127"],[" ",null],["His presence","H6440"],[".",null]],"69":[["Save me","H3467"],[", ",null],["O God","H430"],[", ",null],["for","H3588"],[" ",null],["the waters","H4325"],[" ",null],["are up","H935"],[" ",null],["to","H5704"],[" ",null],["my neck","H5315"],[".",null]],"70":[["Make haste, ",null],["O God","H430"],[", ",null],["to deliver me","H5337"],["! ",null],["Hurry","H2363"],[", ",null],["O LORD","H3068"],[", ",null],["to help me","H5833"],["!",null]],"72":[["Endow","H5414"],[" ",null],["the king","H4428"],[" ",null],["with Your justice","H4941"],[", ",null],["O God","H430"],[", ",null],["and the son","H1121"],[" ",null],["of the king","H4428"],[" ",null],["with Your righteousness","H6666"],[".",null]],"73":[["Surely","H389"],[" ",null],["God","H430"],[" is ",null],["good","H2896"],[" ",null],["to Israel","H3478"],[", ",null],["to those who are pure","H1249"],[" ",null],["in heart","H3824"],[".",null]],"74":[["Why","H4100"],[" ",null],["have You rejected us forever","H2186"],[", ",null],["O God","H430"],["? ",null],["Why does Your anger","H639"],[" ",null],["smolder","H6225"],[" ",null],["against the sheep","H6629"],[" ",null],["of Your pasture","H4830"],["?",null]],"75":[["We give thanks","H3034"],[" to You, ",null],["O God","H430"],["; ",null],["we give thanks","H3034"],[", ",null],["for Your Name","H8034"],[" ",null],["is near","H7138"],[". ",null],["The people declare","H5608"],[" ",null],["Your wondrous works","H6381"],[".",null]],"76":[["God","H430"],[" ",null],["is known","H3045"],[" ",null],["in Judah","H3063"],["; ",null],["His name","H8034"],[" ",null],["is great","H1419"],[" ",null],["in Israel","H3478"],[".",null]],"77":[["I cried out","H6963"],[" ",null],["to","H413"],[" ",null],["God","H430"],["; ",null],["I cried aloud","H6817"],[" ",null],["to","H413"],[" ",null],["God","H430"],[" ",null],["to hear","H238"],[" ",null],["me","H413"],[".",null]],"78":[["Give ear","H238"],[", ",null],["O my people","H5971"],[", ",null],["to my instruction","H8451"],["; ",null],["listen","H5186"],[" ",null],["to the words","H561"],[" ",null],["of my mouth","H6310"],[".",null]],"79":[["The nations","H1471"],[", ",null],["O God","H430"],[", ",null],["have invaded","H935"],[" ",null],["Your inheritance","H5159"],["; ",null],["they have defiled","H2930"],[" ",null],["Your holy","H6944"],[" ",null],["temple","H1964"],[" and ",null],["reduced","H7760"],[" ",null],["Jerusalem","H3389"],[" ",null],["to rubble","H5856"],[".",null]],"80":[["Hear us","H238"],[", ",null],["O Shepherd","H7462"],[" ",null],["of Israel","H3478"],[", ",null],["who leads","H5090"],[" ",null],["Joseph","H3130"],[" ",null],["like a flock","H6629"],["; ",null],["You who sit enthroned","H3427"],[" between ",null],["the cherubim","H3742"],[", ",null],["shine forth","H3313"]],"81":[["Sing for joy","H7442"],[" ",null],["to God","H430"],[" ",null],["our strength","H5797"],["; ",null],["make a joyful noise","H7321"],[" ",null],["to the God","H430"],[" ",null],["of Jacob","H3290"],[".",null]],"82":[["God","H430"],[" ",null],["presides","H5324"],[" ",null],["in the divine","H410"],[" ",null],["assembly","H5712"],["; ",null],["He renders judgment","H8199"],[" ",null],["among","H7130"],[" ",null],["the gods","H430"],[":",null]],"83":[["O God","H430"],[", be ",null],["not","H408"],[" ",null],["silent","H1824"],["; be ",null],["not","H408"],[" ",null],["speechless","H2790"],["; be ",null],["not","H408"],[" ",null],["still","H8252"],[", ",null],["O God","H410"],[".",null]],"84":[["How","H4100"],[" ",null],["lovely","H3039"],[" ",null],["is Your dwelling place","H4908"],[", ",null],["O LORD","H3068"],[" ",null],["of Hosts","H6635"],["!",null]],"85":[["You showed favor","H7521"],[" ",null],["to Your land","H776"],[", ",null],["O LORD","H3068"],["; ",null],["You restored","H7725"],[" ",null],["Jacob","H3290"],[" ",null],["from captivity","H7622"],[".",null]],"86":[["Incline","H5186"],[" ",null],["Your ear","H241"],[", ",null],["O LORD","H3068"],[", ",null],["and answer me","H6030"],[", ",null],["for","H3588"],[" ",null],["I","H589"],[" ",null],["am poor","H6041"],[" ",null],["and needy","H34"],[".",null]],"87":[["He has founded His city","H3248"],[" ",null],["on the holy","H6944"],[" ",null],["mountains","H2042"],[".",null]],"88":[["O LORD","H3068"],[", ",null],["the God","H430"],[" ",null],["of my salvation","H3444"],[", ",null],["day","H3117"],[" ",null],["and night","H3915"],[" ",null],["I cry out","H6817"],[" ",null],["before You","H5048"],[".",null]],"89":[["I will sing","H7891"],[" ",null],["of the loving devotion","H2617"],[" ",null],["of the LORD","H3068"],[" ",null],["forever","H5769"],["; ",null],["with my mouth","H6310"],[" ",null],["I will proclaim","H3045"],[" ",null],["Your faithfulness","H530"],[" ",null],["to all","H1755"],[" ",null],["generations","H1755"],[".",null]],"90":[["Lord","H136"],[", ",null],["You","H859"],[" ",null],["have been","H1961"],[" our ",null],["dwelling place","H4583"],[" ",null],["through all","H1755"],[" ",null],["generations","H1755"],[".",null]],"92":[["It is good","H2896"],[" ",null],["to praise","H3034"],[" ",null],["the LORD","H3068"],[", ",null],["and to sing praises","H2167"],[" ",null],["to Your name","H8034"],[", ",null],["O Most High","H5945"],[",",null]],"98":[["Sing","H7891"],[" ",null],["to the LORD","H3068"],[" ",null],["a new","H2319"],[" ",null],["song","H7892"],[", ",null],["for","H3588"],[" ",null],["He has done","H6213"],[" ",null],["wonders","H6381"],["; ",null],["His right hand","H3225"],[" ",null],["and holy","H6944"],[" ",null],["arm","H2220"],[" ",null],["have gained Him the victory","H3467"],[".",null]],"100":[["Make a joyful noise","H7321"],[" ",null],["to the LORD","H3068"],[", ",null],["all","H3605"],[" ",null],["the earth","H776"],[".",null]],"101":[["I will sing","H7891"],[" ",null],["of","H2617"],[" Your loving devotion ",null],["and justice","H4941"],["; to You, ",null],["O LORD","H3068"],[", ",null],["I will sing praises","H2167"],[".",null]],"102":[["Hear","H8085"],[" ",null],["my prayer","H8605"],[", ",null],["O LORD","H3068"],["; ",null],["let my cry for help","H7775"],[" ",null],["come","H935"],[" ",null],["before You","H413"],[".",null]],"103":[["Bless","H1288"],[" ",null],["the LORD","H3068"],[", ",null],["O my soul","H5315"],["; ",null],["all","H3605"],[" ",null],["that is within me","H7130"],[", bless ",null],["His holy","H6944"],[" ",null],["name","H8034"],[".",null]],"108":[["My heart","H3820"],[" ",null],["is steadfast","H3559"],[", ",null],["O God","H430"],["; ",null],["I will sing","H7891"],[" ",null],["and make music","H2167"],[" ",null],["with","H637"],[" ",null],["all my being","H3519"],[".",null]],"109":[["O God","H430"],[" ",null],["of my praise","H8416"],[", ",null],["be not","H408"],[" ",null],["silent","H2790"],[".",null]],"110":[["The LORD","H3068"],[" ",null],["said","H5002"],[" ",null],["to my Lord","H113"],[": “",null],["Sit","H3427"],[" ",null],["at My right hand","H3225"],[" ",null],["until","H5704"],[" ",null],["I make","H7896"],[" ",null],["Your enemies","H341"],[" ",null],["a footstool","H1916"],[" ",null],["for Your feet","H7272"],[".”",null]],"120":[["In my distress","H6869"],[" ",null],["I cried","H7121"],[" ",null],["to","H413"],[" ",null],["the LORD","H3068"],[", ",null],["and He answered me","H6030"],[".",null]],"121":[["I lift up","H5375"],[" ",null],["my eyes","H5869"],[" ",null],["to","H413"],[" ",null],["the hills","H2022"],[". ",null],["From where","H370"],[" ",null],["does my help","H5828"],[" ",null],["come","H935"],["?",null]],"122":[["I was glad","H8055"],[" ",null],["when they said","H559"],[" to me, “",null],["Let us go","H1980"],[" ",null],["to the house","H1004"],[" ",null],["of the LORD","H3068"],[".”",null]],"123":[["I lift up","H5375"],[" ",null],["my eyes","H5869"],[" ",null],["to You","H413"],[", ",null],["the One enthroned","H3427"],[" ",null],["in heaven","H8064"],[".",null]],"124":[["If the LORD","H3068"],[" ",null],["had not","H3884"],[" ",null],["been","H1961"],[" on our side— ",null],["let Israel","H3478"],[" ",null],["now","H4994"],[" ",null],["declare","H559"],["—",null]],"125":[["Those who trust","H982"],[" ",null],["in the LORD","H3068"],[" ",null],["are like Mount","H2022"],[" ",null],["Zion","H6726"],[". ",null],["It cannot","H3808"],[" ",null],["be moved","H4131"],["; ",null],["it abides","H3427"],[" ",null],["forever","H5769"],[".",null]],"126":[["When the LORD","H3068"],[" ",null],["restored","H7725"],[" ",null],["the captives","H7870"],[" ",null],["of Zion","H6726"],[", ",null],["we were","H1961"],[" ",null],["like dreamers","H2492"],[".",null]],"127":[["Unless","H518"],[" ",null],["the LORD","H3068"],[" ",null],["builds","H1129"],[" ",null],["the house","H1004"],[", ",null],["its builders","H1129"],[" ",null],["labor","H5998"],[" in ",null],["vain","H7723"],["; ",null],["unless","H518"],[" ",null],["the LORD","H3068"],[" ",null],["protects","H8104"],[" ",null],["the city","H5892"],[", ",null],["its watchmen","H8104"],[" ",null],["stand guard","H8245"],[" ",null],["in vain","H7723"],[".",null]],"128":[["Blessed","H835"],[" ",null],["are all","H3605"],[" ",null],["who fear","H3373"],[" ",null],["the LORD","H3068"],[", ",null],["who walk","H1980"],[" ",null],["in His ways","H1870"],["!",null]],"129":[["Many a time","H7227"],[" ",null],["they have persecuted me","H6887"],[" ",null],["from my youth","H5271"],["— ",null],["let Israel","H3478"],[" ",null],["now","H4994"],[" ",null],["declare","H559"],["—",null]],"130":[["Out of the depths","H4615"],[" ",null],["I cry to You","H7121"],[", ",null],["O LORD","H3068"],["!",null]],"131":[["My heart","H3820"],[" ",null],["is not","H3808"],[" ",null],["proud","H1361"],[", ",null],["O LORD","H3068"],[", ",null],["my eyes","H5869"],[" ",null],["are not","H3808"],[" ",null],["haughty","H7311"],[". ",null],["I do not","H3808"],[" ",null],["aspire","H1980"],[" ",null],["to great things","H1419"],[" ",null],["or matters too lofty","H6381"],[" ",null],["for me","H4480"],[".",null]],"132":[["O LORD","H3068"],[", ",null],["remember","H2142"],[" ",null],["on behalf","H853"],[" ",null],["of David","H1732"],[" ",null],["all","H3605"],[" ",null],["the hardships he endured","H6031"],[",",null]],"133":[["Behold","H2009"],[", ",null],["how","H4100"],[" ",null],["good","H2896"],[" ",null],["and","H4100"],[" ",null],["pleasant it is","H5273"],[" ",null],["when","H1571"],[" ",null],["brothers","H251"],[" ",null],["live","H3427"],[" ",null],["together in harmony","H3162"],["!",null]],"134":[["Come","H2009"],[", ",null],["bless","H1288"],[" ",null],["the LORD","H3068"],[", ",null],["all","H3605"],[" ",null],["you servants","H5650"],[" ",null],["of the LORD","H3068"],[" ",null],["who serve","H5975"],[" ",null],["by night","H3915"],[" ",null],["in the house","H1004"],[" ",null],["of the LORD","H3068"],["!",null]],"138":[["I give You thanks","H3034"],[" ",null],["with all","H3605"],[" ",null],["my heart","H3820"],["; ",null],["before","H5048"],[" ",null],["the gods","H430"],[" ",null],["I sing Your praises","H2167"],[".",null]],"139":[["O LORD","H3068"],[", ",null],["You have searched me","H2713"],[" ",null],["and known me","H3045"],[".",null]],"140":[["Rescue me","H2502"],[", ",null],["O LORD","H3068"],[", ",null],["from evil","H7451"],[" ",null],["men","H120"],[". ",null],["Protect me","H5341"],[" ",null],["from men","H376"],[" ",null],["of violence","H2555"],[",",null]],"141":[["I call upon You","H7121"],[", ",null],["O LORD","H3068"],["; ",null],["come quickly","H2363"],[" to me. ",null],["Hear","H238"],[" ",null],["my voice","H6963"],[" ",null],["when I call","H7121"],[" to You.",null]],"142":[["I cry","H2199"],[" ",null],["aloud","H6963"],[" ",null],["to","H413"],[" ",null],["the LORD","H3068"],["; ",null],["I lift my voice","H6963"],[" ",null],["to","H413"],[" ",null],["the LORD","H3068"],[" ",null],["for mercy","H2603"],[".",null]],"143":[["O LORD","H3068"],[", ",null],["hear","H8085"],[" ",null],["my prayer","H8605"],[". ",null],["In Your faithfulness","H530"],[", ",null],["give ear","H238"],[" ",null],["to","H413"],[" ",null],["my plea","H8469"],["; ",null],["in Your righteousness","H6666"],[", ",null],["answer me","H6030"],[".",null]],"144":[["Blessed","H1288"],[" be ",null],["the LORD","H3068"],[", ",null],["my Rock","H6697"],[", ",null],["who trains","H3925"],[" ",null],["my hands","H3027"],[" ",null],["for war","H7128"],[", ",null],["my fingers","H676"],[" ",null],["for battle","H4421"],[".",null]],"145":[["I will exalt You","H7311"],[", ",null],["my God","H430"],[" and ",null],["King","H4428"],["; ",null],["I will bless","H1288"],[" ",null],["Your name","H8034"],[" ",null],["forever","H5769"],[" ",null],["and ever","H5703"],[".",null]]},"ZEC":{"12":[["This is ",null],["the burden","H4853"],[" ",null],["of the word","H1697"],[" ",null],["of the LORD","H3068"],[" ",null],["concerning","H5921"],[" ",null],["Israel","H3478"],[". Thus ",null],["declares","H5002"],[" ",null],["the LORD","H3068"],[", ",null],["who stretches out","H5186"],[" ",null],["the heavens","H8064"],[" ",null],["and lays the foundation","H3245"],[" ",null],["of the earth","H776"],[", ",null],["who forms","H3335"],[" ",null],["the spirit","H7307"],[" ",null],["of man","H120"],[" ",null],["within him","H7130"],[":",null]]}};
+const MAPPING_REVISION = 'a4a2c0558c26e0281ba4e3f0e5479398459e2183';
+
+function readerVerseTexts(reader, book, chapter) {
+  if (reader?.chapter?.number !== chapter || reader?.book?.id !== (book.sourceId || book.id)) {
+    throw new Error('Reader book/chapter identity mismatch.');
+  }
+  const texts = {};
+  const text = items => items.map(item => typeof item === 'string' ? item :
+    (item?.text || (Array.isArray(item?.content) ? text(item.content) : ''))).join(' ');
+  for (const item of reader.chapter.content) {
+    if (item.type !== 'verse') continue;
+    if (!Number.isInteger(item.number) || item.number < 1 || texts[item.number] !== undefined) {
+      throw new Error('Invalid or duplicate reader verse number.');
+    }
+    texts[item.number] = text(item.content).replace(/\s+/g, ' ').trim();
+    if (!texts[item.number]) throw new Error('Empty reader verse.');
+  }
+  if (Object.keys(texts).length !== reader.numberOfVerses || !Object.keys(texts).length) {
+    throw new Error('Reader verse count mismatch.');
+  }
+  for (let verse = 1; verse <= reader.numberOfVerses; verse++) {
+    if (!texts[verse]) throw new Error('Reader verse sequence is incomplete.');
+  }
+  return texts;
+}
+
+function reconcileReader(converted, texts) {
+  const coverage = { textSource: 'HelloAO BSB', unmappedVerses: [],
+    withheldAnnotations: 0, sourceTextDifferences: [] };
+  const compact = text => text.replace(/\s/g, '');
+  for (const [verse, target] of Object.entries(texts)) {
+    const source = converted.verseTexts[verse];
+    if (source !== target) coverage.sourceTextDifferences.push(verse);
+    const originals = converted.annotations[verse];
+    // Conservative whole-verse gate: punctuation/wording changes withhold mappings.
+    // Whitespace alignment is monotonic and uses JS UTF-16 code-unit offsets.
+    if (compact(source) !== compact(target)) {
+      coverage.withheldAnnotations += originals.length;
+      converted.annotations[verse] = [];
+    } else {
+      const sourcePositions = [], targetPositions = [];
+      for (let i = 0; i < source.length; i++) if (!/\s/.test(source[i])) sourcePositions.push(i);
+      for (let i = 0; i < target.length; i++) if (!/\s/.test(target[i])) targetPositions.push(i);
+      const mapped = new Map(sourcePositions.map((pos, i) => [pos, targetPositions[i]]));
+      converted.annotations[verse] = originals.map(entry => {
+        const positions = sourcePositions.filter(pos => pos >= entry.start && pos < entry.end);
+        if (!positions.length) throw new Error('Whitespace-only annotation.');
+        const start = mapped.get(positions[0]), end = mapped.get(positions[positions.length - 1]) + 1;
+        if (compact(source.slice(entry.start, entry.end)) !== compact(target.slice(start, end))) {
+          throw new Error('Phrase alignment failed.');
+        }
+        return {start, end, strongs: entry.strongs.slice()};
+      });
+    }
+    converted.verseTexts[verse] = target;
+    if (!converted.annotations[verse].length) coverage.unmappedVerses.push(verse);
+  }
+  converted.coverage = coverage;
+  return converted;
+}
+
+async function fetchChapterJson(url, signal) {
+  const controller = new AbortController();
+  const cancel = () => controller.abort();
+  signal?.addEventListener('abort', cancel, {once: true});
+  const timeout = setTimeout(cancel, 30000);
+  try {
+    if (signal?.aborted) throw new Error('Operation cancelled.');
+    const response = await fetch(url, {cache:'no-store', signal:controller.signal});
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const value = await response.json();
+    if (signal?.aborted) throw new Error('Operation cancelled.');
+    return value;
+  } finally {
+    clearTimeout(timeout);
+    signal?.removeEventListener('abort', cancel);
+  }
 }
 
 function convertChapter(eng) {
@@ -413,48 +499,36 @@ async function processBook(book, onProgress, retainChapters = false, signal) {
   const chapters = {};
   let totalVerseCount = 0;
   let totalAnnotationCount = 0;
+  let unmappedVerseCount = 0;
+  let withheldAnnotationCount = 0;
   const validationErrors = [];
 
   for (let chapter = 1; chapter <= book.chapters; chapter++) {
     if (signal?.aborted) throw new Error("Operation cancelled.");
     onProgress(`Downloading and converting ${book.name} ${chapter} of ${book.chapters}...`);
-    const url = 'https://raw.githubusercontent.com/' +
-      'BSB-publishing/bsb-data-output/main/base/display/' +
-      `${book.sourceId || book.id}/${book.sourceId || book.id}${chapter}.json`;
-    const controller = new AbortController();
-    const cancelRequest = () => controller.abort();
-    signal?.addEventListener('abort', cancelRequest, { once: true });
-    const timeout = setTimeout(() => controller.abort(), 30000);
-    let source;
-    try {
-      const response = await fetch(url, {
-        cache: 'no-store',
-        signal: controller.signal
-      });
-      if (!response.ok) {
-        throw new Error(`source returned HTTP ${response.status}.`);
-      }
-      source = await response.json();
-      if (signal?.aborted) throw new Error("Operation cancelled.");
-    } catch (error) {
-      if (signal?.aborted) throw new Error("Operation cancelled.");
-      throw new Error(`${book.name} ${chapter}: ${error.name === 'AbortError'
-        ? 'source request timed out.' : error.message}`);
-    } finally {
-      clearTimeout(timeout);
-      signal?.removeEventListener('abort', cancelRequest);
-    }
-
+    const alias = book.sourceId || book.id;
+    const url = 'https://raw.githubusercontent.com/BSB-publishing/bsb-data-output/' +
+      MAPPING_REVISION + '/base/display/' + alias + '/' + alias + chapter + '.json';
+    const source = await fetchChapterJson(url, signal);
+    const reader = await fetchChapterJson('https://bible.helloao.org/api/BSB/' +
+      alias + '/' + chapter + '.json', signal);
+    const texts = readerVerseTexts(reader, book, chapter);
     if (!source?.eng || typeof source.eng !== 'object' ||
         Array.isArray(source.eng)) {
       throw new Error(`${book.name} ${chapter}: source does not contain a valid "eng" object.`);
+    }
+    const repair = VERSE_ONE_REPAIRS[book.id]?.[chapter];
+    if (!Object.hasOwn(source.eng, '1') && repair) source.eng['1'] = repair;
+    const keys = object => Object.keys(object).sort((a,b) => Number(a)-Number(b));
+    if (JSON.stringify(keys(source.eng)) !== JSON.stringify(keys(texts))) {
+      throw new Error(book.name + ' ' + chapter + ': mapping/reader verse sets differ. No export.');
     }
     for (const [verse, segments] of Object.entries(source.eng)) {
       if (!/^[1-9]\d*$/.test(verse) || !Array.isArray(segments) ||
           !segments.length || segments.some(segment =>
             !Array.isArray(segment) || typeof segment[0] !== 'string' ||
             (segment[1] != null && segment[1] !== '' &&
-              (typeof segment[1] !== 'string' || !/^H\d+$/.test(segment[1])))) ||
+              (typeof segment[1] !== 'string' || (!/^H[1-9]\d*$/.test(segment[1]) || Number(segment[1].slice(1)) > 8674)))) ||
           !segments.map(segment => segment[0]).join('').trim()) {
         throw new Error(`${book.name} ${chapter}:${verse}: invalid English verse data.`);
       }
@@ -464,7 +538,11 @@ async function processBook(book, onProgress, retainChapters = false, signal) {
     const validation = validateChapter(book, chapter, source.eng, converted);
     validationErrors.push(...validation.errors);
     totalVerseCount += validation.verseCount;
-    totalAnnotationCount += validation.annotationCount;
+    if (validation.errors.length) throw new Error(validation.errors.join('\n'));
+    reconcileReader(converted, texts);
+    totalAnnotationCount += Object.values(converted.annotations).reduce((n, entries) => n + entries.length, 0);
+    unmappedVerseCount += converted.coverage.unmappedVerses.length;
+    withheldAnnotationCount += converted.coverage.withheldAnnotations;
     if (retainChapters) chapters[String(chapter)] = converted;
   }
 
@@ -475,7 +553,7 @@ async function processBook(book, onProgress, retainChapters = false, signal) {
   if (totalAnnotationCount === 0) {
     throw new Error(`Validation failed: no Strong's annotations were generated for ${book.name}.`);
   }
-  return { chapters, totalVerseCount, totalAnnotationCount };
+  return { chapters, totalVerseCount, totalAnnotationCount, unmappedVerseCount, withheldAnnotationCount };
 }
 
 async function generate() {
@@ -495,7 +573,7 @@ async function generate() {
   setBusy(true);
 
   try {
-    const { chapters, totalVerseCount, totalAnnotationCount } =
+    const { chapters, totalVerseCount, totalAnnotationCount, unmappedVerseCount, withheldAnnotationCount } =
       await processBook(book, log, true, activeController.signal);
 
     const json = serializeBook(book, chapters);
@@ -534,7 +612,8 @@ async function generate() {
       `Generated chapters: ${book.chapters}\n` +
       `Rendered BSB verses: ${totalVerseCount}\n` +
       `Strong's occurrence annotations: ` +
-      `${totalAnnotationCount}\n\n` +
+      `${totalAnnotationCount}\n` +
+      `Text-only verses: ${unmappedVerseCount}; withheld annotations: ${withheldAnnotationCount}\n\n` +
       `${book.id}.json should now be in your ` +
       `Downloads folder.`,
       'ok'
@@ -561,7 +640,9 @@ function serializeBook(book, chapters) {
   return JSON.stringify({
     source: `BSB-publishing/bsb-data-output base/display/${book.sourceId || book.id}`,
     license: 'CC0',
-    scope: `Complete ${book.name} Deep Study Strong's occurrence mapping`,
+    scope: `Complete HelloAO BSB ${book.name} Scripture text; verified available Strong's annotations (not complete lexical coverage)`,
+    mappingRevision: MAPPING_REVISION,
+    recoverySource: 'BSB-publishing/bsb2usfm release v5.16 BSB_strongs_usfm.zip',
     chapters
   }, null, 2);
 }
@@ -578,6 +659,7 @@ async function validateSelected() {
       'Validated chapters: ' + book.chapters + '\n' +
       'Rendered BSB verses: ' + result.totalVerseCount + '\n' +
       "Strong's occurrence annotations: " + result.totalAnnotationCount + '\n\n' +
+      'Text-only verses: ' + result.unmappedVerseCount + '; withheld annotations: ' + result.withheldAnnotationCount + '\n' +
       'No files were downloaded or changed.', 'ok');
   } catch (error) {
     log((activeController.signal.aborted ? 'CANCELLED' : 'FAILED') +
@@ -628,7 +710,7 @@ async function validateAll() {
         passingChapters += book.chapters;
         totalVerses += result.totalVerseCount;
         totalAnnotations += result.totalAnnotationCount;
-        lines.push(`${book.name} (${book.id}): PASS — ${book.chapters} chapters, ${result.totalVerseCount} verses, ${result.totalAnnotationCount} annotations`);
+        lines.push(`${book.name} (${book.id}): PASS — ${book.chapters} chapters, ${result.totalVerseCount} verses, ${result.totalAnnotationCount} annotations; ${result.unmappedVerseCount} text-only verses; ${result.withheldAnnotationCount} withheld annotations`);
       } catch (error) {
         if (signal.aborted) { cancelled = true; break; }
         failed++;
@@ -797,7 +879,7 @@ async function generateOtZip() {
         chaptersDone += book.chapters;
         versesDone += bookResult.totalVerseCount;
         annotationsDone += bookResult.totalAnnotationCount;
-        lines.push(`${book.id}.json: PASS — ${book.chapters} chapters, ${bookResult.totalVerseCount} verses, ${bookResult.totalAnnotationCount} annotations`);
+        lines.push(`${book.id}.json: PASS — ${book.chapters} chapters, ${bookResult.totalVerseCount} verses, ${bookResult.totalAnnotationCount} annotations; ${bookResult.unmappedVerseCount} text-only verses; ${bookResult.withheldAnnotationCount} withheld annotations`);
       })();
 
       // Permit screen updates, garbage collection and cancellation between books.
@@ -812,7 +894,9 @@ async function generateOtZip() {
       `${chaptersDone} of ${totalChapters} chapters validated.`,
       `Verses: ${versesDone}; Strong's annotations: ${annotationsDone}.`,
       'ZIP integrity: CRC-32 checksums on every entry.',
-      'Source: BSB-publishing/bsb-data-output main/base/display (CC0).',
+      'Scripture coverage: checked against every HelloAO BSB chapter.',
+      'Lexical coverage: available verified mappings only; text-only verses are listed in chapter coverage.',
+      'Source: BSB-publishing/bsb-data-output ' + MAPPING_REVISION + ' base/display (CC0); recovery: publisher v5.16 USFM.',
       'No application or live dataset files were changed.');
     if (signal.aborted) throw new Error('Operation cancelled.');
 
