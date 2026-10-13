@@ -1,0 +1,3825 @@
+{
+  "source": "BSB-publishing/bsb-data-output base/display/NAM",
+  "license": "CC0",
+  "scope": "Complete HelloAO BSB Nahum Scripture text; verified available Strong's annotations (not complete lexical coverage)",
+  "mappingRevision": "a4a2c0558c26e0281ba4e3f0e5479398459e2183",
+  "recoverySource": "BSB-publishing/bsb2usfm release v5.16 BSB_strongs_usfm.zip",
+  "chapters": {
+    "1": {
+      "verseTexts": {
+        "1": "This is the burden against Nineveh, the book of the vision of Nahum the Elkoshite:",
+        "2": "The LORD is a jealous and avenging God; the LORD is avenging and full of wrath. The LORD takes vengeance on His foes and reserves wrath for His enemies.",
+        "3": "The LORD is slow to anger and great in power; the LORD will by no means leave the guilty unpunished. His path is in the whirlwind and storm, and clouds are the dust beneath His feet.",
+        "4": "He rebukes the sea and dries it up; He makes all the rivers run dry. Bashan and Carmel wither, and the flower of Lebanon wilts.",
+        "5": "The mountains quake before Him, and the hills melt away; the earth trembles at His presence— the world and all its dwellers.",
+        "6": "Who can withstand His indignation? Who can endure His burning anger? His wrath is poured out like fire; even rocks are shattered before Him.",
+        "7": "The LORD is good, a stronghold in the day of distress; He cares for those who trust in Him.",
+        "8": "But with an overwhelming flood He will make an end of Nineveh and pursue His enemies into darkness.",
+        "9": "Whatever you plot against the LORD, He will bring to an end. Affliction will not rise up a second time.",
+        "10": "For they will be entangled as with thorns and consumed like the drink of a drunkard— like stubble that is fully dry.",
+        "11": "From you, O Nineveh, comes forth a plotter of evil against the LORD, a counselor of wickedness.",
+        "12": "This is what the LORD says: “Though they are allied and numerous, yet they will be cut down and pass away. Though I have afflicted you, O Judah, I will afflict you no longer.",
+        "13": "For I will now break their yoke from your neck and tear away your shackles.”",
+        "14": "The LORD has issued a command concerning you, O Nineveh: “There will be no descendants to carry on your name. I will cut off the carved image and cast idol from the house of your gods; I will prepare your grave, for you are contemptible.”",
+        "15": "Look to the mountains— the feet of one who brings good news, who proclaims peace! Celebrate your feasts, O Judah; fulfill your vows. For the wicked will never again march through you; they will be utterly cut off."
+      },
+      "annotations": {
+        "1": [
+          {
+            "start": 0,
+            "end": 18,
+            "strongs": [
+              "H4853"
+            ]
+          },
+          {
+            "start": 19,
+            "end": 34,
+            "strongs": [
+              "H5210"
+            ]
+          },
+          {
+            "start": 36,
+            "end": 44,
+            "strongs": [
+              "H5612"
+            ]
+          },
+          {
+            "start": 45,
+            "end": 58,
+            "strongs": [
+              "H2377"
+            ]
+          },
+          {
+            "start": 59,
+            "end": 67,
+            "strongs": [
+              "H5151"
+            ]
+          },
+          {
+            "start": 68,
+            "end": 81,
+            "strongs": [
+              "H512"
+            ]
+          }
+        ],
+        "2": [
+          {
+            "start": 0,
+            "end": 8,
+            "strongs": [
+              "H3068"
+            ]
+          },
+          {
+            "start": 9,
+            "end": 21,
+            "strongs": [
+              "H7072"
+            ]
+          },
+          {
+            "start": 22,
+            "end": 34,
+            "strongs": [
+              "H5358"
+            ]
+          },
+          {
+            "start": 35,
+            "end": 38,
+            "strongs": [
+              "H410"
+            ]
+          },
+          {
+            "start": 40,
+            "end": 48,
+            "strongs": [
+              "H3068"
+            ]
+          },
+          {
+            "start": 49,
+            "end": 60,
+            "strongs": [
+              "H5358"
+            ]
+          },
+          {
+            "start": 61,
+            "end": 69,
+            "strongs": [
+              "H1167"
+            ]
+          },
+          {
+            "start": 70,
+            "end": 78,
+            "strongs": [
+              "H2534"
+            ]
+          },
+          {
+            "start": 80,
+            "end": 88,
+            "strongs": [
+              "H3068"
+            ]
+          },
+          {
+            "start": 89,
+            "end": 104,
+            "strongs": [
+              "H5358"
+            ]
+          },
+          {
+            "start": 105,
+            "end": 116,
+            "strongs": [
+              "H6862"
+            ]
+          },
+          {
+            "start": 117,
+            "end": 135,
+            "strongs": [
+              "H5201"
+            ]
+          },
+          {
+            "start": 136,
+            "end": 151,
+            "strongs": [
+              "H341"
+            ]
+          }
+        ],
+        "3": [
+          {
+            "start": 0,
+            "end": 8,
+            "strongs": [
+              "H3068"
+            ]
+          },
+          {
+            "start": 9,
+            "end": 16,
+            "strongs": [
+              "H750"
+            ]
+          },
+          {
+            "start": 17,
+            "end": 25,
+            "strongs": [
+              "H639"
+            ]
+          },
+          {
+            "start": 26,
+            "end": 35,
+            "strongs": [
+              "H1419"
+            ]
+          },
+          {
+            "start": 36,
+            "end": 44,
+            "strongs": [
+              "H3581"
+            ]
+          },
+          {
+            "start": 46,
+            "end": 54,
+            "strongs": [
+              "H3068"
+            ]
+          },
+          {
+            "start": 55,
+            "end": 71,
+            "strongs": [
+              "H3808"
+            ]
+          },
+          {
+            "start": 72,
+            "end": 99,
+            "strongs": [
+              "H5352"
+            ]
+          },
+          {
+            "start": 101,
+            "end": 109,
+            "strongs": [
+              "H1870"
+            ]
+          },
+          {
+            "start": 110,
+            "end": 129,
+            "strongs": [
+              "H5492"
+            ]
+          },
+          {
+            "start": 130,
+            "end": 139,
+            "strongs": [
+              "H8183"
+            ]
+          },
+          {
+            "start": 141,
+            "end": 151,
+            "strongs": [
+              "H6051"
+            ]
+          },
+          {
+            "start": 152,
+            "end": 164,
+            "strongs": [
+              "H80"
+            ]
+          },
+          {
+            "start": 165,
+            "end": 181,
+            "strongs": [
+              "H7272"
+            ]
+          }
+        ],
+        "4": [
+          {
+            "start": 0,
+            "end": 10,
+            "strongs": [
+              "H1605"
+            ]
+          },
+          {
+            "start": 11,
+            "end": 18,
+            "strongs": [
+              "H3220"
+            ]
+          },
+          {
+            "start": 19,
+            "end": 34,
+            "strongs": [
+              "H3001"
+            ]
+          },
+          {
+            "start": 36,
+            "end": 48,
+            "strongs": [
+              "H3605"
+            ]
+          },
+          {
+            "start": 49,
+            "end": 59,
+            "strongs": [
+              "H5104"
+            ]
+          },
+          {
+            "start": 60,
+            "end": 67,
+            "strongs": [
+              "H2717"
+            ]
+          },
+          {
+            "start": 69,
+            "end": 75,
+            "strongs": [
+              "H1316"
+            ]
+          },
+          {
+            "start": 76,
+            "end": 86,
+            "strongs": [
+              "H3760"
+            ]
+          },
+          {
+            "start": 87,
+            "end": 93,
+            "strongs": [
+              "H535"
+            ]
+          },
+          {
+            "start": 95,
+            "end": 109,
+            "strongs": [
+              "H6525"
+            ]
+          },
+          {
+            "start": 110,
+            "end": 120,
+            "strongs": [
+              "H3844"
+            ]
+          },
+          {
+            "start": 121,
+            "end": 126,
+            "strongs": [
+              "H535"
+            ]
+          }
+        ],
+        "5": [],
+        "6": [
+          {
+            "start": 0,
+            "end": 3,
+            "strongs": [
+              "H4310"
+            ]
+          },
+          {
+            "start": 4,
+            "end": 17,
+            "strongs": [
+              "H6440"
+            ]
+          },
+          {
+            "start": 18,
+            "end": 33,
+            "strongs": [
+              "H2195"
+            ]
+          },
+          {
+            "start": 35,
+            "end": 38,
+            "strongs": [
+              "H4310"
+            ]
+          },
+          {
+            "start": 39,
+            "end": 49,
+            "strongs": [
+              "H6965"
+            ]
+          },
+          {
+            "start": 50,
+            "end": 67,
+            "strongs": [
+              "H2740"
+            ]
+          },
+          {
+            "start": 69,
+            "end": 78,
+            "strongs": [
+              "H2534"
+            ]
+          },
+          {
+            "start": 79,
+            "end": 92,
+            "strongs": [
+              "H5413"
+            ]
+          },
+          {
+            "start": 93,
+            "end": 102,
+            "strongs": [
+              "H784"
+            ]
+          },
+          {
+            "start": 104,
+            "end": 114,
+            "strongs": [
+              "H6697"
+            ]
+          },
+          {
+            "start": 115,
+            "end": 128,
+            "strongs": [
+              "H5422"
+            ]
+          },
+          {
+            "start": 129,
+            "end": 139,
+            "strongs": [
+              "H4480"
+            ]
+          }
+        ],
+        "7": [
+          {
+            "start": 0,
+            "end": 8,
+            "strongs": [
+              "H3068"
+            ]
+          },
+          {
+            "start": 9,
+            "end": 16,
+            "strongs": [
+              "H2896"
+            ]
+          },
+          {
+            "start": 18,
+            "end": 30,
+            "strongs": [
+              "H4581"
+            ]
+          },
+          {
+            "start": 31,
+            "end": 41,
+            "strongs": [
+              "H3117"
+            ]
+          },
+          {
+            "start": 42,
+            "end": 53,
+            "strongs": [
+              "H6869"
+            ]
+          },
+          {
+            "start": 55,
+            "end": 67,
+            "strongs": [
+              "H3045"
+            ]
+          },
+          {
+            "start": 68,
+            "end": 83,
+            "strongs": [
+              "H2620"
+            ]
+          }
+        ],
+        "8": [
+          {
+            "start": 0,
+            "end": 24,
+            "strongs": [
+              "H5674"
+            ]
+          },
+          {
+            "start": 25,
+            "end": 30,
+            "strongs": [
+              "H7858"
+            ]
+          },
+          {
+            "start": 31,
+            "end": 43,
+            "strongs": [
+              "H6213"
+            ]
+          },
+          {
+            "start": 44,
+            "end": 50,
+            "strongs": [
+              "H3617"
+            ]
+          },
+          {
+            "start": 51,
+            "end": 61,
+            "strongs": [
+              "H4725"
+            ]
+          },
+          {
+            "start": 62,
+            "end": 72,
+            "strongs": [
+              "H7291"
+            ]
+          },
+          {
+            "start": 73,
+            "end": 84,
+            "strongs": [
+              "H341"
+            ]
+          },
+          {
+            "start": 85,
+            "end": 98,
+            "strongs": [
+              "H2822"
+            ]
+          }
+        ],
+        "9": [
+          {
+            "start": 0,
+            "end": 8,
+            "strongs": [
+              "H4100"
+            ]
+          },
+          {
+            "start": 9,
+            "end": 17,
+            "strongs": [
+              "H2803"
+            ]
+          },
+          {
+            "start": 18,
+            "end": 25,
+            "strongs": [
+              "H413"
+            ]
+          },
+          {
+            "start": 26,
+            "end": 34,
+            "strongs": [
+              "H3068"
+            ]
+          },
+          {
+            "start": 36,
+            "end": 38,
+            "strongs": [
+              "H1931"
+            ]
+          },
+          {
+            "start": 39,
+            "end": 49,
+            "strongs": [
+              "H6213"
+            ]
+          },
+          {
+            "start": 50,
+            "end": 59,
+            "strongs": [
+              "H3617"
+            ]
+          },
+          {
+            "start": 61,
+            "end": 71,
+            "strongs": [
+              "H6869"
+            ]
+          },
+          {
+            "start": 72,
+            "end": 80,
+            "strongs": [
+              "H3808"
+            ]
+          },
+          {
+            "start": 81,
+            "end": 88,
+            "strongs": [
+              "H6965"
+            ]
+          },
+          {
+            "start": 89,
+            "end": 102,
+            "strongs": [
+              "H6471"
+            ]
+          }
+        ],
+        "10": [
+          {
+            "start": 0,
+            "end": 3,
+            "strongs": [
+              "H3588"
+            ]
+          },
+          {
+            "start": 4,
+            "end": 26,
+            "strongs": [
+              "H5440"
+            ]
+          },
+          {
+            "start": 27,
+            "end": 34,
+            "strongs": [
+              "H5704"
+            ]
+          },
+          {
+            "start": 35,
+            "end": 41,
+            "strongs": [
+              "H5518"
+            ]
+          },
+          {
+            "start": 42,
+            "end": 54,
+            "strongs": [
+              "H398"
+            ]
+          },
+          {
+            "start": 55,
+            "end": 69,
+            "strongs": [
+              "H5435"
+            ]
+          },
+          {
+            "start": 70,
+            "end": 83,
+            "strongs": [
+              "H5433"
+            ]
+          },
+          {
+            "start": 85,
+            "end": 97,
+            "strongs": [
+              "H7179"
+            ]
+          },
+          {
+            "start": 98,
+            "end": 111,
+            "strongs": [
+              "H4392"
+            ]
+          },
+          {
+            "start": 112,
+            "end": 115,
+            "strongs": [
+              "H3002"
+            ]
+          }
+        ],
+        "11": [
+          {
+            "start": 0,
+            "end": 8,
+            "strongs": [
+              "H4480"
+            ]
+          },
+          {
+            "start": 10,
+            "end": 19,
+            "strongs": [
+              "H4480"
+            ]
+          },
+          {
+            "start": 21,
+            "end": 32,
+            "strongs": [
+              "H3318"
+            ]
+          },
+          {
+            "start": 33,
+            "end": 42,
+            "strongs": [
+              "H2803"
+            ]
+          },
+          {
+            "start": 43,
+            "end": 50,
+            "strongs": [
+              "H7451"
+            ]
+          },
+          {
+            "start": 51,
+            "end": 58,
+            "strongs": [
+              "H5921"
+            ]
+          },
+          {
+            "start": 59,
+            "end": 67,
+            "strongs": [
+              "H3068"
+            ]
+          },
+          {
+            "start": 69,
+            "end": 80,
+            "strongs": [
+              "H3289"
+            ]
+          },
+          {
+            "start": 81,
+            "end": 94,
+            "strongs": [
+              "H1100"
+            ]
+          }
+        ],
+        "12": [
+          {
+            "start": 0,
+            "end": 12,
+            "strongs": [
+              "H3541"
+            ]
+          },
+          {
+            "start": 13,
+            "end": 21,
+            "strongs": [
+              "H3068"
+            ]
+          },
+          {
+            "start": 22,
+            "end": 26,
+            "strongs": [
+              "H559"
+            ]
+          },
+          {
+            "start": 29,
+            "end": 35,
+            "strongs": [
+              "H518"
+            ]
+          },
+          {
+            "start": 36,
+            "end": 51,
+            "strongs": [
+              "H8003"
+            ]
+          },
+          {
+            "start": 52,
+            "end": 64,
+            "strongs": [
+              "H7227"
+            ]
+          },
+          {
+            "start": 66,
+            "end": 69,
+            "strongs": [
+              "H3651"
+            ]
+          },
+          {
+            "start": 70,
+            "end": 91,
+            "strongs": [
+              "H1494"
+            ]
+          },
+          {
+            "start": 92,
+            "end": 105,
+            "strongs": [
+              "H5674"
+            ]
+          },
+          {
+            "start": 107,
+            "end": 134,
+            "strongs": [
+              "H6031"
+            ]
+          },
+          {
+            "start": 136,
+            "end": 143,
+            "strongs": [
+              "H6031"
+            ]
+          },
+          {
+            "start": 145,
+            "end": 159,
+            "strongs": [
+              "H6031"
+            ]
+          },
+          {
+            "start": 160,
+            "end": 166,
+            "strongs": [
+              "H3808"
+            ]
+          },
+          {
+            "start": 167,
+            "end": 173,
+            "strongs": [
+              "H5750"
+            ]
+          }
+        ],
+        "13": [
+          {
+            "start": 0,
+            "end": 14,
+            "strongs": [
+              "H6258"
+            ]
+          },
+          {
+            "start": 15,
+            "end": 20,
+            "strongs": [
+              "H7665"
+            ]
+          },
+          {
+            "start": 21,
+            "end": 31,
+            "strongs": [
+              "H4132"
+            ]
+          },
+          {
+            "start": 32,
+            "end": 46,
+            "strongs": [
+              "H5921"
+            ]
+          },
+          {
+            "start": 47,
+            "end": 60,
+            "strongs": [
+              "H5423"
+            ]
+          },
+          {
+            "start": 61,
+            "end": 74,
+            "strongs": [
+              "H4147"
+            ]
+          }
+        ],
+        "14": [
+          {
+            "start": 0,
+            "end": 8,
+            "strongs": [
+              "H3068"
+            ]
+          },
+          {
+            "start": 9,
+            "end": 29,
+            "strongs": [
+              "H6680"
+            ]
+          },
+          {
+            "start": 30,
+            "end": 44,
+            "strongs": [
+              "H5921"
+            ]
+          },
+          {
+            "start": 46,
+            "end": 55,
+            "strongs": [
+              "H5921"
+            ]
+          },
+          {
+            "start": 58,
+            "end": 74,
+            "strongs": [
+              "H3808"
+            ]
+          },
+          {
+            "start": 75,
+            "end": 86,
+            "strongs": [
+              "H2232"
+            ]
+          },
+          {
+            "start": 87,
+            "end": 108,
+            "strongs": [
+              "H8034"
+            ]
+          },
+          {
+            "start": 110,
+            "end": 124,
+            "strongs": [
+              "H3772"
+            ]
+          },
+          {
+            "start": 125,
+            "end": 141,
+            "strongs": [
+              "H6459"
+            ]
+          },
+          {
+            "start": 142,
+            "end": 155,
+            "strongs": [
+              "H4541"
+            ]
+          },
+          {
+            "start": 156,
+            "end": 170,
+            "strongs": [
+              "H1004"
+            ]
+          },
+          {
+            "start": 171,
+            "end": 183,
+            "strongs": [
+              "H430"
+            ]
+          },
+          {
+            "start": 185,
+            "end": 199,
+            "strongs": [
+              "H7760"
+            ]
+          },
+          {
+            "start": 200,
+            "end": 210,
+            "strongs": [
+              "H6913"
+            ]
+          },
+          {
+            "start": 212,
+            "end": 215,
+            "strongs": [
+              "H3588"
+            ]
+          },
+          {
+            "start": 216,
+            "end": 236,
+            "strongs": [
+              "H7043"
+            ]
+          }
+        ],
+        "15": [
+          {
+            "start": 0,
+            "end": 4,
+            "strongs": [
+              "H2009"
+            ]
+          },
+          {
+            "start": 5,
+            "end": 7,
+            "strongs": [
+              "H5921"
+            ]
+          },
+          {
+            "start": 8,
+            "end": 21,
+            "strongs": [
+              "H2022"
+            ]
+          },
+          {
+            "start": 23,
+            "end": 31,
+            "strongs": [
+              "H7272"
+            ]
+          },
+          {
+            "start": 32,
+            "end": 59,
+            "strongs": [
+              "H1319"
+            ]
+          },
+          {
+            "start": 61,
+            "end": 74,
+            "strongs": [
+              "H8085"
+            ]
+          },
+          {
+            "start": 75,
+            "end": 80,
+            "strongs": [
+              "H7965"
+            ]
+          },
+          {
+            "start": 82,
+            "end": 91,
+            "strongs": [
+              "H2287"
+            ]
+          },
+          {
+            "start": 92,
+            "end": 103,
+            "strongs": [
+              "H2282"
+            ]
+          },
+          {
+            "start": 105,
+            "end": 112,
+            "strongs": [
+              "H3063"
+            ]
+          },
+          {
+            "start": 114,
+            "end": 121,
+            "strongs": [
+              "H7999"
+            ]
+          },
+          {
+            "start": 122,
+            "end": 131,
+            "strongs": [
+              "H5088"
+            ]
+          },
+          {
+            "start": 133,
+            "end": 136,
+            "strongs": [
+              "H3588"
+            ]
+          },
+          {
+            "start": 137,
+            "end": 147,
+            "strongs": [
+              "H1100"
+            ]
+          },
+          {
+            "start": 148,
+            "end": 158,
+            "strongs": [
+              "H3808"
+            ]
+          },
+          {
+            "start": 159,
+            "end": 164,
+            "strongs": [
+              "H3254"
+            ]
+          },
+          {
+            "start": 165,
+            "end": 178,
+            "strongs": [
+              "H5674"
+            ]
+          },
+          {
+            "start": 184,
+            "end": 204,
+            "strongs": [
+              "H3605"
+            ]
+          },
+          {
+            "start": 205,
+            "end": 212,
+            "strongs": [
+              "H3772"
+            ]
+          }
+        ]
+      },
+      "coverage": {
+        "textSource": "HelloAO BSB",
+        "unmappedVerses": [
+          "5"
+        ],
+        "withheldAnnotations": 11,
+        "sourceTextDifferences": [
+          "5",
+          "10",
+          "12",
+          "14"
+        ]
+      }
+    },
+    "2": {
+      "verseTexts": {
+        "1": "One who scatters advances against you, O Nineveh. Guard the fortress! Watch the road! Brace yourselves! Summon all your strength!",
+        "2": "For the LORD will restore the splendor of Jacob like the splendor of Israel, though destroyers have laid them waste and ruined the branches of their vine.",
+        "3": "The shields of his mighty men are red; the valiant warriors are dressed in scarlet. The fittings of the chariots flash like fire on the day they are prepared, and the spears of cypress have been brandished.",
+        "4": "The chariots dash through the streets; they rush around the plazas, appearing like torches, darting about like lightning.",
+        "5": "He summons his nobles; they stumble as they advance. They race to its wall; the protective shield is set in place.",
+        "6": "The river gates are thrown open and the palace collapses.",
+        "7": "It is decreed that the city be exiled and carried away; her maidservants moan like doves, and beat upon their breasts.",
+        "8": "Nineveh has been like a pool of water throughout her days, but now it is draining away. “Stop! Stop!” they cry, but no one turns back.",
+        "9": "“Plunder the silver! Plunder the gold!” There is no end to the treasure, an abundance of every precious thing.",
+        "10": "She is emptied! Yes, she is desolate and laid waste! Hearts melt, knees knock, bodies tremble, and every face grows pale!",
+        "11": "Where is the lions’ lair or the feeding ground of the young lions, where the lion and lioness prowled with their cubs, with nothing to frighten them away?",
+        "12": "The lion mauled enough for its cubs and strangled prey for the lioness. It filled its dens with the kill, and its lairs with mauled prey.",
+        "13": "“Behold, I am against you,” declares the LORD of Hosts. “I will reduce your chariots to cinders, and the sword will devour your young lions. I will cut off your prey from the earth, and the voices of your messengers will no longer be heard.”"
+      },
+      "annotations": {
+        "1": [
+          {
+            "start": 0,
+            "end": 16,
+            "strongs": [
+              "H6327"
+            ]
+          },
+          {
+            "start": 17,
+            "end": 25,
+            "strongs": [
+              "H5927"
+            ]
+          },
+          {
+            "start": 26,
+            "end": 33,
+            "strongs": [
+              "H5921"
+            ]
+          },
+          {
+            "start": 34,
+            "end": 37,
+            "strongs": [
+              "H6440"
+            ]
+          },
+          {
+            "start": 39,
+            "end": 48,
+            "strongs": [
+              "H6440"
+            ]
+          },
+          {
+            "start": 50,
+            "end": 55,
+            "strongs": [
+              "H5341"
+            ]
+          },
+          {
+            "start": 56,
+            "end": 68,
+            "strongs": [
+              "H4694"
+            ]
+          },
+          {
+            "start": 70,
+            "end": 75,
+            "strongs": [
+              "H6822"
+            ]
+          },
+          {
+            "start": 76,
+            "end": 84,
+            "strongs": [
+              "H1870"
+            ]
+          },
+          {
+            "start": 86,
+            "end": 102,
+            "strongs": [
+              "H2388"
+            ]
+          },
+          {
+            "start": 104,
+            "end": 110,
+            "strongs": [
+              "H553"
+            ]
+          },
+          {
+            "start": 111,
+            "end": 114,
+            "strongs": [
+              "H3966"
+            ]
+          },
+          {
+            "start": 115,
+            "end": 128,
+            "strongs": [
+              "H3581"
+            ]
+          }
+        ],
+        "2": [
+          {
+            "start": 0,
+            "end": 3,
+            "strongs": [
+              "H3588"
+            ]
+          },
+          {
+            "start": 4,
+            "end": 12,
+            "strongs": [
+              "H3068"
+            ]
+          },
+          {
+            "start": 13,
+            "end": 25,
+            "strongs": [
+              "H7725"
+            ]
+          },
+          {
+            "start": 26,
+            "end": 38,
+            "strongs": [
+              "H1347"
+            ]
+          },
+          {
+            "start": 39,
+            "end": 47,
+            "strongs": [
+              "H3290"
+            ]
+          },
+          {
+            "start": 48,
+            "end": 65,
+            "strongs": [
+              "H1347"
+            ]
+          },
+          {
+            "start": 66,
+            "end": 75,
+            "strongs": [
+              "H3478"
+            ]
+          },
+          {
+            "start": 77,
+            "end": 83,
+            "strongs": [
+              "H3588"
+            ]
+          },
+          {
+            "start": 84,
+            "end": 94,
+            "strongs": [
+              "H1238"
+            ]
+          },
+          {
+            "start": 95,
+            "end": 115,
+            "strongs": [
+              "H1238"
+            ]
+          },
+          {
+            "start": 116,
+            "end": 126,
+            "strongs": [
+              "H7843"
+            ]
+          },
+          {
+            "start": 127,
+            "end": 153,
+            "strongs": [
+              "H2156"
+            ]
+          }
+        ],
+        "3": [
+          {
+            "start": 0,
+            "end": 11,
+            "strongs": [
+              "H4043"
+            ]
+          },
+          {
+            "start": 12,
+            "end": 29,
+            "strongs": [
+              "H1368"
+            ]
+          },
+          {
+            "start": 30,
+            "end": 37,
+            "strongs": [
+              "H119"
+            ]
+          },
+          {
+            "start": 39,
+            "end": 59,
+            "strongs": [
+              "H376"
+            ]
+          },
+          {
+            "start": 60,
+            "end": 82,
+            "strongs": [
+              "H8529"
+            ]
+          },
+          {
+            "start": 84,
+            "end": 96,
+            "strongs": [
+              "H6393"
+            ]
+          },
+          {
+            "start": 97,
+            "end": 112,
+            "strongs": [
+              "H7393"
+            ]
+          },
+          {
+            "start": 113,
+            "end": 128,
+            "strongs": [
+              "H784"
+            ]
+          },
+          {
+            "start": 129,
+            "end": 139,
+            "strongs": [
+              "H3117"
+            ]
+          },
+          {
+            "start": 140,
+            "end": 157,
+            "strongs": [
+              "H3559"
+            ]
+          },
+          {
+            "start": 159,
+            "end": 184,
+            "strongs": [
+              "H1265"
+            ]
+          },
+          {
+            "start": 185,
+            "end": 205,
+            "strongs": [
+              "H7477"
+            ]
+          }
+        ],
+        "4": [
+          {
+            "start": 0,
+            "end": 12,
+            "strongs": [
+              "H7393"
+            ]
+          },
+          {
+            "start": 13,
+            "end": 17,
+            "strongs": [
+              "H1984"
+            ]
+          },
+          {
+            "start": 18,
+            "end": 37,
+            "strongs": [
+              "H2351"
+            ]
+          },
+          {
+            "start": 39,
+            "end": 55,
+            "strongs": [
+              "H8264"
+            ]
+          },
+          {
+            "start": 56,
+            "end": 66,
+            "strongs": [
+              "H7339"
+            ]
+          },
+          {
+            "start": 68,
+            "end": 77,
+            "strongs": [
+              "H4758"
+            ]
+          },
+          {
+            "start": 78,
+            "end": 90,
+            "strongs": [
+              "H3940"
+            ]
+          },
+          {
+            "start": 92,
+            "end": 105,
+            "strongs": [
+              "H7323"
+            ]
+          },
+          {
+            "start": 106,
+            "end": 120,
+            "strongs": [
+              "H1300"
+            ]
+          }
+        ],
+        "5": [
+          {
+            "start": 0,
+            "end": 10,
+            "strongs": [
+              "H2142"
+            ]
+          },
+          {
+            "start": 11,
+            "end": 21,
+            "strongs": [
+              "H117"
+            ]
+          },
+          {
+            "start": 23,
+            "end": 35,
+            "strongs": [
+              "H3782"
+            ]
+          },
+          {
+            "start": 36,
+            "end": 51,
+            "strongs": [
+              "H1979"
+            ]
+          },
+          {
+            "start": 53,
+            "end": 62,
+            "strongs": [
+              "H4116"
+            ]
+          },
+          {
+            "start": 63,
+            "end": 74,
+            "strongs": [
+              "H2346"
+            ]
+          },
+          {
+            "start": 76,
+            "end": 97,
+            "strongs": [
+              "H5526"
+            ]
+          },
+          {
+            "start": 98,
+            "end": 113,
+            "strongs": [
+              "H3559"
+            ]
+          }
+        ],
+        "6": [
+          {
+            "start": 0,
+            "end": 9,
+            "strongs": [
+              "H5104"
+            ]
+          },
+          {
+            "start": 10,
+            "end": 15,
+            "strongs": [
+              "H8179"
+            ]
+          },
+          {
+            "start": 16,
+            "end": 31,
+            "strongs": [
+              "H6605"
+            ]
+          },
+          {
+            "start": 32,
+            "end": 46,
+            "strongs": [
+              "H1964"
+            ]
+          },
+          {
+            "start": 47,
+            "end": 56,
+            "strongs": [
+              "H4127"
+            ]
+          }
+        ],
+        "7": [
+          {
+            "start": 0,
+            "end": 18,
+            "strongs": [
+              "H5324"
+            ]
+          },
+          {
+            "start": 19,
+            "end": 37,
+            "strongs": [
+              "H1540"
+            ]
+          },
+          {
+            "start": 38,
+            "end": 54,
+            "strongs": [
+              "H5927"
+            ]
+          },
+          {
+            "start": 56,
+            "end": 72,
+            "strongs": [
+              "H519"
+            ]
+          },
+          {
+            "start": 73,
+            "end": 77,
+            "strongs": [
+              "H5090"
+            ]
+          },
+          {
+            "start": 78,
+            "end": 82,
+            "strongs": [
+              "H6963"
+            ]
+          },
+          {
+            "start": 83,
+            "end": 88,
+            "strongs": [
+              "H3123"
+            ]
+          },
+          {
+            "start": 90,
+            "end": 98,
+            "strongs": [
+              "H8608"
+            ]
+          },
+          {
+            "start": 99,
+            "end": 103,
+            "strongs": [
+              "H5921"
+            ]
+          },
+          {
+            "start": 104,
+            "end": 117,
+            "strongs": [
+              "H3824"
+            ]
+          }
+        ],
+        "8": [
+          {
+            "start": 0,
+            "end": 7,
+            "strongs": [
+              "H5210"
+            ]
+          },
+          {
+            "start": 8,
+            "end": 28,
+            "strongs": [
+              "H1295"
+            ]
+          },
+          {
+            "start": 29,
+            "end": 37,
+            "strongs": [
+              "H4325"
+            ]
+          },
+          {
+            "start": 38,
+            "end": 48,
+            "strongs": [
+              "H1931"
+            ]
+          },
+          {
+            "start": 49,
+            "end": 57,
+            "strongs": [
+              "H3117"
+            ]
+          },
+          {
+            "start": 59,
+            "end": 66,
+            "strongs": [
+              "H1992"
+            ]
+          },
+          {
+            "start": 67,
+            "end": 86,
+            "strongs": [
+              "H5127"
+            ]
+          },
+          {
+            "start": 89,
+            "end": 93,
+            "strongs": [
+              "H5975"
+            ]
+          },
+          {
+            "start": 95,
+            "end": 110,
+            "strongs": [
+              "H5975"
+            ]
+          },
+          {
+            "start": 112,
+            "end": 118,
+            "strongs": [
+              "H369"
+            ]
+          },
+          {
+            "start": 119,
+            "end": 133,
+            "strongs": [
+              "H6437"
+            ]
+          }
+        ],
+        "9": [
+          {
+            "start": 1,
+            "end": 8,
+            "strongs": [
+              "H962"
+            ]
+          },
+          {
+            "start": 9,
+            "end": 19,
+            "strongs": [
+              "H3701"
+            ]
+          },
+          {
+            "start": 21,
+            "end": 28,
+            "strongs": [
+              "H962"
+            ]
+          },
+          {
+            "start": 29,
+            "end": 37,
+            "strongs": [
+              "H2091"
+            ]
+          },
+          {
+            "start": 40,
+            "end": 51,
+            "strongs": [
+              "H369"
+            ]
+          },
+          {
+            "start": 52,
+            "end": 55,
+            "strongs": [
+              "H7097"
+            ]
+          },
+          {
+            "start": 56,
+            "end": 71,
+            "strongs": [
+              "H8498"
+            ]
+          },
+          {
+            "start": 73,
+            "end": 85,
+            "strongs": [
+              "H3519"
+            ]
+          },
+          {
+            "start": 86,
+            "end": 94,
+            "strongs": [
+              "H3605"
+            ]
+          },
+          {
+            "start": 95,
+            "end": 103,
+            "strongs": [
+              "H2532"
+            ]
+          },
+          {
+            "start": 104,
+            "end": 109,
+            "strongs": [
+              "H3627"
+            ]
+          }
+        ],
+        "10": [
+          {
+            "start": 0,
+            "end": 14,
+            "strongs": [
+              "H950"
+            ]
+          },
+          {
+            "start": 16,
+            "end": 19,
+            "strongs": [
+              "H4003"
+            ]
+          },
+          {
+            "start": 21,
+            "end": 36,
+            "strongs": [
+              "H4003"
+            ]
+          },
+          {
+            "start": 37,
+            "end": 51,
+            "strongs": [
+              "H1110"
+            ]
+          },
+          {
+            "start": 53,
+            "end": 59,
+            "strongs": [
+              "H3820"
+            ]
+          },
+          {
+            "start": 60,
+            "end": 64,
+            "strongs": [
+              "H4549"
+            ]
+          },
+          {
+            "start": 66,
+            "end": 71,
+            "strongs": [
+              "H1290"
+            ]
+          },
+          {
+            "start": 72,
+            "end": 77,
+            "strongs": [
+              "H6375"
+            ]
+          },
+          {
+            "start": 79,
+            "end": 85,
+            "strongs": [
+              "H4975"
+            ]
+          },
+          {
+            "start": 86,
+            "end": 93,
+            "strongs": [
+              "H2479"
+            ]
+          },
+          {
+            "start": 95,
+            "end": 104,
+            "strongs": [
+              "H3605"
+            ]
+          },
+          {
+            "start": 105,
+            "end": 109,
+            "strongs": [
+              "H6440"
+            ]
+          },
+          {
+            "start": 110,
+            "end": 120,
+            "strongs": [
+              "H6908"
+            ]
+          }
+        ],
+        "11": [
+          {
+            "start": 0,
+            "end": 5,
+            "strongs": [
+              "H346"
+            ]
+          },
+          {
+            "start": 6,
+            "end": 19,
+            "strongs": [
+              "H738"
+            ]
+          },
+          {
+            "start": 20,
+            "end": 24,
+            "strongs": [
+              "H4583"
+            ]
+          },
+          {
+            "start": 25,
+            "end": 46,
+            "strongs": [
+              "H4829"
+            ]
+          },
+          {
+            "start": 47,
+            "end": 65,
+            "strongs": [
+              "H3715"
+            ]
+          },
+          {
+            "start": 67,
+            "end": 72,
+            "strongs": [
+              "H834"
+            ]
+          },
+          {
+            "start": 73,
+            "end": 81,
+            "strongs": [
+              "H738"
+            ]
+          },
+          {
+            "start": 82,
+            "end": 93,
+            "strongs": [
+              "H3833"
+            ]
+          },
+          {
+            "start": 94,
+            "end": 101,
+            "strongs": [
+              "H1980"
+            ]
+          },
+          {
+            "start": 102,
+            "end": 112,
+            "strongs": [
+              "H738"
+            ]
+          },
+          {
+            "start": 113,
+            "end": 117,
+            "strongs": [
+              "H1482"
+            ]
+          },
+          {
+            "start": 119,
+            "end": 131,
+            "strongs": [
+              "H369"
+            ]
+          },
+          {
+            "start": 132,
+            "end": 153,
+            "strongs": [
+              "H2729"
+            ]
+          }
+        ],
+        "12": [
+          {
+            "start": 0,
+            "end": 8,
+            "strongs": [
+              "H738"
+            ]
+          },
+          {
+            "start": 9,
+            "end": 15,
+            "strongs": [
+              "H2963"
+            ]
+          },
+          {
+            "start": 16,
+            "end": 26,
+            "strongs": [
+              "H1767"
+            ]
+          },
+          {
+            "start": 27,
+            "end": 35,
+            "strongs": [
+              "H1484"
+            ]
+          },
+          {
+            "start": 36,
+            "end": 54,
+            "strongs": [
+              "H2614"
+            ]
+          },
+          {
+            "start": 55,
+            "end": 70,
+            "strongs": [
+              "H3833"
+            ]
+          },
+          {
+            "start": 72,
+            "end": 81,
+            "strongs": [
+              "H4390"
+            ]
+          },
+          {
+            "start": 82,
+            "end": 90,
+            "strongs": [
+              "H2356"
+            ]
+          },
+          {
+            "start": 91,
+            "end": 104,
+            "strongs": [
+              "H2964"
+            ]
+          },
+          {
+            "start": 106,
+            "end": 119,
+            "strongs": [
+              "H4585"
+            ]
+          },
+          {
+            "start": 120,
+            "end": 136,
+            "strongs": [
+              "H2966"
+            ]
+          }
+        ],
+        "13": [
+          {
+            "start": 1,
+            "end": 7,
+            "strongs": [
+              "H2005"
+            ]
+          },
+          {
+            "start": 9,
+            "end": 25,
+            "strongs": [
+              "H413"
+            ]
+          },
+          {
+            "start": 28,
+            "end": 36,
+            "strongs": [
+              "H5002"
+            ]
+          },
+          {
+            "start": 37,
+            "end": 45,
+            "strongs": [
+              "H3068"
+            ]
+          },
+          {
+            "start": 46,
+            "end": 54,
+            "strongs": [
+              "H6635"
+            ]
+          },
+          {
+            "start": 57,
+            "end": 70,
+            "strongs": [
+              "H1197"
+            ]
+          },
+          {
+            "start": 71,
+            "end": 84,
+            "strongs": [
+              "H7393"
+            ]
+          },
+          {
+            "start": 85,
+            "end": 95,
+            "strongs": [
+              "H6227"
+            ]
+          },
+          {
+            "start": 97,
+            "end": 110,
+            "strongs": [
+              "H2719"
+            ]
+          },
+          {
+            "start": 111,
+            "end": 122,
+            "strongs": [
+              "H398"
+            ]
+          },
+          {
+            "start": 123,
+            "end": 139,
+            "strongs": [
+              "H3715"
+            ]
+          },
+          {
+            "start": 141,
+            "end": 155,
+            "strongs": [
+              "H3772"
+            ]
+          },
+          {
+            "start": 156,
+            "end": 165,
+            "strongs": [
+              "H2964"
+            ]
+          },
+          {
+            "start": 166,
+            "end": 180,
+            "strongs": [
+              "H776"
+            ]
+          },
+          {
+            "start": 182,
+            "end": 196,
+            "strongs": [
+              "H6963"
+            ]
+          },
+          {
+            "start": 197,
+            "end": 215,
+            "strongs": [
+              "H4397"
+            ]
+          },
+          {
+            "start": 216,
+            "end": 230,
+            "strongs": [
+              "H3808"
+            ]
+          },
+          {
+            "start": 231,
+            "end": 239,
+            "strongs": [
+              "H8085"
+            ]
+          }
+        ]
+      },
+      "coverage": {
+        "textSource": "HelloAO BSB",
+        "unmappedVerses": [],
+        "withheldAnnotations": 0,
+        "sourceTextDifferences": [
+          "8",
+          "13"
+        ]
+      }
+    },
+    "3": {
+      "verseTexts": {
+        "1": "Woe to the city of blood, full of lies, full of plunder, never without prey.",
+        "2": "The crack of the whip, the rumble of the wheel, galloping horse and bounding chariot!",
+        "3": "Charging horseman, flashing sword, shining spear; heaps of slain, mounds of corpses, dead bodies without end— they stumble over their dead—",
+        "4": "because of the many harlotries of the harlot, the seductive mistress of sorcery, who betrays nations by her prostitution and clans by her witchcraft.",
+        "5": "“Behold, I am against you,” declares the LORD of Hosts. “I will lift your skirts over your face. I will show your nakedness to the nations and your shame to the kingdoms.",
+        "6": "I will pelt you with filth and treat you with contempt; I will make a spectacle of you.",
+        "7": "Then all who see you will recoil from you and say, ‘Nineveh is devastated; who will grieve for her?’ Where can I find comforters for you?”",
+        "8": "Are you better than Thebes, stationed by the Nile with water around her, whose rampart was the sea, whose wall was the water?",
+        "9": "Cush and Egypt were her boundless strength; Put and Libya were her allies.",
+        "10": "Yet she became an exile; she went into captivity. Her infants were dashed to pieces at the head of every street. They cast lots for her dignitaries, and all her nobles were bound in chains.",
+        "11": "You too will become drunk; you will go into hiding and seek refuge from the enemy.",
+        "12": "All your fortresses are fig trees with the first ripe figs; when shaken, they fall into the mouth of the eater!",
+        "13": "Look at your troops— they are like your women! The gates of your land are wide open to your enemies; fire consumes their bars.",
+        "14": "Draw your water for the siege; strengthen your fortresses. Work the clay and tread the mortar; repair the brick kiln!",
+        "15": "There the fire will devour you; the sword will cut you down and consume you like a young locust. Make yourself many like the young locust; make yourself many like the swarming locust!",
+        "16": "You have multiplied your merchants more than the stars of the sky. The young locust strips the land and flies away.",
+        "17": "Your guards are like the swarming locust, and your scribes like clouds of locusts that settle on the walls on a cold day. When the sun rises, they fly away, and no one knows where.",
+        "18": "O king of Assyria, your shepherds slumber; your officers sleep. Your people are scattered on the mountains with no one to gather them.",
+        "19": "There is no healing for your injury; your wound is severe. All who hear the news of you applaud your downfall, for who has not experienced your constant cruelty?"
+      },
+      "annotations": {
+        "1": [
+          {
+            "start": 0,
+            "end": 3,
+            "strongs": [
+              "H1945"
+            ]
+          },
+          {
+            "start": 4,
+            "end": 15,
+            "strongs": [
+              "H5892"
+            ]
+          },
+          {
+            "start": 16,
+            "end": 24,
+            "strongs": [
+              "H1818"
+            ]
+          },
+          {
+            "start": 26,
+            "end": 30,
+            "strongs": [
+              "H3605"
+            ]
+          },
+          {
+            "start": 31,
+            "end": 38,
+            "strongs": [
+              "H3585"
+            ]
+          },
+          {
+            "start": 40,
+            "end": 47,
+            "strongs": [
+              "H4392"
+            ]
+          },
+          {
+            "start": 48,
+            "end": 55,
+            "strongs": [
+              "H6563"
+            ]
+          },
+          {
+            "start": 57,
+            "end": 62,
+            "strongs": [
+              "H3808"
+            ]
+          },
+          {
+            "start": 63,
+            "end": 70,
+            "strongs": [
+              "H4185"
+            ]
+          },
+          {
+            "start": 71,
+            "end": 75,
+            "strongs": [
+              "H2964"
+            ]
+          }
+        ],
+        "2": [
+          {
+            "start": 0,
+            "end": 9,
+            "strongs": [
+              "H6963"
+            ]
+          },
+          {
+            "start": 10,
+            "end": 21,
+            "strongs": [
+              "H7752"
+            ]
+          },
+          {
+            "start": 23,
+            "end": 33,
+            "strongs": [
+              "H6963"
+            ]
+          },
+          {
+            "start": 34,
+            "end": 46,
+            "strongs": [
+              "H212"
+            ]
+          },
+          {
+            "start": 48,
+            "end": 57,
+            "strongs": [
+              "H1725"
+            ]
+          },
+          {
+            "start": 58,
+            "end": 63,
+            "strongs": [
+              "H5483"
+            ]
+          },
+          {
+            "start": 64,
+            "end": 76,
+            "strongs": [
+              "H7540"
+            ]
+          },
+          {
+            "start": 77,
+            "end": 84,
+            "strongs": [
+              "H4818"
+            ]
+          }
+        ],
+        "3": [
+          {
+            "start": 0,
+            "end": 8,
+            "strongs": [
+              "H5927"
+            ]
+          },
+          {
+            "start": 9,
+            "end": 17,
+            "strongs": [
+              "H6571"
+            ]
+          },
+          {
+            "start": 19,
+            "end": 27,
+            "strongs": [
+              "H3851"
+            ]
+          },
+          {
+            "start": 28,
+            "end": 33,
+            "strongs": [
+              "H2719"
+            ]
+          },
+          {
+            "start": 35,
+            "end": 42,
+            "strongs": [
+              "H1300"
+            ]
+          },
+          {
+            "start": 43,
+            "end": 48,
+            "strongs": [
+              "H2595"
+            ]
+          },
+          {
+            "start": 50,
+            "end": 55,
+            "strongs": [
+              "H7230"
+            ]
+          },
+          {
+            "start": 56,
+            "end": 64,
+            "strongs": [
+              "H2491"
+            ]
+          },
+          {
+            "start": 66,
+            "end": 72,
+            "strongs": [
+              "H3514"
+            ]
+          },
+          {
+            "start": 73,
+            "end": 83,
+            "strongs": [
+              "H6297"
+            ]
+          },
+          {
+            "start": 85,
+            "end": 96,
+            "strongs": [
+              "H1472"
+            ]
+          },
+          {
+            "start": 97,
+            "end": 104,
+            "strongs": [
+              "H369"
+            ]
+          },
+          {
+            "start": 105,
+            "end": 108,
+            "strongs": [
+              "H7097"
+            ]
+          },
+          {
+            "start": 110,
+            "end": 122,
+            "strongs": [
+              "H3782"
+            ]
+          },
+          {
+            "start": 123,
+            "end": 138,
+            "strongs": [
+              "H1472"
+            ]
+          }
+        ],
+        "4": [
+          {
+            "start": 0,
+            "end": 19,
+            "strongs": [
+              "H7230"
+            ]
+          },
+          {
+            "start": 20,
+            "end": 30,
+            "strongs": [
+              "H2183"
+            ]
+          },
+          {
+            "start": 31,
+            "end": 44,
+            "strongs": [
+              "H2181"
+            ]
+          },
+          {
+            "start": 46,
+            "end": 59,
+            "strongs": [
+              "H2580"
+            ]
+          },
+          {
+            "start": 60,
+            "end": 68,
+            "strongs": [
+              "H1172"
+            ]
+          },
+          {
+            "start": 69,
+            "end": 79,
+            "strongs": [
+              "H3785"
+            ]
+          },
+          {
+            "start": 81,
+            "end": 92,
+            "strongs": [
+              "H4376"
+            ]
+          },
+          {
+            "start": 93,
+            "end": 100,
+            "strongs": [
+              "H1471"
+            ]
+          },
+          {
+            "start": 101,
+            "end": 120,
+            "strongs": [
+              "H2183"
+            ]
+          },
+          {
+            "start": 121,
+            "end": 130,
+            "strongs": [
+              "H4940"
+            ]
+          },
+          {
+            "start": 131,
+            "end": 148,
+            "strongs": [
+              "H3785"
+            ]
+          }
+        ],
+        "5": [
+          {
+            "start": 1,
+            "end": 7,
+            "strongs": [
+              "H2005"
+            ]
+          },
+          {
+            "start": 9,
+            "end": 25,
+            "strongs": [
+              "H413"
+            ]
+          },
+          {
+            "start": 28,
+            "end": 36,
+            "strongs": [
+              "H5002"
+            ]
+          },
+          {
+            "start": 37,
+            "end": 45,
+            "strongs": [
+              "H3068"
+            ]
+          },
+          {
+            "start": 46,
+            "end": 54,
+            "strongs": [
+              "H6635"
+            ]
+          },
+          {
+            "start": 57,
+            "end": 68,
+            "strongs": [
+              "H1540"
+            ]
+          },
+          {
+            "start": 69,
+            "end": 80,
+            "strongs": [
+              "H7757"
+            ]
+          },
+          {
+            "start": 81,
+            "end": 85,
+            "strongs": [
+              "H5921"
+            ]
+          },
+          {
+            "start": 86,
+            "end": 95,
+            "strongs": [
+              "H6440"
+            ]
+          },
+          {
+            "start": 97,
+            "end": 108,
+            "strongs": [
+              "H7200"
+            ]
+          },
+          {
+            "start": 109,
+            "end": 123,
+            "strongs": [
+              "H4626"
+            ]
+          },
+          {
+            "start": 124,
+            "end": 138,
+            "strongs": [
+              "H1471"
+            ]
+          },
+          {
+            "start": 139,
+            "end": 153,
+            "strongs": [
+              "H7036"
+            ]
+          },
+          {
+            "start": 154,
+            "end": 169,
+            "strongs": [
+              "H4467"
+            ]
+          }
+        ],
+        "6": [
+          {
+            "start": 0,
+            "end": 11,
+            "strongs": [
+              "H7993"
+            ]
+          },
+          {
+            "start": 12,
+            "end": 15,
+            "strongs": [
+              "H5921"
+            ]
+          },
+          {
+            "start": 16,
+            "end": 26,
+            "strongs": [
+              "H8251"
+            ]
+          },
+          {
+            "start": 27,
+            "end": 54,
+            "strongs": [
+              "H5034"
+            ]
+          },
+          {
+            "start": 56,
+            "end": 67,
+            "strongs": [
+              "H7760"
+            ]
+          },
+          {
+            "start": 68,
+            "end": 86,
+            "strongs": [
+              "H7210"
+            ]
+          }
+        ],
+        "7": [
+          {
+            "start": 0,
+            "end": 4,
+            "strongs": [
+              "H1961"
+            ]
+          },
+          {
+            "start": 5,
+            "end": 8,
+            "strongs": [
+              "H3605"
+            ]
+          },
+          {
+            "start": 9,
+            "end": 20,
+            "strongs": [
+              "H7200"
+            ]
+          },
+          {
+            "start": 21,
+            "end": 32,
+            "strongs": [
+              "H5074"
+            ]
+          },
+          {
+            "start": 33,
+            "end": 41,
+            "strongs": [
+              "H4480"
+            ]
+          },
+          {
+            "start": 42,
+            "end": 49,
+            "strongs": [
+              "H559"
+            ]
+          },
+          {
+            "start": 52,
+            "end": 59,
+            "strongs": [
+              "H5210"
+            ]
+          },
+          {
+            "start": 60,
+            "end": 73,
+            "strongs": [
+              "H7703"
+            ]
+          },
+          {
+            "start": 75,
+            "end": 78,
+            "strongs": [
+              "H4310"
+            ]
+          },
+          {
+            "start": 79,
+            "end": 90,
+            "strongs": [
+              "H5110"
+            ]
+          },
+          {
+            "start": 101,
+            "end": 106,
+            "strongs": [
+              "H370"
+            ]
+          },
+          {
+            "start": 107,
+            "end": 117,
+            "strongs": [
+              "H1245"
+            ]
+          },
+          {
+            "start": 118,
+            "end": 128,
+            "strongs": [
+              "H5162"
+            ]
+          }
+        ],
+        "8": [
+          {
+            "start": 0,
+            "end": 14,
+            "strongs": [
+              "H3190"
+            ]
+          },
+          {
+            "start": 15,
+            "end": 26,
+            "strongs": [
+              "H4996"
+            ]
+          },
+          {
+            "start": 28,
+            "end": 37,
+            "strongs": [
+              "H3427"
+            ]
+          },
+          {
+            "start": 38,
+            "end": 49,
+            "strongs": [
+              "H2975"
+            ]
+          },
+          {
+            "start": 50,
+            "end": 60,
+            "strongs": [
+              "H4325"
+            ]
+          },
+          {
+            "start": 61,
+            "end": 67,
+            "strongs": [
+              "H5439"
+            ]
+          },
+          {
+            "start": 73,
+            "end": 78,
+            "strongs": [
+              "H834"
+            ]
+          },
+          {
+            "start": 79,
+            "end": 86,
+            "strongs": [
+              "H2426"
+            ]
+          },
+          {
+            "start": 87,
+            "end": 98,
+            "strongs": [
+              "H3220"
+            ]
+          },
+          {
+            "start": 100,
+            "end": 110,
+            "strongs": [
+              "H2346"
+            ]
+          },
+          {
+            "start": 111,
+            "end": 124,
+            "strongs": [
+              "H3220"
+            ]
+          }
+        ],
+        "9": [
+          {
+            "start": 0,
+            "end": 4,
+            "strongs": [
+              "H3568"
+            ]
+          },
+          {
+            "start": 5,
+            "end": 14,
+            "strongs": [
+              "H4714"
+            ]
+          },
+          {
+            "start": 15,
+            "end": 33,
+            "strongs": [
+              "H369"
+            ]
+          },
+          {
+            "start": 34,
+            "end": 42,
+            "strongs": [
+              "H6109"
+            ]
+          },
+          {
+            "start": 44,
+            "end": 47,
+            "strongs": [
+              "H6316"
+            ]
+          },
+          {
+            "start": 48,
+            "end": 57,
+            "strongs": [
+              "H3864"
+            ]
+          },
+          {
+            "start": 58,
+            "end": 62,
+            "strongs": [
+              "H1961"
+            ]
+          },
+          {
+            "start": 63,
+            "end": 73,
+            "strongs": [
+              "H5833"
+            ]
+          }
+        ],
+        "10": [
+          {
+            "start": 0,
+            "end": 3,
+            "strongs": [
+              "H1571"
+            ]
+          },
+          {
+            "start": 4,
+            "end": 7,
+            "strongs": [
+              "H1931"
+            ]
+          },
+          {
+            "start": 8,
+            "end": 23,
+            "strongs": [
+              "H1473"
+            ]
+          },
+          {
+            "start": 25,
+            "end": 33,
+            "strongs": [
+              "H1980"
+            ]
+          },
+          {
+            "start": 34,
+            "end": 48,
+            "strongs": [
+              "H7628"
+            ]
+          },
+          {
+            "start": 50,
+            "end": 61,
+            "strongs": [
+              "H5768"
+            ]
+          },
+          {
+            "start": 62,
+            "end": 83,
+            "strongs": [
+              "H7376"
+            ]
+          },
+          {
+            "start": 84,
+            "end": 95,
+            "strongs": [
+              "H7218"
+            ]
+          },
+          {
+            "start": 96,
+            "end": 104,
+            "strongs": [
+              "H3605"
+            ]
+          },
+          {
+            "start": 105,
+            "end": 111,
+            "strongs": [
+              "H2351"
+            ]
+          },
+          {
+            "start": 113,
+            "end": 122,
+            "strongs": [
+              "H3032"
+            ]
+          },
+          {
+            "start": 123,
+            "end": 127,
+            "strongs": [
+              "H1486"
+            ]
+          },
+          {
+            "start": 128,
+            "end": 131,
+            "strongs": [
+              "H5921"
+            ]
+          },
+          {
+            "start": 132,
+            "end": 147,
+            "strongs": [
+              "H3513"
+            ]
+          },
+          {
+            "start": 149,
+            "end": 156,
+            "strongs": [
+              "H3605"
+            ]
+          },
+          {
+            "start": 157,
+            "end": 167,
+            "strongs": [
+              "H1419"
+            ]
+          },
+          {
+            "start": 168,
+            "end": 178,
+            "strongs": [
+              "H7576"
+            ]
+          },
+          {
+            "start": 179,
+            "end": 188,
+            "strongs": [
+              "H2131"
+            ]
+          }
+        ],
+        "11": [
+          {
+            "start": 0,
+            "end": 3,
+            "strongs": [
+              "H859"
+            ]
+          },
+          {
+            "start": 4,
+            "end": 7,
+            "strongs": [
+              "H1571"
+            ]
+          },
+          {
+            "start": 8,
+            "end": 25,
+            "strongs": [
+              "H7937"
+            ]
+          },
+          {
+            "start": 27,
+            "end": 38,
+            "strongs": [
+              "H1961"
+            ]
+          },
+          {
+            "start": 39,
+            "end": 50,
+            "strongs": [
+              "H5956"
+            ]
+          },
+          {
+            "start": 51,
+            "end": 54,
+            "strongs": [
+              "H1571"
+            ]
+          },
+          {
+            "start": 55,
+            "end": 59,
+            "strongs": [
+              "H1245"
+            ]
+          },
+          {
+            "start": 60,
+            "end": 66,
+            "strongs": [
+              "H4581"
+            ]
+          },
+          {
+            "start": 67,
+            "end": 81,
+            "strongs": [
+              "H341"
+            ]
+          }
+        ],
+        "12": [
+          {
+            "start": 0,
+            "end": 3,
+            "strongs": [
+              "H3605"
+            ]
+          },
+          {
+            "start": 4,
+            "end": 19,
+            "strongs": [
+              "H4013"
+            ]
+          },
+          {
+            "start": 20,
+            "end": 33,
+            "strongs": [
+              "H8384"
+            ]
+          },
+          {
+            "start": 34,
+            "end": 38,
+            "strongs": [
+              "H5973"
+            ]
+          },
+          {
+            "start": 39,
+            "end": 58,
+            "strongs": [
+              "H1061"
+            ]
+          },
+          {
+            "start": 60,
+            "end": 64,
+            "strongs": [
+              "H518"
+            ]
+          },
+          {
+            "start": 65,
+            "end": 71,
+            "strongs": [
+              "H5128"
+            ]
+          },
+          {
+            "start": 73,
+            "end": 82,
+            "strongs": [
+              "H5307"
+            ]
+          },
+          {
+            "start": 83,
+            "end": 87,
+            "strongs": [
+              "H5921"
+            ]
+          },
+          {
+            "start": 88,
+            "end": 97,
+            "strongs": [
+              "H6310"
+            ]
+          },
+          {
+            "start": 98,
+            "end": 110,
+            "strongs": [
+              "H398"
+            ]
+          }
+        ],
+        "13": [
+          {
+            "start": 0,
+            "end": 7,
+            "strongs": [
+              "H2009"
+            ]
+          },
+          {
+            "start": 8,
+            "end": 19,
+            "strongs": [
+              "H5971"
+            ]
+          },
+          {
+            "start": 21,
+            "end": 45,
+            "strongs": [
+              "H802"
+            ]
+          },
+          {
+            "start": 47,
+            "end": 56,
+            "strongs": [
+              "H8179"
+            ]
+          },
+          {
+            "start": 57,
+            "end": 69,
+            "strongs": [
+              "H776"
+            ]
+          },
+          {
+            "start": 70,
+            "end": 83,
+            "strongs": [
+              "H6605"
+            ]
+          },
+          {
+            "start": 84,
+            "end": 99,
+            "strongs": [
+              "H341"
+            ]
+          },
+          {
+            "start": 101,
+            "end": 105,
+            "strongs": [
+              "H784"
+            ]
+          },
+          {
+            "start": 106,
+            "end": 114,
+            "strongs": [
+              "H398"
+            ]
+          },
+          {
+            "start": 115,
+            "end": 125,
+            "strongs": [
+              "H1280"
+            ]
+          }
+        ],
+        "14": [
+          {
+            "start": 0,
+            "end": 4,
+            "strongs": [
+              "H7579"
+            ]
+          },
+          {
+            "start": 10,
+            "end": 15,
+            "strongs": [
+              "H4325"
+            ]
+          },
+          {
+            "start": 16,
+            "end": 29,
+            "strongs": [
+              "H4692"
+            ]
+          },
+          {
+            "start": 31,
+            "end": 41,
+            "strongs": [
+              "H2388"
+            ]
+          },
+          {
+            "start": 42,
+            "end": 57,
+            "strongs": [
+              "H4013"
+            ]
+          },
+          {
+            "start": 59,
+            "end": 63,
+            "strongs": [
+              "H935"
+            ]
+          },
+          {
+            "start": 64,
+            "end": 72,
+            "strongs": [
+              "H2916"
+            ]
+          },
+          {
+            "start": 73,
+            "end": 82,
+            "strongs": [
+              "H7429"
+            ]
+          },
+          {
+            "start": 83,
+            "end": 93,
+            "strongs": [
+              "H2563"
+            ]
+          },
+          {
+            "start": 95,
+            "end": 101,
+            "strongs": [
+              "H2388"
+            ]
+          },
+          {
+            "start": 102,
+            "end": 116,
+            "strongs": [
+              "H4404"
+            ]
+          }
+        ],
+        "15": [
+          {
+            "start": 0,
+            "end": 5,
+            "strongs": [
+              "H8033"
+            ]
+          },
+          {
+            "start": 6,
+            "end": 14,
+            "strongs": [
+              "H784"
+            ]
+          },
+          {
+            "start": 15,
+            "end": 30,
+            "strongs": [
+              "H398"
+            ]
+          },
+          {
+            "start": 32,
+            "end": 41,
+            "strongs": [
+              "H2719"
+            ]
+          },
+          {
+            "start": 42,
+            "end": 59,
+            "strongs": [
+              "H3772"
+            ]
+          },
+          {
+            "start": 60,
+            "end": 75,
+            "strongs": [
+              "H398"
+            ]
+          },
+          {
+            "start": 76,
+            "end": 95,
+            "strongs": [
+              "H3218"
+            ]
+          },
+          {
+            "start": 97,
+            "end": 115,
+            "strongs": [
+              "H3513"
+            ]
+          },
+          {
+            "start": 116,
+            "end": 137,
+            "strongs": [
+              "H3218"
+            ]
+          },
+          {
+            "start": 139,
+            "end": 157,
+            "strongs": [
+              "H3513"
+            ]
+          },
+          {
+            "start": 158,
+            "end": 182,
+            "strongs": [
+              "H697"
+            ]
+          }
+        ],
+        "16": [
+          {
+            "start": 0,
+            "end": 19,
+            "strongs": [
+              "H7235"
+            ]
+          },
+          {
+            "start": 20,
+            "end": 34,
+            "strongs": [
+              "H7402"
+            ]
+          },
+          {
+            "start": 35,
+            "end": 54,
+            "strongs": [
+              "H3556"
+            ]
+          },
+          {
+            "start": 55,
+            "end": 65,
+            "strongs": [
+              "H8064"
+            ]
+          },
+          {
+            "start": 67,
+            "end": 83,
+            "strongs": [
+              "H3218"
+            ]
+          },
+          {
+            "start": 84,
+            "end": 99,
+            "strongs": [
+              "H6584"
+            ]
+          },
+          {
+            "start": 100,
+            "end": 114,
+            "strongs": [
+              "H5774"
+            ]
+          }
+        ],
+        "17": [
+          {
+            "start": 0,
+            "end": 11,
+            "strongs": [
+              "H4502"
+            ]
+          },
+          {
+            "start": 12,
+            "end": 40,
+            "strongs": [
+              "H697"
+            ]
+          },
+          {
+            "start": 42,
+            "end": 58,
+            "strongs": [
+              "H2951"
+            ]
+          },
+          {
+            "start": 59,
+            "end": 81,
+            "strongs": [
+              "H1462"
+            ]
+          },
+          {
+            "start": 82,
+            "end": 93,
+            "strongs": [
+              "H2583"
+            ]
+          },
+          {
+            "start": 94,
+            "end": 106,
+            "strongs": [
+              "H1448"
+            ]
+          },
+          {
+            "start": 107,
+            "end": 116,
+            "strongs": [
+              "H7135"
+            ]
+          },
+          {
+            "start": 117,
+            "end": 120,
+            "strongs": [
+              "H3117"
+            ]
+          },
+          {
+            "start": 122,
+            "end": 134,
+            "strongs": [
+              "H8121"
+            ]
+          },
+          {
+            "start": 135,
+            "end": 140,
+            "strongs": [
+              "H2224"
+            ]
+          },
+          {
+            "start": 142,
+            "end": 155,
+            "strongs": [
+              "H5074"
+            ]
+          },
+          {
+            "start": 157,
+            "end": 163,
+            "strongs": [
+              "H3808"
+            ]
+          },
+          {
+            "start": 164,
+            "end": 173,
+            "strongs": [
+              "H3045"
+            ]
+          },
+          {
+            "start": 174,
+            "end": 179,
+            "strongs": [
+              "H335"
+            ]
+          }
+        ],
+        "18": [
+          {
+            "start": 0,
+            "end": 6,
+            "strongs": [
+              "H4428"
+            ]
+          },
+          {
+            "start": 7,
+            "end": 17,
+            "strongs": [
+              "H804"
+            ]
+          },
+          {
+            "start": 19,
+            "end": 33,
+            "strongs": [
+              "H7462"
+            ]
+          },
+          {
+            "start": 34,
+            "end": 41,
+            "strongs": [
+              "H5123"
+            ]
+          },
+          {
+            "start": 43,
+            "end": 56,
+            "strongs": [
+              "H117"
+            ]
+          },
+          {
+            "start": 57,
+            "end": 62,
+            "strongs": [
+              "H7931"
+            ]
+          },
+          {
+            "start": 64,
+            "end": 75,
+            "strongs": [
+              "H5971"
+            ]
+          },
+          {
+            "start": 76,
+            "end": 89,
+            "strongs": [
+              "H6335"
+            ]
+          },
+          {
+            "start": 90,
+            "end": 92,
+            "strongs": [
+              "H5921"
+            ]
+          },
+          {
+            "start": 93,
+            "end": 106,
+            "strongs": [
+              "H2022"
+            ]
+          },
+          {
+            "start": 107,
+            "end": 118,
+            "strongs": [
+              "H369"
+            ]
+          },
+          {
+            "start": 119,
+            "end": 133,
+            "strongs": [
+              "H6908"
+            ]
+          }
+        ],
+        "19": [
+          {
+            "start": 0,
+            "end": 11,
+            "strongs": [
+              "H369"
+            ]
+          },
+          {
+            "start": 12,
+            "end": 19,
+            "strongs": [
+              "H3545"
+            ]
+          },
+          {
+            "start": 20,
+            "end": 35,
+            "strongs": [
+              "H7667"
+            ]
+          },
+          {
+            "start": 37,
+            "end": 47,
+            "strongs": [
+              "H4347"
+            ]
+          },
+          {
+            "start": 48,
+            "end": 57,
+            "strongs": [
+              "H2470"
+            ]
+          },
+          {
+            "start": 59,
+            "end": 62,
+            "strongs": [
+              "H3605"
+            ]
+          },
+          {
+            "start": 63,
+            "end": 71,
+            "strongs": [
+              "H8085"
+            ]
+          },
+          {
+            "start": 72,
+            "end": 87,
+            "strongs": [
+              "H8088"
+            ]
+          },
+          {
+            "start": 88,
+            "end": 95,
+            "strongs": [
+              "H8628"
+            ]
+          },
+          {
+            "start": 96,
+            "end": 109,
+            "strongs": [
+              "H5921"
+            ]
+          },
+          {
+            "start": 111,
+            "end": 114,
+            "strongs": [
+              "H3588"
+            ]
+          },
+          {
+            "start": 115,
+            "end": 118,
+            "strongs": [
+              "H4310"
+            ]
+          },
+          {
+            "start": 119,
+            "end": 126,
+            "strongs": [
+              "H3808"
+            ]
+          },
+          {
+            "start": 127,
+            "end": 138,
+            "strongs": [
+              "H5674"
+            ]
+          },
+          {
+            "start": 139,
+            "end": 152,
+            "strongs": [
+              "H8548"
+            ]
+          },
+          {
+            "start": 153,
+            "end": 160,
+            "strongs": [
+              "H7451"
+            ]
+          }
+        ]
+      },
+      "coverage": {
+        "textSource": "HelloAO BSB",
+        "unmappedVerses": [],
+        "withheldAnnotations": 0,
+        "sourceTextDifferences": [
+          "5",
+          "7",
+          "13"
+        ]
+      }
+    }
+  }
+}
